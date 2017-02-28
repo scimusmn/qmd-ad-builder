@@ -1,0 +1,22 @@
+@import "base/extends";
+@import "base/animations";
+@import "base/forms";
+
+@import "module/Loading";
+@import "module/Login";
+@import "module/PageHeader";
+@import "module/Signup";
+
+@import "state/Navbar";
+
+
+.workspace {
+
+  background-color: #f9f5ec;
+  width: 1920px;
+  height: 1080px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+
+}
