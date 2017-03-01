@@ -59,9 +59,6 @@ export const initCamera = () => {
     warpImage = context.createImageData(49, 49);
     homographyImage = new CV.Image();
 
-    console.log('---');
-    console.log(video);
-
     requestAnimationFrame(tick);
   }
 
@@ -77,7 +74,7 @@ export const initCamera = () => {
 
   });
 
-}
+};
 
 const tick = () => {
 
@@ -87,9 +84,11 @@ const tick = () => {
     snapshot();
 
     var markers = detector.detect(imageData);
+    // TODO - these should all be toggleable
     drawDebug();
     drawCorners(markers);
     drawId(markers);
+    listMarkers(markers);
   }
 
 };
@@ -192,6 +191,7 @@ const drawId = (markers) => {
 
   context.strokeStyle = 'blue';
   context.lineWidth = 1;
+  context.font = '10px Helvetica';
 
   for (i = 0; i !== markers.length; ++i) {
     corners = markers[i].corners;
@@ -219,6 +219,17 @@ const createImage = (src, dst) => {
   }
 
   return dst;
+};
+
+const listMarkers = (markers) => {
+
+  context.fillStyle = '#6dc2e8';
+  context.font = '40px Helvetica';
+
+  for (let i = 0; i < markers.length; i++) {
+    context.fillText(markers[i].id + ', ', i * 64, canvas.height - 64);
+  }
+
 };
 
 const arCam = {
