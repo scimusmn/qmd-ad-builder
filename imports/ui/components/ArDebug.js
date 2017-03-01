@@ -3,7 +3,7 @@
 import React from 'react';
 import Mousetrap from 'mousetrap';
 
-import { initCamera } from '../../modules/client/ArCamera';
+import arCam from '../../modules/client/ArCamera';
 
 export class ArDebug extends React.Component {
 
@@ -27,8 +27,8 @@ export class ArDebug extends React.Component {
 
   componentDidMount() {
 
-    console.log('ArDebug:componentDidMount');
-    initCamera();
+    console.log('ArDebug::componentDidMount');
+    arCam.initCamera();
 
   }
 
@@ -40,10 +40,10 @@ export class ArDebug extends React.Component {
   }
 
   render() {
-/*
-    if (!this.state.showing) {
-      return null;
-    }*/
+
+    // if (!this.state.showing) {
+    //   return null;
+    // }
 
     return <div className='ar-debug'>
               <h1>DEBUG</h1>

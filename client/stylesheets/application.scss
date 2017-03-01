@@ -21,6 +21,9 @@
 
 }
 
+/* ********** */
+/* The Poster */
+/* ********** */
 .ar-poster {
 
   width: 640px;
@@ -39,6 +42,38 @@
 
 }
 
+.ar-poster .item {
+
+  position: absolute;
+
+}
+
+.ar-poster .item img {
+
+  position: absolute;
+  top:0px;
+  left:0px;
+
+/*
+  background-color: rgba(136, 108, 43, 0.15);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+
+  border-radius: 19px 19px 19px 19px;
+  -moz-border-radius: 19px 19px 19px 19px;
+  -webkit-border-radius: 19px 19px 19px 19px;
+  border: 5px dashed rgba(0,0,0,0.5);
+*/
+
+}
+
+/* ************* */
+/* Debug Overlay */
+/* ************* */
 .ar-debug {
 
   width: 100%;
@@ -63,4 +98,26 @@
 .ar-debug h3 {
   color: #ffd847;
   background-color: #6dc2e8;
+}
+
+
+/* ************* */
+/* Miscellaneous */
+/* ************* */
+.flip-h {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+.flip-v {
+  -moz-transform: scaleY(-1);
+  -o-transform: scaleY(-1);
+  -webkit-transform: scaleY(-1);
+  transform: scaleY(-1);
+  filter: FlipV;
+  -ms-filter: "FlipV";
 }

@@ -16,8 +16,16 @@ import AR from '../../../client/lib/js-aruco/aruco.js';
  *
 */
 
-var video, camera, canvas, context, imageData, pixels, detector;
-var debugImage, warpImage, homographyImage;
+let video;
+let canvas;
+let context;
+let imageData;
+let pixels;
+let detector;
+let debugImage;
+let warpImage;
+let homographyImage;
+let onMarkersUpdate = (markers) => {};
 
 export const initCamera = () => {
 
@@ -47,7 +55,8 @@ export const initCamera = () => {
       }
 
     function errorCallback(error) {
-      }
+      console.log('ERROR', error);
+    }
 
     navigator.getUserMedia({video:true}, successCallback, errorCallback);
 
@@ -84,11 +93,15 @@ const tick = () => {
     snapshot();
 
     var markers = detector.detect(imageData);
-    // TODO - these should all be toggleable
+
+    // TODO: these could be toggleable
     drawDebug();
     drawCorners(markers);
     drawId(markers);
     listMarkers(markers);
+
+    onMarkersUpdate(markers);
+
   }
 
 };
@@ -161,7 +174,11 @@ const drawWarps  = (imageSrc, contours, x, y) => {
 };
 
 const drawCorners  = (markers) => {
-  var corners, corner, i, j;
+
+  let corners;
+  let corner;
+  let i;
+  let j;
 
   context.lineWidth = 3;
 
@@ -187,7 +204,12 @@ const drawCorners  = (markers) => {
 };
 
 const drawId = (markers) => {
-  var corners, corner, x, y, i, j;
+  let corners;
+  let corner;
+  let x;
+  let y;
+  let i;
+  let j;
 
   context.strokeStyle = 'blue';
   context.lineWidth = 1;
@@ -206,12 +228,14 @@ const drawId = (markers) => {
       y = Math.min(y, corner.y);
     }
 
-    context.strokeText(markers[i].id, x, y)
+    context.strokeText(markers[i].id, x, y);
+
   }
 };
 
 const createImage = (src, dst) => {
-  var i = src.data.length, j = (i * 4) + 3;
+  let i = src.data.length;
+  let j = (i * 4) + 3;
 
   while (i--) {
     dst.data[j -= 4] = 255;
@@ -232,8 +256,24 @@ const listMarkers = (markers) => {
 
 };
 
+/* Queries */
+export let getCamDimensions = function() {
+
+  return {width:video.width, height:video.height};
+
+};
+
+/* Callbacks */
+export let setMarkerUpdateCallback = function(func) {
+
+  onMarkersUpdate = func;
+
+};
+
 const arCam = {
-  initCamera:initCamera,
+  initCamera,
+  getCamDimensions,
+  setMarkerUpdateCallback,
 };
 
 export default arCam;
