@@ -2,8 +2,8 @@
 
 import React from 'react';
 import Mousetrap from 'mousetrap';
-import CV from '../../../client/lib/js-aruco/cv.js';
-import AR from '../../../client/lib/js-aruco/aruco.js';
+
+import { initCamera } from '../../modules/client/ArCamera';
 
 export class ArDebug extends React.Component {
 
@@ -15,9 +15,10 @@ export class ArDebug extends React.Component {
       showing:false,
     };
 
+    // Listen for 'D' keystrokes
+    // to toggle debug view.
     Mousetrap.bind('d', () => {
 
-      console.log('toggle debug');
       this.setState({showing: !this.state.showing});
 
     });
@@ -25,6 +26,9 @@ export class ArDebug extends React.Component {
   }
 
   componentDidMount() {
+
+    console.log('ArDebug:componentDidMount');
+    initCamera();
 
   }
 
@@ -36,16 +40,16 @@ export class ArDebug extends React.Component {
   }
 
   render() {
-
+/*
     if (!this.state.showing) {
       return null;
-    }
+    }*/
 
     return <div className='ar-debug'>
-              <h1>DEBUG & SETTINGS</h1>
+              <h1>DEBUG</h1>
               <div><h2><strong>-=///////////////=-</strong></h2></div>
-              <video id='video' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
-              <canvas id='canvas' style={{width:'960px', height:'620px'}}></canvas><br/>
+              <video id='debug-video' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
+              <canvas id='debug-canvas' style={{width:'960px', height:'620px'}}></canvas><br/>
               <input id='invert' type='checkbox' name='invert' value='Invert'></input> Invert Detection
            </div>;
   }

@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import CV from '../../../client/lib/js-aruco/cv.js';
-import AR from '../../../client/lib/js-aruco/aruco.js';
+// import CV from '../../../client/lib/js-aruco/cv.js';
+// import AR from '../../../client/lib/js-aruco/aruco.js';
 
 
 export class ArPoster extends React.Component {
@@ -21,8 +21,8 @@ export class ArPoster extends React.Component {
   componentDidMount() {
 
     console.log('ArPoster::componentDidMount()');
-    var detector = new AR.Detector();
-    console.log(detector);
+    // var detector = new AR.Detector();
+    // console.log(detector);
 
   }
 
@@ -30,9 +30,6 @@ export class ArPoster extends React.Component {
 
     // Stop all tweens
     // and timers.
-    console.log('ArPoster::componentDidMount()');
-    var detector = new AR.Detector();
-    console.log(detector);
 
   }
 
