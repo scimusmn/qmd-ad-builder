@@ -27,6 +27,23 @@ let warpImage;
 let homographyImage;
 let onMarkersUpdate = (markers) => {};
 
+let debugMode = false;
+
+const color1 = '#ffd847'; // Gold
+const color2 = '#f58277'; // Salmon
+const color3 = '#6dc2e8'; // Light blue
+const color4 = '#07b6ca'; // Turqoise
+const color5 = '#9178ea'; // Purple
+
+// Corner pts for target quad
+let targetQuadDragIndex = -1;
+let targetQuad = [
+                    {x:10, y:10},
+                    {x:90, y:22},
+                    {x:105, y:110},
+                    {x:30, y:99},
+                  ];
+
 export const initCamera = () => {
 
   console.log('ArCamera: initCamera()');
@@ -83,6 +100,50 @@ export const initCamera = () => {
 
   });
 
+  // Listen for target quad clicks
+  canvas.addEventListener('mousedown', function(event) {
+
+    const mousePos = getCanvasMousePos(canvas, event);
+    console.log('debug canvas mousedown', mousePos);
+
+    // Check for corner drag
+    // on target quad
+    for (var i = 0; i < targetQuad.length; i++) {
+      let pt = targetQuad[i];
+      const dist = distCalc(mousePos.x, mousePos.y, pt.x, pt.y);
+      if (dist < 10) {
+        console.log('start drag. corner index', i);
+        targetQuadDragIndex = i;
+        break;
+      }
+    }
+
+  });
+
+  // Listen for mouse move to update drags
+  canvas.addEventListener('mousemove', function(event) {
+
+    // Update target quad
+    // if currently dragging.
+    if (targetQuadDragIndex >= 0) {
+
+      console.log('update quad corner', targetQuadDragIndex);
+
+      const mousePos = getCanvasMousePos(canvas, event);
+      targetQuad[targetQuadDragIndex].x = mousePos.x;
+      targetQuad[targetQuadDragIndex].y = mousePos.y;
+
+    }
+
+  });
+
+  // Listen for mouse up to end drags
+  canvas.addEventListener('mouseup', function(event) {
+
+    targetQuadDragIndex = -1;
+
+  });
+
 };
 
 const tick = () => {
@@ -90,16 +151,22 @@ const tick = () => {
   requestAnimationFrame(tick);
 
   if (video.readyState === video.HAVE_ENOUGH_DATA) {
+
     snapshot();
 
     var markers = detector.detect(imageData);
 
-    // TODO: these could be toggleable
-    drawDebug();
-    drawCorners(markers);
-    drawId(markers);
-    listMarkers(markers);
+    if (debugMode == true) {
+      // TODO: these could be individually toggleable
+      drawDebug();
+      drawCorners(markers);
+      drawId(markers);
+      listMarkers(markers);
+      drawTargetQuad();
 
+    }
+
+    // Update external markers.
     onMarkersUpdate(markers);
 
   }
@@ -113,6 +180,49 @@ const snapshot = () => {
 
 };
 
+const getCanvasMousePos = (canvas, evt) => {
+
+  var rect = canvas.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top,
+  };
+
+};
+
+const distCalc = (x1, y1, x2, y2) => {
+
+  const a = x1 - x2;
+  const b = y1 - y2;
+
+  return Math.sqrt(a * a + b * b);
+
+};
+
+const drawTargetQuad = () => {
+
+  // Draw target quad
+
+  context.strokeStyle = color2;
+  context.lineWidth = 3;
+
+  context.beginPath();
+  context.moveTo(targetQuad[0].x, targetQuad[0].y);
+  context.lineTo(targetQuad[1].x, targetQuad[1].y);
+  context.lineTo(targetQuad[2].x, targetQuad[2].y);
+  context.lineTo(targetQuad[3].x, targetQuad[3].y);
+  context.closePath();
+  context.stroke();
+
+  context.strokeRect(targetQuad[0].x, targetQuad[0].y, -4, -4);
+  context.strokeRect(targetQuad[1].x, targetQuad[1].y, 4, -4);
+  context.strokeRect(targetQuad[2].x, targetQuad[2].y, 4, 4);
+  context.strokeRect(targetQuad[3].x, targetQuad[3].y, -4, 4);
+
+  context.lineWidth = 1;
+
+};
+
 const drawDebug = () => {
   const width = video.width;
   const height = video.height;
@@ -123,13 +233,14 @@ const drawDebug = () => {
   context.putImageData(createImage(detector.grey, debugImage), width, 0);
   context.putImageData(createImage(detector.thres, debugImage), width * 2, 0);
 
-  drawContours(detector.contours, 0, height, width, height, function(hole) {return hole ? 'magenta' : 'blue';});
+  drawContours(detector.contours, 0, height, width, height, function(hole) {return hole ? color5 : color1;});
 
-  drawContours(detector.polys, width, height, width, height, function() {return 'green';});
+  drawContours(detector.polys, width, height, width, height, function() {return color5;});
 
-  drawContours(detector.candidates, width * 2, height, width, height, function() {return 'red';});
+  drawContours(detector.candidates, width * 2, height, width, height, function() {return color2;});
 
   drawWarps(detector.grey, detector.candidates, 0, height * 2 + 20);
+
 };
 
 const drawContours  = (contours, x, y, width, height, fn) => {
@@ -185,7 +296,7 @@ const drawCorners  = (markers) => {
   for (i = 0; i !== markers.length; ++i) {
     corners = markers[i].corners;
 
-    context.strokeStyle = 'red';
+    context.strokeStyle = color1;
     context.beginPath();
 
     for (j = 0; j !== corners.length; ++j) {
@@ -198,7 +309,7 @@ const drawCorners  = (markers) => {
     context.stroke();
     context.closePath();
 
-    context.strokeStyle = 'green';
+    context.strokeStyle = color5;
     context.strokeRect(corners[0].x - 2, corners[0].y - 2, 4, 4);
   }
 };
@@ -211,7 +322,7 @@ const drawId = (markers) => {
   let i;
   let j;
 
-  context.strokeStyle = 'blue';
+  context.strokeStyle = color2;
   context.lineWidth = 1;
   context.font = '10px Helvetica';
 
@@ -247,7 +358,7 @@ const createImage = (src, dst) => {
 
 const listMarkers = (markers) => {
 
-  context.fillStyle = '#6dc2e8';
+  context.fillStyle = color1;
   context.font = '40px Helvetica';
 
   for (let i = 0; i < markers.length; i++) {
@@ -256,10 +367,16 @@ const listMarkers = (markers) => {
 
 };
 
-/* Queries */
+/* Utils */
 export let getCamDimensions = function() {
 
   return {width:video.width, height:video.height};
+
+};
+
+export const toggleDebugMode = function(value) {
+
+  debugMode = value;
 
 };
 
@@ -273,6 +390,7 @@ export let setMarkerUpdateCallback = function(func) {
 const arCam = {
   initCamera,
   getCamDimensions,
+  toggleDebugMode,
   setMarkerUpdateCallback,
 };
 

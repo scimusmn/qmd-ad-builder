@@ -19,7 +19,7 @@ export class ArDebug extends React.Component {
     // to toggle debug view.
     Mousetrap.bind('d', () => {
 
-      this.setState({showing: !this.state.showing});
+      this.toggleVisible(!this.state.showing);
 
     });
 
@@ -30,6 +30,11 @@ export class ArDebug extends React.Component {
     console.log('ArDebug::componentDidMount');
     arCam.initCamera();
 
+    // Set initial state.
+    this.toggleVisible(this.state.showing);
+
+
+
   }
 
   componentWillUnmount() {
@@ -39,11 +44,20 @@ export class ArDebug extends React.Component {
 
   }
 
-  render() {
+  toggleVisible(show) {
 
-    // if (!this.state.showing) {
-    //   return null;
-    // }
+    this.setState({showing: show});
+    arCam.toggleDebugMode(show);
+
+    if (show) {
+      $('.ar-debug').css('display', 'block');
+    } else {
+      $('.ar-debug').css('display', 'none');
+    }
+
+  }
+
+  render() {
 
     return <div className='ar-debug'>
               <h1>DEBUG</h1>

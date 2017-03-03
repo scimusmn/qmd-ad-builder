@@ -54,20 +54,22 @@
   top:0px;
   left:0px;
 
-/*
-  background-color: rgba(136, 108, 43, 0.15);
+
+/*  background-color: rgba(136, 108, 43, 0.15);
+*/
+  /* Center image on point */
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 
-
-  border-radius: 19px 19px 19px 19px;
+  /* Cutout border */
+/*  border-radius: 19px 19px 19px 19px;
   -moz-border-radius: 19px 19px 19px 19px;
   -webkit-border-radius: 19px 19px 19px 19px;
-  border: 5px dashed rgba(0,0,0,0.5);
-*/
+  border: 5px dashed rgba(0,0,0,0.5);*/
+
 
 }
 
