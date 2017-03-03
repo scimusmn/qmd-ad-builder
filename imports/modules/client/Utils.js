@@ -15,6 +15,13 @@
  * Math transposed to JS from http://iquilezles.org/www/articles/ibilinear/ibilinear.htm
  *
  */
+
+ // TODO: This function could become a
+ // performance bottleneck if used.
+ // Could be optimized by instantiating
+ // variables outside function scope, and
+ // creating a dedicated Point (Vec2) class for
+ // faster point math.
 const mapPointFromQuad = (p,  a,  b,  c,  d) => {
 
   const e = pointSubtract(b, a);
