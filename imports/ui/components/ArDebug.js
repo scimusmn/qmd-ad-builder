@@ -33,8 +33,6 @@ export class ArDebug extends React.Component {
     // Set initial state.
     this.toggleVisible(this.state.showing);
 
-
-
   }
 
   componentWillUnmount() {
@@ -61,10 +59,11 @@ export class ArDebug extends React.Component {
 
     return <div className='ar-debug'>
               <h1>DEBUG</h1>
-              <div><h2><strong>-=///////////////=-</strong></h2></div>
+              <div><h2><strong>-=///////DEBUG///////=-</strong></h2></div>
               <video id='debug-video' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
               <canvas id='debug-canvas' style={{width:'960px', height:'620px'}}></canvas><br/>
-              <input id='invert' type='checkbox' name='invert' value='Invert'></input> Invert Detection
+              <input id='invert' type='checkbox' name='invert' value='Invert'></input> Invert Detection<br/>
+              <input id='flip' type='checkbox' name='flip' value='Flip'></input> Flip Camera
            </div>;
   }
 }

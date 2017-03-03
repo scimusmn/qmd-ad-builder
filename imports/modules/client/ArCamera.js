@@ -29,6 +29,7 @@ let homographyImage;
 let onMarkersUpdate = (markers) => {};
 
 let debugMode = false;
+let flipCamera = false;
 
 const color1 = '#ffd847'; // Gold
 const color2 = '#f58277'; // Salmon
@@ -39,10 +40,10 @@ const color5 = '#9178ea'; // Purple
 // Corner pts for target quad
 let targetQuadDragIndex = -1;
 let targetQuad = [
-                    {x:10, y:10},
-                    {x:90, y:22},
-                    {x:105, y:110},
-                    {x:30, y:99},
+                    {x:15, y:10},
+                    {x:300, y:10},
+                    {x:300, y:220},
+                    {x:15, y:220},
                   ];
 
 export const initCamera = () => {
@@ -91,14 +92,19 @@ export const initCamera = () => {
   }
 
   // Listen for checkbox changes
+  // TODO: This should go into ArDebug.js, where
+  // it can set a session variable.
   var invertCB = document.getElementById('invert');
   invertCB.addEventListener('change', function() {
 
-    if (invertCB.checked) {
-      detector.invertDetection = true;
-    } else {
-      detector.invertDetection = false;
-    }
+    detector.invertDetection = invertCB.checked;
+
+  });
+
+  var flipCamCB = document.getElementById('flip');
+  flipCamCB.addEventListener('change', function() {
+
+    flipCamera = flipCamCB.checked;
 
   });
 
@@ -106,7 +112,6 @@ export const initCamera = () => {
   canvas.addEventListener('mousedown', function(event) {
 
     const mousePos = getCanvasMousePos(canvas, event);
-    console.log('debug canvas mousedown', mousePos);
 
     // Check for corner drag
     // on target quad
@@ -138,8 +143,6 @@ export const initCamera = () => {
     // if currently dragging.
     if (targetQuadDragIndex >= 0) {
 
-      console.log('update quad corner', targetQuadDragIndex);
-
       const mousePos = getCanvasMousePos(canvas, event);
       targetQuad[targetQuadDragIndex].x = mousePos.x;
       targetQuad[targetQuadDragIndex].y = mousePos.y;
@@ -167,6 +170,10 @@ const tick = () => {
 
     var markers = detector.detect(imageData);
 
+    // TEMP. Should we go ahead and calculate
+    // center points, rotation, and mapped QuadPts here??
+    calcDisplayMetas(markers);
+
     if (debugMode == true) {
       // TODO: these could be individually toggleable
       drawDebug();
@@ -186,7 +193,18 @@ const tick = () => {
 
 const snapshot = () => {
 
+  if (flipCamera) {
+    context.translate(video.width, 0);
+    context.scale(-1, 1);
+  }
+
   context.drawImage(video, 0, 0, video.width, video.height);
+
+  if (flipCamera) {
+    context.scale(-1, 1);
+    context.translate(-video.width, 0);
+  }
+
   imageData = context.getImageData(0, 0, video.width, video.height);
 
 };
@@ -198,6 +216,43 @@ const getCanvasMousePos = (canvas, evt) => {
     x: evt.clientX - rect.left,
     y: evt.clientY - rect.top,
   };
+
+};
+
+// Prep the markers with extra information
+// that will be useful on the poster display.
+const calcDisplayMetas = (markers) => {
+
+  let corners;
+  let i;
+  let cX;
+  let cY;
+  let rot;
+  let center;
+  let quadPos;
+
+  for (i = 0; i !== markers.length; ++i) {
+
+    corners = markers[i].corners;
+
+    // Calc center point of corners
+    cX = (corners[0].x + corners[2].x) * 0.5;
+    cY = (corners[0].y + corners[2].y) * 0.5;
+
+    center = {x:cX,y:cY};
+
+    quadPos = Utils.mapPointFromQuad(center, targetQuad[0], targetQuad[1], targetQuad[2], targetQuad[3]);
+
+    // Calc rotation of top two corners
+    // TODO: Does this rotation need to use
+    // quad-mapped points to be accurate???
+    rot = Math.atan2(corners[1].y - corners[0].y, corners[1].x - corners[0].x) * 180 / Math.PI;
+
+    markers[i].center = center;
+    markers[i].rot = rot;
+    markers[i].quadPos = quadPos;
+
+  }
 
 };
 

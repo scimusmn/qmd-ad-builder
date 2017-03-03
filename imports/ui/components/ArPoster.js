@@ -52,28 +52,16 @@ export class ArPoster extends React.Component {
 
     if (markers.length == 0) return;
 
-    // console.log(markers);
-
-    let corners;
     let i;
-    let cX;
-    let cY;
-    let rot;
     let itemId;
 
     for (i = 0; i !== markers.length; ++i) {
 
       corners = markers[i].corners;
 
-      // Get center point of corners
-      cX = (corners[0].x + corners[2].x) * 0.5;
-      cY = (corners[0].y + corners[2].y) * 0.5;
-
-      // Get rotation between top two corners
-      rot = Math.atan2(corners[1].y - corners[0].y, corners[1].x - corners[0].x) * 180 / Math.PI;
-
-      // CLEANUP: This check shouldn't
-      // be necessary once only a set num
+      // CLEANUP: This defaulting to 5
+      // shouldn't be necessary once
+      // only using a set num
       // of marker ids.
       if (this.lookup[markers[i].id]) {
         itemId = this.lookup[markers[i].id];
@@ -81,32 +69,35 @@ export class ArPoster extends React.Component {
         itemId = this.lookup[5];
       }
 
-/*
-      var isActive = false;
-      if (itemId == markers[i].id) {
-        isActive = true;
-      }
-*/
-      this.updateItem(itemId, cX, cY, rot, false);
+      this.updateItem(itemId, markers[i]);
 
     }
 
   }
 
-  updateItem(id, x, y, rot, isActive) {
+  updateItem(id, mark) {
+
+    let x = mark.center.x;
+    let y = mark.center.y;
+
+    // console.log('updateItem:', id, mark.quadPos.x, mark.quadPos.y);
+
+    if (mark.quadPos.x >= 0) {
+      x = mark.quadPos.x * this.posterWidth;
+      y = mark.quadPos.y * this.posterHeight;
+    } else {
+      x = x * this.wRatio;
+      x = y * this.wRatio;
+    }
+
+    // Appending '_short' tells tween to choose
+    // direction of shortest distance.
+    const rotation = -mark.rot + '_short';
+    console.log('rotation:', rotation);
 
     // TODO: should pre-populate a dictionary with all jquery targets...
     // Do not lookup by string id every tick.
-
-    TweenMax.to($('#' + id), 0.2, {x:this.posterWidth - (x * this.wRatio), y:y * this.hRatio, rotation:-rot});
-
-    // Show object highlight
-    // on this element
-    if (isActive == true) {
-      TweenLite.set($('#' + id).children('img'), {css:{borderColor:'#c4160a'}});
-    } else {
-      TweenLite.set($('#' + id).children('img'), {css:{borderColor:'rgba(0,0,0,0.4)'}});
-    }
+    TweenMax.to($('#' + id), 0.2, {x:x, y:y, rotation:rotation});
 
   }
 
