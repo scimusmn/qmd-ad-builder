@@ -3,6 +3,7 @@
 import { Meteor } from 'meteor/meteor';
 import CV from '../../../client/lib/js-aruco/cv.js';
 import AR from '../../../client/lib/js-aruco/aruco.js';
+import Utils from './Utils.js';
 
 /*
  *
@@ -86,6 +87,7 @@ export const initCamera = () => {
     homographyImage = new CV.Image();
 
     requestAnimationFrame(tick);
+
   }
 
   // Listen for checkbox changes
@@ -110,13 +112,22 @@ export const initCamera = () => {
     // on target quad
     for (var i = 0; i < targetQuad.length; i++) {
       let pt = targetQuad[i];
-      const dist = distCalc(mousePos.x, mousePos.y, pt.x, pt.y);
+      const dist = Utils.distCalc(mousePos.x, mousePos.y, pt.x, pt.y);
       if (dist < 10) {
         console.log('start drag. corner index', i);
         targetQuadDragIndex = i;
         break;
       }
     }
+
+    // Did not start drag.
+    // log output coordinate
+    console.log('pt click:');
+    console.log(mousePos);
+
+    const mappedPos = Utils.mapPointFromQuad(mousePos, targetQuad[0], targetQuad[1], targetQuad[2], targetQuad[3]);
+    console.log('mapped pt: ');
+    console.log(mappedPos);
 
   });
 
@@ -187,15 +198,6 @@ const getCanvasMousePos = (canvas, evt) => {
     x: evt.clientX - rect.left,
     y: evt.clientY - rect.top,
   };
-
-};
-
-const distCalc = (x1, y1, x2, y2) => {
-
-  const a = x1 - x2;
-  const b = y1 - y2;
-
-  return Math.sqrt(a * a + b * b);
 
 };
 
