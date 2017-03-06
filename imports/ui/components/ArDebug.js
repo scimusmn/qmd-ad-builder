@@ -63,7 +63,15 @@ export class ArDebug extends React.Component {
               <video id='debug-video' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
               <canvas id='debug-canvas' style={{width:'960px', height:'620px'}}></canvas><br/>
               <input id='invert' type='checkbox' name='invert' value='Invert'></input> Invert Detection<br/>
-              <input id='flip' type='checkbox' name='flip' value='Flip'></input> Flip Camera
+              <input id='flip-input' type='checkbox' name='flip-input' value='FlipInput'></input> Flip Camera<br/>
+              <input id='flip-output' type='checkbox' name='flip-output' value='FlipOutput'></input> Flip Output Horizontally<br/><br/>
+              <input id='cam-name' type='text' name='cam-name'></input>: Camera Search String<br/>
+              <h3>Available Cameras</h3>
+              <ul className='list-group'>
+                <li className='list-group-item'>First item</li>
+                <li className='list-group-item'>Second item</li>
+                <li className='list-group-item'>Third item</li>
+              </ul>
            </div>;
   }
 }

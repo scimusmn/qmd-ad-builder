@@ -60,6 +60,9 @@ export const initCamera = () => {
   canvas.width = parseInt(canvas.style.width);
   canvas.height = parseInt(canvas.style.height);
 
+  // Gather all available cameras
+  navigator.mediaDevices.enumerateDevices().then(onGatherDevices);
+
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
   if (navigator.getUserMedia) {
 
@@ -94,17 +97,24 @@ export const initCamera = () => {
   // Listen for checkbox changes
   // TODO: This should go into ArDebug.js, where
   // it can set a session variable.
-  var invertCB = document.getElementById('invert');
+  const invertCB = document.getElementById('invert');
   invertCB.addEventListener('change', function() {
 
     detector.invertDetection = invertCB.checked;
 
   });
 
-  var flipCamCB = document.getElementById('flip');
+  const flipCamCB = document.getElementById('flip-input');
   flipCamCB.addEventListener('change', function() {
 
     flipCamera = flipCamCB.checked;
+
+  });
+
+  const flipOutCB = document.getElementById('flip-output');
+  flipOutCB.addEventListener('change', function() {
+
+    Session.set('flip-output-h', flipOutCB.checked);
 
   });
 
@@ -159,6 +169,32 @@ export const initCamera = () => {
   });
 
 };
+
+const onGatherDevices = (deviceInfos) => {
+
+  const targetDeviceName = 'FaceTime HD Camera'; // temp
+
+  for (var i = 0; i !== deviceInfos.length; ++i) {
+
+    var deviceInfo = deviceInfos[i];
+
+    if (deviceInfo.kind === 'videoinput') {
+
+      console.log('videoinput option::', i, deviceInfo);
+
+      // Use usb camera if available
+      if (deviceInfo.label.indexOf(targetDeviceName) != -1) {
+
+        console.log('Found target cam:', targetDeviceName);
+
+        cameraToUse = deviceInfo;
+        break;
+
+      }
+
+    }
+  }
+}
 
 const tick = () => {
 

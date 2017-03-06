@@ -3,6 +3,7 @@
 import React from 'react';
 import arCam from '../../modules/client/ArCamera';
 import TweenMax from 'gsap';
+import Utils from '../../modules/client/Utils';
 
 export class ArPoster extends React.Component {
 
@@ -16,10 +17,19 @@ export class ArPoster extends React.Component {
 
     // Dictionary to find
     // item ids from marker ids.
+    // TODO: Once all lookup ids
+    // are added here. Create official
+    // marker print docs for this project
+    // and add to repo. Also, use the
+    // lookup dict to loop through
+    // on mount and pre find all jquery
+    // objects. (e.g., 6:$('#headline'));
     this.lookup = {
       5:'headline',
       6:'quote',
     };
+
+    this.activeMarkers = [];
 
     this.markerUpdate = this.markerUpdate.bind(this);
 
@@ -50,6 +60,8 @@ export class ArPoster extends React.Component {
 
   markerUpdate(markers) {
 
+    this.updateLifeCycles(markers);
+
     if (markers.length == 0) return;
 
     let i;
@@ -69,35 +81,124 @@ export class ArPoster extends React.Component {
         itemId = this.lookup[5];
       }
 
-      this.updateItem(itemId, markers[i]);
+      this.updateItemDisplay(itemId, markers[i]);
 
     }
 
   }
 
-  updateItem(id, mark) {
+  updateItemDisplay(id, mark) {
 
+    // TODO: should pre-populate a dictionary with all jquery targets...
+    // Do not lookup by string id every tick.
+    const $item = $('#' + id);
+
+    // Calculate item's position
+    // on poster with current settings.
     let x = mark.center.x;
     let y = mark.center.y;
-
-    // console.log('updateItem:', id, mark.quadPos.x, mark.quadPos.y);
 
     if (mark.quadPos.x >= 0) {
       x = mark.quadPos.x * this.posterWidth;
       y = mark.quadPos.y * this.posterHeight;
+
+      if (Session.get('flip-output-h') == true) {
+        x = this.posterWidth - x;
+      }
+
     } else {
-      x = x * this.wRatio;
-      x = y * this.wRatio;
+
+      console.log('Marker "' + id + '" is outside target quad.', mark.quadPos.x, mark.quadPos.y);
+
     }
 
     // Appending '_short' tells tween to choose
     // direction of shortest distance.
     const rotation = -mark.rot + '_short';
-    console.log('rotation:', rotation);
 
-    // TODO: should pre-populate a dictionary with all jquery targets...
-    // Do not lookup by string id every tick.
-    TweenMax.to($('#' + id), 0.2, {x:x, y:y, rotation:rotation});
+    // If item isn't already
+    // 'active', activate.
+    if (Utils.arrayContainsId(this.activeMarkers, mark.id) == false) {
+      // TODO: the above conditional should eventually be something like:
+      // if (this.items[id].isActive == false) {
+      // instead of adding/removeing items in realtime, should just
+      // track state of each item, and update display accordingly
+
+      this.activeMarkers.push({id:mark.id, deadCount:0});
+
+      // $('#' + id).show();
+
+      TweenMax.killTweensOf($item);
+      TweenMax.set($item, {opacity:1.0, scale: 1.0, x:x, y:y, rotation:rotation});
+      TweenMax.from($item, 0.2, {opacity:0.0, scale:1.45});
+
+      console.log('-> item alive', id, new Date().getMilliseconds());
+
+    } else {
+
+      //Already showing, only need to update.
+      // Smooth between current position
+      // and target position...
+      TweenMax.to($item, 0.2, {x:x, y:y, rotation:rotation});
+
+    }
+
+  }
+
+  // Remove items whose markers
+  // have no-showed for X cycles.
+  updateLifeCycles(markers) {
+
+    for (let i = this.activeMarkers.length - 1; i >= 0; i--) {
+
+      // Is this marker still active
+      // according to current batch of
+      // incoming marker objects?
+      const isActive = Utils.arrayContainsId(markers, this.activeMarkers[i].id);
+
+      if (isActive == true) {
+
+        this.activeMarkers[i].deadCount = 0;
+
+      } else {
+
+        this.activeMarkers[i].deadCount++;
+
+        if (this.activeMarkers[i].deadCount > 150) {
+          // Marker has been MIA for a while now,
+          // let's assume the user has intentionally
+          // removed it from the poster and remove.
+
+          const itemId = this.lookup[this.activeMarkers[i].id];
+          const $item = $('#' + itemId);
+
+          // $item.hide();
+
+          TweenMax.killTweensOf($item);
+          TweenMax.to($item, 0.15, { scale: 0.6, opacity:0.0});
+
+          console.log('item dead:', itemId);
+
+          this.activeMarkers.splice(i, 1);
+        }
+
+      }
+
+    }
+
+  }
+
+  isMarkerActive(testId, markers) {
+
+    for (i = 0; i !== markers.length; ++i) {
+
+      if (markers[i].id == testId) {
+        return true;
+      }
+
+    }
+
+    return false;
 
   }
 

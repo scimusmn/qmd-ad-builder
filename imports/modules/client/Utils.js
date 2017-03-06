@@ -29,9 +29,14 @@ const mapPointFromQuad = (p,  a,  b,  c,  d) => {
   const g = pointAdd(pointSubtract(a, b), pointSubtract(c, d));
   const h = pointSubtract(p, a);
 
-  const k2 = pointCross(g, f);
-  const k1 = pointCross(e, f) + pointCross(h, g);
-  const k0 = pointCross(h, e);
+  let k2 = pointCross(g, f);
+  let k1 = pointCross(e, f) + pointCross(h, g);
+  let k0 = pointCross(h, e);
+
+  // Prevent division by zero. -tnordberg
+  if (k0 == 0) k0 = 0.0001;
+  if (k1 == 0) k1 = 0.0001;
+  if (k2 == 0) k2 = 0.0001;
 
   let w = k1 * k1 - 4.0 * k0 * k2;
   if (w < 0.0) return {x:-1.0, y:-1.0};
@@ -79,6 +84,26 @@ const distCalc = (x1, y1, x2, y2) => {
 
 };
 
+// This test assumes an array
+// filled with objects
+// containing an 'id' key.
+// e.g.  objArray = [{id:4,val:'red'},{id:7,val:'orange'},{id:3,val:'blue'}];
+const arrayContainsId = (objArray, id) => {
+
+  for (j = 0; j !== objArray.length; ++j) {
+
+    if (objArray[j].id == id) {
+
+      return true;
+
+    }
+
+  }
+
+  return false;
+
+};
+
 const Utils = {
 
   mapPointFromQuad,
@@ -86,6 +111,7 @@ const Utils = {
   pointAdd,
   pointCross,
   distCalc,
+  arrayContainsId,
 
 };
 
