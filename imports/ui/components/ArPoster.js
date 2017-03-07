@@ -29,12 +29,15 @@ export class ArPoster extends React.Component {
       6:'quote',
       255: 'name',
       991: 'details',
+      383: 'claim',
+      767: 'endorsement',
+      682: 'image',
     };
 
-    this.items = {
-      5: {obj:$('#headline'), isActive:false, deadCount:0,},
-      6: {obj:$('#quote'), isActive:false, deadCount:0,},
-    };
+    // this.items = {
+    //   5: {obj:$('#headline'), isActive:false, deadCount:0,},
+    //   6: {obj:$('#quote'), isActive:false, deadCount:0,},
+    // };
 
     this.activeMarkers = [];
 
@@ -78,17 +81,14 @@ export class ArPoster extends React.Component {
 
       corners = markers[i].corners;
 
-      // CLEANUP: This defaulting to 5
+      // CLEANUP: This check
       // shouldn't be necessary once
       // only using a set num
       // of marker ids.
       if (this.lookup[markers[i].id]) {
         itemId = this.lookup[markers[i].id];
-      } else {
-        itemId = this.lookup[5];
+        this.updateItemDisplay(itemId, markers[i]);
       }
-
-      this.updateItemDisplay(itemId, markers[i]);
 
     }
 
@@ -105,7 +105,10 @@ export class ArPoster extends React.Component {
     let x = mark.center.x;
     let y = mark.center.y;
 
+    // Emsure position is within
+    // target quad. (quadPos will be -1 otherwise)
     if (mark.quadPos.x >= 0) {
+
       x = mark.quadPos.x * this.posterWidth;
       y = mark.quadPos.y * this.posterHeight;
 
@@ -115,7 +118,8 @@ export class ArPoster extends React.Component {
 
     } else {
 
-      console.log('Marker "' + id + '" is outside target quad.', mark.quadPos.x, mark.quadPos.y);
+      console.log('Marker "' + id + '" is outside target quad. Do not update.');
+      return;
 
     }
 
@@ -133,11 +137,11 @@ export class ArPoster extends React.Component {
 
       this.activeMarkers.push({id:mark.id, deadCount:0});
 
-      $('#' + id).show();
+      // $('#' + id).show();
 
-      // TweenMax.killTweensOf($item);
-      // TweenMax.set($item, {opacity:1.0, scale: 1.0, x:x, y:y, rotation:rotation});
-      // TweenMax.from($item, 0.2, {opacity:0.0, scale:1.45});
+      TweenMax.killTweensOf($item);
+      TweenMax.set($item, {opacity:1.0, scale: 1.0, x:x, y:y, rotation:rotation});
+      TweenMax.from($item, 0.2, {opacity:0.0, scale:1.45});
 
     } else {
 
@@ -169,7 +173,7 @@ export class ArPoster extends React.Component {
 
         this.activeMarkers[i].deadCount++;
 
-        if (this.activeMarkers[i].deadCount > 150) {
+        if (this.activeMarkers[i].deadCount > 100) {
           // Marker has been MIA for a while now,
           // let's assume the user has intentionally
           // removed it from the poster and remove.
@@ -177,10 +181,10 @@ export class ArPoster extends React.Component {
           const itemId = this.lookup[this.activeMarkers[i].id];
           const $item = $('#' + itemId);
 
-          $item.hide();
+          // $item.hide();
 
-          // TweenMax.killTweensOf($item);
-          // TweenMax.to($item, 0.15, { scale: 0.6, opacity:0.0});
+          TweenMax.killTweensOf($item);
+          TweenMax.to($item, 0.15, { scale: 0.6, opacity:0.0});
 
           this.activeMarkers.splice(i, 1);
         }
@@ -223,6 +227,18 @@ export class ArPoster extends React.Component {
 
               <div id='details' className='item'>
                 <img src='images/details_01.png'/>
+              </div>
+
+              <div id='claim' className='item'>
+                <img src='images/claim_01.png'/>
+              </div>
+
+              <div id='endorsement' className='item'>
+                <img src='images/endorsement_01.png'/>
+              </div>
+
+              <div id='image' className='item'>
+                <img src='images/image_01.png'/>
               </div>
 
           </div>;
