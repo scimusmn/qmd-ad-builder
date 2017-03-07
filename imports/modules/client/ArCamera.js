@@ -27,6 +27,7 @@ let debugImage;
 let warpImage;
 let homographyImage;
 let onMarkersUpdate = (markers) => {};
+let prevCorners = {};
 
 let debugMode = false;
 let flipCamera = false;
@@ -259,17 +260,24 @@ const getCanvasMousePos = (canvas, evt) => {
 // that will be useful on the poster display.
 const calcDisplayMetas = (markers) => {
 
+  let marker;
   let corners;
+  let corner;
+  let prevCorner;
   let i;
   let cX;
   let cY;
   let rot;
   let center;
   let quadPos;
+  let topDelta = 0;
+  let topDeltaIndex = -1;
 
   for (i = 0; i !== markers.length; ++i) {
 
-    corners = markers[i].corners;
+    marker = markers[i];
+
+    corners = marker.corners;
 
     // Calc center point of corners
     cX = (corners[0].x + corners[2].x) * 0.5;
@@ -284,11 +292,44 @@ const calcDisplayMetas = (markers) => {
     // quad-mapped points to be accurate???
     rot = Math.atan2(corners[1].y - corners[0].y, corners[1].x - corners[0].x) * 180 / Math.PI;
 
-    markers[i].center = center;
-    markers[i].rot = rot;
-    markers[i].quadPos = quadPos;
+    // Find movement total by summing
+    // the distance each corner has moved
+    // since previous cycle.
+    marker.delta = 0;
+    if (prevCorners[marker.id]) {
+      for (j = 0; j !== corners.length; ++j) {
+
+        corner = corners[j];
+        prevCorner = prevCorners[marker.id][j];
+
+        // Add this corner's movement to running delta
+        marker.delta += Math.abs(corner.x - prevCorner.x);
+        marker.delta += Math.abs(corner.y - prevCorner.y);
+
+      }
+    }
+
+    // Check if beaten record for
+    // top movement this cycle.
+    if (marker.delta > topDelta) {
+      topDelta = marker.delta;
+      topDeltaIndex = i;
+    }
+
+    // Remember corner positions to
+    // calculate delta next cycle.
+    prevCorners[marker.id] = corners;
+
+    marker.center = center;
+    marker.rot = rot;
+    marker.quadPos = quadPos;
+    marker.highlight = false; // May be overwritten.
 
   }
+
+  // After checking all markers,
+  // mark which had top movement.
+  if (topDeltaIndex >= 0) markers[topDeltaIndex].highlight = true;
 
 };
 

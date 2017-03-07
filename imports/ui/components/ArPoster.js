@@ -96,6 +96,9 @@ export class ArPoster extends React.Component {
 
   updateItemDisplay(id, mark) {
 
+    console.log('updateItemDisplay:', id);
+    console.log(mark.delta, mark.highlight);
+
     // TODO: should pre-populate a dictionary with all jquery targets...
     // Do not lookup by string id every tick.
     const $item = $('#' + id);
