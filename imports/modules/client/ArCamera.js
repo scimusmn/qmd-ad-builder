@@ -27,6 +27,7 @@ let debugImage;
 let warpImage;
 let homographyImage;
 let onMarkersUpdate = (markers) => {};
+
 let prevCorners = {};
 
 let debugMode = false;
@@ -270,8 +271,6 @@ const calcDisplayMetas = (markers) => {
   let rot;
   let center;
   let quadPos;
-  let topDelta = 0;
-  let topDeltaIndex = -1;
 
   for (i = 0; i !== markers.length; ++i) {
 
@@ -309,13 +308,6 @@ const calcDisplayMetas = (markers) => {
       }
     }
 
-    // Check if beaten record for
-    // top movement this cycle.
-    if (marker.delta > topDelta) {
-      topDelta = marker.delta;
-      topDeltaIndex = i;
-    }
-
     // Remember corner positions to
     // calculate delta next cycle.
     prevCorners[marker.id] = corners;
@@ -323,13 +315,8 @@ const calcDisplayMetas = (markers) => {
     marker.center = center;
     marker.rot = rot;
     marker.quadPos = quadPos;
-    marker.highlight = false; // May be overwritten.
 
   }
-
-  // After checking all markers,
-  // mark which had top movement.
-  if (topDeltaIndex >= 0) markers[topDeltaIndex].highlight = true;
 
 };
 

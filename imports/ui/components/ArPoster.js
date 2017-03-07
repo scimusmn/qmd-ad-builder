@@ -34,10 +34,9 @@ export class ArPoster extends React.Component {
       682: 'image',
     };
 
-    // this.items = {
-    //   5: {obj:$('#headline'), isActive:false, deadCount:0,},
-    //   6: {obj:$('#quote'), isActive:false, deadCount:0,},
-    // };
+    // Holds all poster items.
+    // Populated on mount.
+    this.items = {};
 
     this.activeMarkers = [];
 
@@ -59,6 +58,27 @@ export class ArPoster extends React.Component {
 
     arCam.setMarkerUpdateCallback(this.markerUpdate);
 
+    // Set up all poster items and
+    // ready initial display state.
+    for (let key in this.lookup) {
+
+      const itemId = this.lookup[key];
+      const $item = $('#' + itemId);
+
+      this.items[key] = { id:itemId,
+                          target:$item,
+                          active:false,
+                          deadCount:0,
+                        };
+
+      // Hide
+      TweenMax.set($item, {opacity:0.0});
+
+    }
+
+    console.log('--==poster items==--');;
+    console.dir(this.items);
+
   }
 
   componentWillUnmount() {
@@ -75,29 +95,57 @@ export class ArPoster extends React.Component {
     if (markers.length == 0) return;
 
     let i;
+    let marker;
     let itemId;
+    let topDelta = -1;
+    let topDeltaId = -1;
 
     for (i = 0; i !== markers.length; ++i) {
 
-      corners = markers[i].corners;
+      marker = markers[i];
+
+      // Check if beaten record for
+      // top movement this cycle.
+      if (marker.delta > topDelta) {
+        topDelta = marker.delta;
+        topDeltaId = marker.id;
+      }
 
       // CLEANUP: This check
       // shouldn't be necessary once
       // only using a set num
       // of marker ids.
-      if (this.lookup[markers[i].id]) {
-        itemId = this.lookup[markers[i].id];
+      if (this.lookup[marker.id]) {
+
+        itemId = this.lookup[marker.id];
+        if (marker.highlight == true) {
+          console.log('highlight:', itemId);
+        }
+
         this.updateItemDisplay(itemId, markers[i]);
       }
 
     }
 
+    // After checking all markers,
+    // mark which had top movement.
+    if (topDeltaId >= 0 && topDelta > 20) {
+      // Only make a change if delta is larger
+      // than X. Prevents unintentional highlight
+      // jittering when everything is resting.
+
+      // markers[topDeltaId].highlight = true;
+      // prevTopDeltaId = topDeltaId;
+
+      console.log('highlight:', this.lookup[topDeltaId]);
+    } else {
+      // Leave previous highlight
+      // markers[topDeltaId].highlight = true;
+    }
+
   }
 
   updateItemDisplay(id, mark) {
-
-    console.log('updateItemDisplay:', id);
-    console.log(mark.delta, mark.highlight);
 
     // TODO: should pre-populate a dictionary with all jquery targets...
     // Do not lookup by string id every tick.
@@ -152,6 +200,12 @@ export class ArPoster extends React.Component {
       // Smooth between current position
       // and target position...
       TweenMax.to($item, 0.2, {x:x, y:y, rotation:rotation});
+
+      if (mark.highlight == true) {
+        TweenMax.set($item.find('img'), {backgroundColor:'yellow'});
+      } else {
+        TweenMax.set($item.find('img'), {backgroundColor:'rgba(255,255,100,0.0)'});
+      }
 
     }
 
