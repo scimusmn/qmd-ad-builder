@@ -3,3 +3,6 @@ settings-production.json
 npm-debug.log
 
 node_modules
+
+#tn - work files
+/public/work

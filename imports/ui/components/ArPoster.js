@@ -27,6 +27,13 @@ export class ArPoster extends React.Component {
     this.lookup = {
       5:'headline',
       6:'quote',
+      255: 'name',
+      991: 'details',
+    };
+
+    this.items = {
+      5: {obj:$('#headline'), isActive:false, deadCount:0,},
+      6: {obj:$('#quote'), isActive:false, deadCount:0,},
     };
 
     this.activeMarkers = [];
@@ -126,17 +133,15 @@ export class ArPoster extends React.Component {
 
       this.activeMarkers.push({id:mark.id, deadCount:0});
 
-      // $('#' + id).show();
+      $('#' + id).show();
 
-      TweenMax.killTweensOf($item);
-      TweenMax.set($item, {opacity:1.0, scale: 1.0, x:x, y:y, rotation:rotation});
-      TweenMax.from($item, 0.2, {opacity:0.0, scale:1.45});
-
-      console.log('-> item alive', id, new Date().getMilliseconds());
+      // TweenMax.killTweensOf($item);
+      // TweenMax.set($item, {opacity:1.0, scale: 1.0, x:x, y:y, rotation:rotation});
+      // TweenMax.from($item, 0.2, {opacity:0.0, scale:1.45});
 
     } else {
 
-      //Already showing, only need to update.
+      // Already showing, only need to update.
       // Smooth between current position
       // and target position...
       TweenMax.to($item, 0.2, {x:x, y:y, rotation:rotation});
@@ -172,12 +177,10 @@ export class ArPoster extends React.Component {
           const itemId = this.lookup[this.activeMarkers[i].id];
           const $item = $('#' + itemId);
 
-          // $item.hide();
+          $item.hide();
 
-          TweenMax.killTweensOf($item);
-          TweenMax.to($item, 0.15, { scale: 0.6, opacity:0.0});
-
-          console.log('item dead:', itemId);
+          // TweenMax.killTweensOf($item);
+          // TweenMax.to($item, 0.15, { scale: 0.6, opacity:0.0});
 
           this.activeMarkers.splice(i, 1);
         }
@@ -212,6 +215,14 @@ export class ArPoster extends React.Component {
 
               <div id='quote' className='item'>
                 <img src='images/quote0.png'/>
+              </div>
+
+              <div id='name' className='item'>
+                <img src='images/name_01.png'/>
+              </div>
+
+              <div id='details' className='item'>
+                <img src='images/details_01.png'/>
               </div>
 
           </div>;
