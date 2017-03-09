@@ -80,6 +80,21 @@ export class ArPoster extends React.Component {
 
     }
 
+    // Listen for Arrow keys
+    Mousetrap.bind('left', () => {
+
+      console.log('<- Left pressed');
+      this.incrementImage(-1);
+
+    });
+
+    Mousetrap.bind('right', () => {
+
+      console.log('Right -> pressed');
+      this.incrementImage(1);
+
+    });
+
   }
 
   componentWillUnmount() {
@@ -156,6 +171,35 @@ export class ArPoster extends React.Component {
       }
 
     }
+
+  }
+
+  incrementImage(incremental) {
+
+    this.activeItem.image.attr('src', newSrc);
+
+    // TODO: This fancy string manip works for now,
+    // but should be replaced with a system that collects
+    // all image paths for an item on init,
+    // then possibly stores as part of the item object.
+
+    const curSrc = this.activeItem.image.attr('src');
+    const targetIndex = curSrc.length - 5;
+
+    let numId = curSrc.charAt(targetIndex);
+    numId = parseInt(numId);
+    numId += incremental;
+
+    if (numId > 3) {
+      numId = 1;
+    } else if (numId < 1) {
+      numId = 3;
+    }
+
+    const newSrc = curSrc.substr(0, targetIndex) + numId + curSrc.substr(targetIndex + 1);
+
+    // Update img source
+    this.activeItem.image.attr('src', newSrc);
 
   }
 
@@ -261,11 +305,11 @@ export class ArPoster extends React.Component {
     return <div className='ar-poster'>
 
               <div id='headline' className='item'>
-                <img src='images/headline0.png'/>
+                <img src='images/headline_01.png'/>
               </div>
 
               <div id='quote' className='item'>
-                <img src='images/quote0.png'/>
+                <img src='images/quote_01.png'/>
               </div>
 
               <div id='name' className='item'>
