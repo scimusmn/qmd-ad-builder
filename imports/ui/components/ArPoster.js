@@ -38,6 +38,8 @@ export class ArPoster extends React.Component {
     // Dynamically populated.
     this.items = {};
 
+    this.activeItem;
+
     // Bind to 'this'
     this.markerUpdate = this.markerUpdate.bind(this);
 
@@ -119,10 +121,6 @@ export class ArPoster extends React.Component {
         topDeltaId = marker.id;
       }
 
-      if (marker.highlight == true) {
-        console.log('highlight:', itemId);
-      }
-
       this.updateItemDisplay(item, marker);
 
     }
@@ -134,13 +132,29 @@ export class ArPoster extends React.Component {
       // than X. Prevents unintentional highlight
       // jittering when everything is resting.
 
-      // markers[topDeltaId].highlight = true;
-      // prevTopDeltaId = topDeltaId;
+      this.updateActiveItem(topDeltaId);
 
-      console.log('highlight:', this.lookup[topDeltaId]);
-    } else {
-      // Leave previous highlight
-      // markers[topDeltaId].highlight = true;
+    }
+
+  }
+
+  updateActiveItem(activeId) {
+
+    let item;
+
+    for (let key in this.items) {
+
+      item = this.items[key];
+
+      if (key == activeId) {
+        item.active = true;
+        this.activeItem = this.items[key];
+        TweenMax.set(item.image, {backgroundColor:'rgba(255,255,100,0.8)'});
+      } else {
+        item.active = false;
+        TweenMax.set(item.image, {backgroundColor:'rgba(255,255,100,0.0)'});
+      }
+
     }
 
   }
@@ -187,16 +201,10 @@ export class ArPoster extends React.Component {
 
     } else {
 
-      // Already showing, only need to update.
+      // Item already showing.
       // Smooth between current position
       // and target position...
       TweenMax.to(item.target, 0.2, {x:x, y:y, rotation:rotation});
-
-      if (marker.highlight == true) {
-        TweenMax.set(item.image, {backgroundColor:'yellow'});
-      } else {
-        TweenMax.set(item.image, {backgroundColor:'rgba(255,255,100,0.0)'});
-      }
 
     }
 
