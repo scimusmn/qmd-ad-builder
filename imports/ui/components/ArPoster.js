@@ -142,7 +142,7 @@ export class ArPoster extends React.Component {
 
     // After checking all markers,
     // mark which had top movement.
-    if (topDeltaId >= 0 && topDelta > 20) {
+    if (topDeltaId >= 0 && topDelta > 10) {
       // Only make a change if delta is larger
       // than X. Prevents unintentional highlight
       // jittering when everything is resting.
@@ -178,10 +178,11 @@ export class ArPoster extends React.Component {
 
     this.activeItem.image.attr('src', newSrc);
 
-    // TODO: This fancy string manip works for now,
+    // TODO: This hacky string manip works for now,
     // but should be replaced with a system that collects
     // all image paths for an item on init,
-    // then possibly stores as part of the item object.
+    // then stores as part of the item object.
+    // item.assets = ['name_01.png','name_02.png','name_03.png'];
 
     const curSrc = this.activeItem.image.attr('src');
     const targetIndex = curSrc.length - 5;
@@ -266,7 +267,7 @@ export class ArPoster extends React.Component {
       item = this.items[key];
 
       // Skip dead items.
-      if (!item.alive) break;
+      if (!item.alive) continue;
 
       // Is this marker still active
       // according to current batch of
@@ -286,13 +287,32 @@ export class ArPoster extends React.Component {
           // Marker has been MIA for a while now,
           // let's assume the user has intentionally
           // removed it from the poster and remove.
-
           TweenMax.killTweensOf(item.target);
           TweenMax.to(item.target, 0.15, { scale: 0.6, opacity:0.0});
 
           item.alive = false;
 
+          // If this item was active
+          // shift, highlight to another
+          // random alive item.
+          const aliveItemId = this.fishAliveIDs();
+          this.updateActiveItem(aliveItemId);
+
         }
+
+      }
+
+    }
+
+  }
+
+  fishAliveIDs() {
+
+    for (let key in this.items) {
+
+      if (this.items[key].alive == true) {
+
+        return key;
 
       }
 

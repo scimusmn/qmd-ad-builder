@@ -84,8 +84,12 @@ export const initCamera = () => {
       console.log('ERROR', error);
     }
 
-    // const deviceConstraints = {video:true, deviceId:'4b72c45be401f96e41125eaefc9fbdf702b2c04ae2ee9043be5b85d39847535a'};
-    const deviceConstraints = {video: {deviceId: '4b72c45be401f96e41125eaefc9fbdf702b2c04ae2ee9043be5b85d39847535a'}};
+    // IR cam
+    // const deviceConstraints = {video: {deviceId: '4b72c45be401f96e41125eaefc9fbdf702b2c04ae2ee9043be5b85d39847535a'}};
+
+    // Non-IR naked cam
+    const deviceConstraints = {video: {deviceId: '1c4c5317efe3aff1818f8fbca8e68d34a9daa7a7104340944c0bba683e34a1f7'}};
+
 
     // const deviceConstraints = {video:true};
     navigator.getUserMedia(deviceConstraints, successCallback, errorCallback);
