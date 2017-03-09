@@ -35,11 +35,10 @@ export class ArPoster extends React.Component {
     };
 
     // Holds all poster items.
-    // Populated on mount.
+    // Dynamically populated.
     this.items = {};
 
-    this.activeMarkers = [];
-
+    // Bind to 'this'
     this.markerUpdate = this.markerUpdate.bind(this);
 
   }
@@ -63,21 +62,21 @@ export class ArPoster extends React.Component {
     for (let key in this.lookup) {
 
       const itemId = this.lookup[key];
-      const $item = $('#' + itemId);
+      const $target = $('#' + itemId);
+      const $image = $target.find('img');
 
       this.items[key] = { id:itemId,
-                          target:$item,
+                          target:$target,
+                          image:$image,
+                          alive:false,
                           active:false,
                           deadCount:0,
                         };
 
       // Hide
-      TweenMax.set($item, {opacity:0.0});
+      TweenMax.set($target, {opacity:0.0});
 
     }
-
-    console.log('--==poster items==--');;
-    console.dir(this.items);
 
   }
 
@@ -96,13 +95,22 @@ export class ArPoster extends React.Component {
 
     let i;
     let marker;
+    let item;
     let itemId;
     let topDelta = -1;
     let topDeltaId = -1;
 
     for (i = 0; i !== markers.length; ++i) {
 
+      // AR marker object
       marker = markers[i];
+
+      // Poster item
+      item = this.items[marker.id];
+
+      // If marker isn't associated
+      // with a poster item, ignore.
+      if (!item) return;
 
       // Check if beaten record for
       // top movement this cycle.
@@ -111,19 +119,11 @@ export class ArPoster extends React.Component {
         topDeltaId = marker.id;
       }
 
-      // CLEANUP: This check
-      // shouldn't be necessary once
-      // only using a set num
-      // of marker ids.
-      if (this.lookup[marker.id]) {
-
-        itemId = this.lookup[marker.id];
-        if (marker.highlight == true) {
-          console.log('highlight:', itemId);
-        }
-
-        this.updateItemDisplay(itemId, markers[i]);
+      if (marker.highlight == true) {
+        console.log('highlight:', itemId);
       }
+
+      this.updateItemDisplay(item, marker);
 
     }
 
@@ -145,23 +145,19 @@ export class ArPoster extends React.Component {
 
   }
 
-  updateItemDisplay(id, mark) {
-
-    // TODO: should pre-populate a dictionary with all jquery targets...
-    // Do not lookup by string id every tick.
-    const $item = $('#' + id);
+  updateItemDisplay(item, marker) {
 
     // Calculate item's position
     // on poster with current settings.
-    let x = mark.center.x;
-    let y = mark.center.y;
+    let x = marker.center.x;
+    let y = marker.center.y;
 
     // Emsure position is within
     // target quad. (quadPos will be -1 otherwise)
-    if (mark.quadPos.x >= 0) {
+    if (marker.quadPos.x >= 0) {
 
-      x = mark.quadPos.x * this.posterWidth;
-      y = mark.quadPos.y * this.posterHeight;
+      x = marker.quadPos.x * this.posterWidth;
+      y = marker.quadPos.y * this.posterHeight;
 
       if (Session.get('flip-output-h') == true) {
         x = this.posterWidth - x;
@@ -176,35 +172,30 @@ export class ArPoster extends React.Component {
 
     // Appending '_short' tells tween to choose
     // direction of shortest distance.
-    const rotation = -mark.rot + '_short';
+    const rotation = -marker.rot + '_short';
 
     // If item isn't already
-    // 'active', activate.
-    if (Utils.arrayContainsId(this.activeMarkers, mark.id) == false) {
-      // TODO: the above conditional should eventually be something like:
-      // if (this.items[id].isActive == false) {
-      // instead of adding/removeing items in realtime, should just
-      // track state of each item, and update display accordingly
+    // 'alive', show and awake.
+    if (item.alive == false) {
 
-      this.activeMarkers.push({id:mark.id, deadCount:0});
+      item.alive = true;
+      item.deadCount = 0;
 
-      // $('#' + id).show();
-
-      TweenMax.killTweensOf($item);
-      TweenMax.set($item, {opacity:1.0, scale: 1.0, x:x, y:y, rotation:rotation});
-      TweenMax.from($item, 0.2, {opacity:0.0, scale:1.45});
+      TweenMax.killTweensOf(item.target);
+      TweenMax.set(item.target, {opacity:1.0, scale: 1.0, x:x, y:y, rotation:rotation});
+      TweenMax.from(item.target, 0.2, {opacity:0.0, scale:1.45});
 
     } else {
 
       // Already showing, only need to update.
       // Smooth between current position
       // and target position...
-      TweenMax.to($item, 0.2, {x:x, y:y, rotation:rotation});
+      TweenMax.to(item.target, 0.2, {x:x, y:y, rotation:rotation});
 
-      if (mark.highlight == true) {
-        TweenMax.set($item.find('img'), {backgroundColor:'yellow'});
+      if (marker.highlight == true) {
+        TweenMax.set(item.image, {backgroundColor:'yellow'});
       } else {
-        TweenMax.set($item.find('img'), {backgroundColor:'rgba(255,255,100,0.0)'});
+        TweenMax.set(item.image, {backgroundColor:'rgba(255,255,100,0.0)'});
       }
 
     }
@@ -215,54 +206,45 @@ export class ArPoster extends React.Component {
   // have no-showed for X cycles.
   updateLifeCycles(markers) {
 
-    for (let i = this.activeMarkers.length - 1; i >= 0; i--) {
+    let item;
+    let hasActiveMarker;
+
+    for (let key in this.items) {
+
+      item = this.items[key];
+
+      // Skip dead items.
+      if (!item.alive) break;
 
       // Is this marker still active
       // according to current batch of
       // incoming marker objects?
-      const isActive = Utils.arrayContainsId(markers, this.activeMarkers[i].id);
+      hasActiveMarker = Utils.arrayContainsId(markers, key);
 
-      if (isActive == true) {
+      if (hasActiveMarker == true) {
 
-        this.activeMarkers[i].deadCount = 0;
+        item.deadCount = 0;
 
       } else {
 
-        this.activeMarkers[i].deadCount++;
+        item.deadCount++;
 
-        if (this.activeMarkers[i].deadCount > 100) {
+        if (item.deadCount > 100) {
+
           // Marker has been MIA for a while now,
           // let's assume the user has intentionally
           // removed it from the poster and remove.
 
-          const itemId = this.lookup[this.activeMarkers[i].id];
-          const $item = $('#' + itemId);
+          TweenMax.killTweensOf(item.target);
+          TweenMax.to(item.target, 0.15, { scale: 0.6, opacity:0.0});
 
-          // $item.hide();
+          item.alive = false;
 
-          TweenMax.killTweensOf($item);
-          TweenMax.to($item, 0.15, { scale: 0.6, opacity:0.0});
-
-          this.activeMarkers.splice(i, 1);
         }
 
       }
 
     }
-
-  }
-
-  isMarkerActive(testId, markers) {
-
-    for (i = 0; i !== markers.length; ++i) {
-
-      if (markers[i].id == testId) {
-        return true;
-      }
-
-    }
-
-    return false;
 
   }
 

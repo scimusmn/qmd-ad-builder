@@ -63,7 +63,9 @@ export const initCamera = () => {
   canvas.height = parseInt(canvas.style.height);
 
   // Gather all available cameras
-  navigator.mediaDevices.enumerateDevices().then(onGatherDevices);
+  navigator.mediaDevices.enumerateDevices().then(onDevicesGathered).catch(function(error) {
+    console.log('navigator.getUserMedia error: ', error);
+  });
 
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
   if (navigator.getUserMedia) {
@@ -82,7 +84,11 @@ export const initCamera = () => {
       console.log('ERROR', error);
     }
 
-    navigator.getUserMedia({video:true}, successCallback, errorCallback);
+    // const deviceConstraints = {video:true, deviceId:'4b72c45be401f96e41125eaefc9fbdf702b2c04ae2ee9043be5b85d39847535a'};
+    const deviceConstraints = {video: {deviceId: '4b72c45be401f96e41125eaefc9fbdf702b2c04ae2ee9043be5b85d39847535a'}};
+
+    // const deviceConstraints = {video:true};
+    navigator.getUserMedia(deviceConstraints, successCallback, errorCallback);
 
     imageData = context.getImageData(0, 0, video.width, video.height);
     pixels = [];
@@ -172,9 +178,10 @@ export const initCamera = () => {
 
 };
 
-const onGatherDevices = (deviceInfos) => {
+const onDevicesGathered = (deviceInfos) => {
 
-  const targetDeviceName = 'FaceTime HD Camera'; // temp
+  // Temp - should come from variable..
+  const targetDeviceName = 'FaceTime HD Camera';
 
   for (var i = 0; i !== deviceInfos.length; ++i) {
 
@@ -190,7 +197,8 @@ const onGatherDevices = (deviceInfos) => {
         console.log('Found target cam:', targetDeviceName);
 
         cameraToUse = deviceInfo;
-        break;
+
+        // break;
 
       }
 

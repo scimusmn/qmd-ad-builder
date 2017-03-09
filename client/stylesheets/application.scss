@@ -9,7 +9,6 @@
 
 @import "state/Navbar";
 
-
 .workspace {
 
   background-color: rgba(225,215,200,0.6);
@@ -26,12 +25,12 @@
 /* ********** */
 .ar-poster {
 
-  width: 640px;
-  height: 960px;
+  width: 1020px;
+  height: 1020px;
 
   /* Center */
   position: absolute;
-  top: 50%;
+  top: 49.75%;
   left: 50%;
   transform: translate(-50%, -50%);
 
@@ -54,9 +53,10 @@
   top:0px;
   left:0px;
 
+  pointer-events: none;
 
-/*  background-color: rgba(136, 108, 43, 0.15);
-*/
+
+/*  background-color: rgba(136, 108, 43, 0.15); */
   /* Center image on point */
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
@@ -85,9 +85,11 @@
   top: 0px;
   left: 0px;
 
-  background-color: rgba(0,22,27,0.7);
+  background-color: rgba(0,20,25,0.4);
 
   color:  #07b6ca;
+
+  z-index: 2;
 
 }
 
