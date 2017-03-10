@@ -11,7 +11,7 @@
 
 .workspace {
 
-  background-color: rgba(225,215,200,0.6);
+  background-color: rgba(225,215,200,0.75);
   width: 1920px;
   height: 1080px;
   position: absolute;
@@ -39,6 +39,10 @@
   -moz-box-shadow: 0px 3px 59px -11px rgba(41,39,35,0.4);
   box-shadow: 0px 3px 59px -11px rgba(41,39,35,0.4);
 
+  background-image:url('images/paper-texture.png');
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+
 }
 
 .ar-poster .item {
@@ -65,10 +69,10 @@
   transform: translate(-50%, -50%);
 
   /* Cutout border */
-/*  border-radius: 19px 19px 19px 19px;
+  border-radius: 19px 19px 19px 19px;
   -moz-border-radius: 19px 19px 19px 19px;
   -webkit-border-radius: 19px 19px 19px 19px;
-  border: 5px dashed rgba(0,0,0,0.5);*/
+  border: 5px dashed rgba(0,0,0,0.5);
 
 
 }

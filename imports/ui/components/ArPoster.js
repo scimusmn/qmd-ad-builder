@@ -83,14 +83,12 @@ export class ArPoster extends React.Component {
     // Listen for Arrow keys
     Mousetrap.bind('left', () => {
 
-      console.log('<- Left pressed');
       this.incrementImage(-1);
 
     });
 
     Mousetrap.bind('right', () => {
 
-      console.log('Right -> pressed');
       this.incrementImage(1);
 
     });
@@ -164,10 +162,12 @@ export class ArPoster extends React.Component {
       if (key == activeId) {
         item.active = true;
         this.activeItem = this.items[key];
-        TweenMax.set(item.image, {backgroundColor:'rgba(255,255,100,0.8)'});
+        // TweenMax.set(item.image, {backgroundColor:'rgba(255,255,100,0.5)'});
+        TweenMax.set(item.image, {borderColor:'rgba(255,5,5,0.6)'});
       } else {
         item.active = false;
-        TweenMax.set(item.image, {backgroundColor:'rgba(255,255,100,0.0)'});
+        // TweenMax.set(item.image, {backgroundColor:'rgba(255,255,100,0.0)'});
+        TweenMax.set(item.image, {borderColor:'rgba(255,255,100,0.0)'});
       }
 
     }
@@ -191,10 +191,10 @@ export class ArPoster extends React.Component {
     numId = parseInt(numId);
     numId += incremental;
 
-    if (numId > 3) {
+    if (numId > 6) {
       numId = 1;
     } else if (numId < 1) {
-      numId = 3;
+      numId = 6;
     }
 
     const newSrc = curSrc.substr(0, targetIndex) + numId + curSrc.substr(targetIndex + 1);
@@ -224,7 +224,7 @@ export class ArPoster extends React.Component {
 
     } else {
 
-      console.log('Marker "' + id + '" is outside target quad. Do not update.');
+      console.log('Marker "' + item.id + '" is outside target quad. Do not update.');
       return;
 
     }
