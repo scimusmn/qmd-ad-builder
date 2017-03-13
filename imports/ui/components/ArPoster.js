@@ -1,5 +1,6 @@
 /* eslint-disable max-len, no-return-assign */
 
+import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import arCam from '../../modules/client/ArCamera';
 import TweenMax from 'gsap';
@@ -27,11 +28,11 @@ export class ArPoster extends React.Component {
     this.lookup = {
       5:'headline',
       6:'quote',
-      255: 'name',
-      991: 'details',
-      383: 'claim',
-      767: 'endorsement',
-      682: 'image',
+      255:'name',
+      991:'details',
+      383:'claim',
+      767:'endorsement',
+      682:'image',
     };
 
     // Holds all poster items.
@@ -73,10 +74,32 @@ export class ArPoster extends React.Component {
                           alive:false,
                           active:false,
                           deadCount:0,
+                          assets:[],
+                          assetIndex:0,
+                          prevRot:-1,
+                          prevX:-1,
+                          prevY:-1,
                         };
 
       // Hide
       TweenMax.set($target, {opacity:0.0});
+
+      // Get list of possible
+      // assets for this item
+      Meteor.call('getFiles', itemId, (error, result) => {
+
+        if (result) {
+
+          const item = this.items[key];
+
+          item.assets = result;
+
+          // Set default asset
+          item.image.attr('src', item.assets[item.assetIndex]);
+
+        }
+
+      });
 
     }
 
@@ -90,6 +113,12 @@ export class ArPoster extends React.Component {
     Mousetrap.bind('right', () => {
 
       this.incrementImage(1);
+
+    });
+
+    Mousetrap.bind('s', () => {
+
+      console.log('Save Image');
 
     });
 
@@ -140,18 +169,18 @@ export class ArPoster extends React.Component {
 
     // After checking all markers,
     // mark which had top movement.
-    if (topDeltaId >= 0 && topDelta > 10) {
+    if (topDeltaId >= 0 && topDelta > 6) {
       // Only make a change if delta is larger
       // than X. Prevents unintentional highlight
       // jittering when everything is resting.
 
-      this.updateActiveItem(topDeltaId);
+      this.setActiveItem(topDeltaId);
 
     }
 
   }
 
-  updateActiveItem(activeId) {
+  setActiveItem(activeId) {
 
     let item;
 
@@ -162,12 +191,14 @@ export class ArPoster extends React.Component {
       if (key == activeId) {
         item.active = true;
         this.activeItem = this.items[key];
-        // TweenMax.set(item.image, {backgroundColor:'rgba(255,255,100,0.5)'});
-        TweenMax.set(item.image, {borderColor:'rgba(255,5,5,0.6)'});
+
+        TweenMax.set(item.image, {borderColor:'rgba(255,5,5,0.5)'});
+
       } else {
         item.active = false;
-        // TweenMax.set(item.image, {backgroundColor:'rgba(255,255,100,0.0)'});
+
         TweenMax.set(item.image, {borderColor:'rgba(255,255,100,0.0)'});
+
       }
 
     }
@@ -176,31 +207,20 @@ export class ArPoster extends React.Component {
 
   incrementImage(incremental) {
 
-    this.activeItem.image.attr('src', newSrc);
+    const numAssets = this.activeItem.assets.length;
+    let index = this.activeItem.assetIndex;
 
-    // TODO: This hacky string manip works for now,
-    // but should be replaced with a system that collects
-    // all image paths for an item on init,
-    // then stores as part of the item object.
-    // item.assets = ['name_01.png','name_02.png','name_03.png'];
+    index += incremental;
 
-    const curSrc = this.activeItem.image.attr('src');
-    const targetIndex = curSrc.length - 5;
-
-    let numId = curSrc.charAt(targetIndex);
-    numId = parseInt(numId);
-    numId += incremental;
-
-    if (numId > 6) {
-      numId = 1;
-    } else if (numId < 1) {
-      numId = 6;
+    if (index > numAssets - 1) {
+      index = 0;
+    } else if (index < 0) {
+      index = numAssets - 1;
     }
 
-    const newSrc = curSrc.substr(0, targetIndex) + numId + curSrc.substr(targetIndex + 1);
-
     // Update img source
-    this.activeItem.image.attr('src', newSrc);
+    this.activeItem.assetIndex = index;
+    this.activeItem.image.attr('src', this.activeItem.assets[index]);
 
   }
 
@@ -229,9 +249,7 @@ export class ArPoster extends React.Component {
 
     }
 
-    // Appending '_short' tells tween to choose
-    // direction of shortest distance.
-    const rotation = -marker.rot + '_short';
+    let rotation = -marker.rot;
 
     // If item isn't already
     // 'alive', show and awake.
@@ -241,15 +259,39 @@ export class ArPoster extends React.Component {
       item.deadCount = 0;
 
       TweenMax.killTweensOf(item.target);
-      TweenMax.set(item.target, {opacity:1.0, scale: 1.0, x:x, y:y, rotation:rotation});
+      TweenMax.set(item.target, {opacity:1.0, scale: 1.0, x:x, y:y, rotation:rotation + '_short'});
       TweenMax.from(item.target, 0.2, {opacity:0.0, scale:1.45});
 
     } else {
 
+      // Here, we check to make sure the
+      // display's transform has changed
+      // a significant amount before applying.
+      // This prevents jittering when it
+      // should be static.
+      if (Math.abs(item.prevRot - rotation) < 3) {
+        rotation = item.prevRot;
+      }
+
+      if (Math.abs(item.prevX - x) < 3) {
+        x = item.prevX;
+      }
+
+      if (Math.abs(item.prevY - y) < 3) {
+        y = item.prevY;
+      }
+
       // Item already showing.
       // Smooth between current position
       // and target position...
-      TweenMax.to(item.target, 0.2, {x:x, y:y, rotation:rotation});
+      TweenMax.to(item.target, 0.2, {x:x, y:y, rotation:rotation + '_short'});
+
+      // Remember transform values
+      // to check for meaningful change
+      // next cycle
+      item.prevRot = rotation;
+      item.prevX = x;
+      item.prevY = y;
 
     }
 
@@ -282,7 +324,7 @@ export class ArPoster extends React.Component {
 
         item.deadCount++;
 
-        if (item.deadCount > 100) {
+        if (item.deadCount > 80) {
 
           // Marker has been MIA for a while now,
           // let's assume the user has intentionally
@@ -296,7 +338,7 @@ export class ArPoster extends React.Component {
           // shift, highlight to another
           // random alive item.
           const aliveItemId = this.fishAliveIDs();
-          this.updateActiveItem(aliveItemId);
+          this.setActiveItem(aliveItemId);
 
         }
 
@@ -325,31 +367,31 @@ export class ArPoster extends React.Component {
     return <div className='ar-poster'>
 
               <div id='headline' className='item'>
-                <img src='images/headline_01.png'/>
+                <img src='#'/>
               </div>
 
               <div id='quote' className='item'>
-                <img src='images/quote_01.png'/>
+                <img src='#'/>
               </div>
 
               <div id='name' className='item'>
-                <img src='images/name_01.png'/>
+                <img src='#'/>
               </div>
 
               <div id='details' className='item'>
-                <img src='images/details_01.png'/>
+                <img src='#'/>
               </div>
 
               <div id='claim' className='item'>
-                <img src='images/claim_01.png'/>
+                <img src='#'/>
               </div>
 
               <div id='endorsement' className='item'>
-                <img src='images/endorsement_01.png'/>
+                <img src='#'/>
               </div>
 
               <div id='image' className='item'>
-                <img src='images/image_01.png'/>
+                <img src='#'/>
               </div>
 
           </div>;

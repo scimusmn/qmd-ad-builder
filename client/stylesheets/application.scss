@@ -69,11 +69,19 @@
   transform: translate(-50%, -50%);
 
   /* Cutout border */
+  padding: 9px;
   border-radius: 19px 19px 19px 19px;
   -moz-border-radius: 19px 19px 19px 19px;
   -webkit-border-radius: 19px 19px 19px 19px;
-  border: 5px dashed rgba(0,0,0,0.5);
+  border: 6px dashed rgba(0,0,0,0.65);
 
+
+}
+
+.ar-poster #image img {
+
+  max-width: 620px;
+  max-height: 620px;
 
 }
 
