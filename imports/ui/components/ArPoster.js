@@ -104,19 +104,25 @@ export class ArPoster extends React.Component {
     }
 
     // Listen for Arrow keys
-    Mousetrap.bind('left', () => {
+    Mousetrap.bind(['left', 'a'], () => {
 
       this.incrementImage(-1);
 
+      // TweenMax.from($(this.activeItem.target).find('#arrows .left'), 0.3, { scaleX:1.7, scaleY:-1.7,ease:Bounce.easeOut});
+      // TweenMax.from($(this.activeItem.target).find('#arrows .left'), 0.4, { x:'-=90px',ease:Bounce.easeOut});
+
     });
 
-    Mousetrap.bind('right', () => {
+    Mousetrap.bind(['right', 'b'], () => {
 
       this.incrementImage(1);
 
+      // TweenMax.from($(this.activeItem.target).find('#arrows .right'), 0.3, { scaleX:1.7, scaleY:1.7,ease:Bounce.easeOut});
+      // TweenMax.from($(this.activeItem.target).find('#arrows .right'), 0.4, { x:'+=90px',ease:Bounce.easeOut});
+
     });
 
-    Mousetrap.bind('s', () => {
+    Mousetrap.bind(['s', 'e'], () => {
 
       console.log('Save Image');
 
@@ -192,12 +198,20 @@ export class ArPoster extends React.Component {
         item.active = true;
         this.activeItem = this.items[key];
 
-        TweenMax.set(item.image, {borderColor:'rgba(255,5,5,0.5)'});
+        // TweenMax.set(item.image, {borderColor:'rgba(5,5,5,0.2)'});
+        // TweenMax.set(item.image, {boxShadow: ' 2px 9px 5px -8px rgba(0,0,0,0.57)'});
+
+        // Move arrows into active
+        // item's div
+        this.activeItem.target.append($('#arrows'));
 
       } else {
+
         item.active = false;
 
-        TweenMax.set(item.image, {borderColor:'rgba(255,255,100,0.0)'});
+        // TweenMax.set(item.image, {borderColor:'rgba(255,255,100,0.0)'});
+
+        // TweenMax.set(item.image, {boxShadow: '4px 5px 12px 5px rgba(255,163,163,0.0)'});
 
       }
 
@@ -286,6 +300,17 @@ export class ArPoster extends React.Component {
       // and target position...
       TweenMax.to(item.target, 0.2, {x:x, y:y, rotation:rotation + '_short'});
 
+      // TEMP - Set arrow positions
+      // on active
+      if (item.active == true) {
+
+        const offset = (item.image.outerWidth() + $(item.target).find('#arrows .right').outerWidth()) * 0.5;
+
+        TweenMax.to($(item.target).find('#arrows .right'), 0.15, {left:offset});
+        TweenMax.to($(item.target).find('#arrows .left'), 0.15, {left:-offset});
+
+      }
+
       // Remember transform values
       // to check for meaningful change
       // next cycle
@@ -367,31 +392,36 @@ export class ArPoster extends React.Component {
     return <div className='ar-poster'>
 
               <div id='headline' className='item'>
-                <img src='#'/>
+                <img src='#' className='asset'/>
               </div>
 
               <div id='quote' className='item'>
-                <img src='#'/>
+                <img src='#' className='asset'/>
               </div>
 
               <div id='name' className='item'>
-                <img src='#'/>
+                <img src='#' className='asset'/>
               </div>
 
               <div id='details' className='item'>
-                <img src='#'/>
+                <img src='#' className='asset'/>
               </div>
 
               <div id='claim' className='item'>
-                <img src='#'/>
+                <img src='#' className='asset'/>
               </div>
 
               <div id='endorsement' className='item'>
-                <img src='#'/>
+                <img src='#' className='asset'/>
               </div>
 
               <div id='image' className='item'>
-                <img src='#'/>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='arrows'>
+                <img src='images/arrow.png' className='right'/>
+                <img src='images/arrow.png' className='left'/>
               </div>
 
           </div>;

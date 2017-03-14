@@ -64,7 +64,8 @@ export class ArDebug extends React.Component {
               <canvas id='debug-canvas' style={{width:'960px', height:'620px'}}></canvas><br/>
               <input id='invert' type='checkbox' name='invert' value='Invert'></input> Invert Detection<br/>
               <input id='flip-input' type='checkbox' name='flip-input' value='FlipInput'></input> Flip Input<br/>
-              <input id='flip-output' type='checkbox' name='flip-output' value='FlipOutput'></input> Flip Output<br/><br/>
+              <input id='flip-output' type='checkbox' name='flip-output' value='FlipOutput' checked></input> Flip Output<br/>
+              <input id='bg-image' type='checkbox' name='bg-image' value='BackgroundImage'></input> Background image<br/><br/>
               <div className='select'>
                 <label htmlFor='videoSource'>Camera: </label><select id='videoSource'></select>
               </div>

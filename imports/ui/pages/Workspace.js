@@ -6,7 +6,6 @@ import { ArPoster } from '../components/ArPoster';
 
 const Workspace = () => (
   <div className="workspace">
-    <h4 className="pull-left">Here, the workspace lives</h4>
     <ArDebug/>
     <ArPoster/>
   </div>

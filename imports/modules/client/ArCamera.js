@@ -48,6 +48,46 @@ let targetQuad = [
                     {x:15, y:220},
                   ];
 
+// temp - desk
+targetQuad = [
+    {
+        "x": 65,
+        "y": 7
+    },
+    {
+        "x": 313,
+        "y": 18
+    },
+    {
+        "x": 316,
+        "y": 225
+    },
+    {
+        "x": 29,
+        "y": 228
+    }
+];
+
+// temp - shop
+targetQuad = [
+    {
+        "x": 30,
+        "y": 6
+    },
+    {
+        "x": 281,
+        "y": 3
+    },
+    {
+        "x": 280,
+        "y": 232
+    },
+    {
+        "x": 46,
+        "y": 236
+    }
+];
+
 export const initCamera = () => {
 
   console.log('ArCamera: initCamera()');
@@ -90,7 +130,6 @@ export const initCamera = () => {
     // Non-IR naked cam
     const deviceConstraints = {video: {deviceId: '1c4c5317efe3aff1818f8fbca8e68d34a9daa7a7104340944c0bba683e34a1f7'}};
 
-
     // const deviceConstraints = {video:true};
     navigator.getUserMedia(deviceConstraints, successCallback, errorCallback);
 
@@ -129,6 +168,21 @@ export const initCamera = () => {
     Session.set('flip-output-h', flipOutCB.checked);
 
   });
+
+  // Set default
+  Session.set('flip-output-h', flipOutCB.checked);
+
+  const bgImageCB = document.getElementById('bg-image');
+  bgImageCB.addEventListener('change', function() {
+
+    if (bgImageCB.checked) {
+      $('.workspace').addClass('newspaper');
+    } else {
+      $('.workspace').removeClass('newspaper');
+    }
+
+  });
+
 
   // Listen for target quad clicks
   canvas.addEventListener('mousedown', function(event) {
@@ -177,6 +231,10 @@ export const initCamera = () => {
   canvas.addEventListener('mouseup', function(event) {
 
     targetQuadDragIndex = -1;
+
+    console.log('New targetQuad coords:');
+    console.dir(targetQuad);
+    console.log(JSON.stringify(targetQuad, null, 4));
 
   });
 
@@ -492,7 +550,7 @@ const createImage = (src, dst) => {
 const listMarkers = (markers) => {
 
   context.fillStyle = color1;
-  context.font = '40px Helvetica';
+  context.font = '22px Helvetica';
 
   for (let i = 0; i < markers.length; i++) {
     context.fillText(markers[i].id + ', ', i * 64, canvas.height - 64);
