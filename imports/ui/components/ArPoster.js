@@ -295,6 +295,13 @@ export class ArPoster extends React.Component {
         y = item.prevY;
       }
 
+      // Snap rotation when close to 0°
+      // this is to prevent frustrating
+      // "close but not perfect" alignment.
+      if (rotation < 5 && rotation > -5) {
+        rotation = 0;
+      }
+
       // Item already showing.
       // Smooth between current position
       // and target position...
