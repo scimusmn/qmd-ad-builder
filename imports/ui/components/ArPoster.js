@@ -319,8 +319,8 @@ export class ArPoster extends React.Component {
       }
 
       // Remember transform values
-      // to check for meaningful change
-      // next cycle
+      // to check for meaningful
+      // change next cycle
       item.prevRot = rotation;
       item.prevX = x;
       item.prevY = y;

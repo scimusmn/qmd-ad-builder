@@ -4,6 +4,8 @@ import React from 'react';
 import Mousetrap from 'mousetrap';
 
 import arCam from '../../modules/client/ArCamera';
+import { SettingsGroup } from './debug/SettingsGroup';
+import { Setting } from './debug/Setting';
 
 export class ArDebug extends React.Component {
 
@@ -69,6 +71,12 @@ export class ArDebug extends React.Component {
               <div className='select'>
                 <label htmlFor='videoSource'>Camera: </label><select id='videoSource'></select>
               </div>
+
+              <SettingsGroup>
+                <Setting id='flipInput'/>
+                <Setting id='flipOutput'/>
+                <Setting id='mySweet_Setting-guys'/>
+              </SettingsGroup>
            </div>;
   }
 }

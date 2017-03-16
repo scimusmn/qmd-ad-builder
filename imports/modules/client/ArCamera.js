@@ -48,45 +48,8 @@ let targetQuad = [
                     {x:15, y:220},
                   ];
 
-// temp - desk
-targetQuad = [
-    {
-        "x": 65,
-        "y": 7
-    },
-    {
-        "x": 313,
-        "y": 18
-    },
-    {
-        "x": 316,
-        "y": 225
-    },
-    {
-        "x": 29,
-        "y": 228
-    }
-];
-
-// temp - shop
-targetQuad = [
-    {
-        "x": 30,
-        "y": 6
-    },
-    {
-        "x": 281,
-        "y": 3
-    },
-    {
-        "x": 280,
-        "y": 232
-    },
-    {
-        "x": 46,
-        "y": 236
-    }
-];
+let cameraOptions = [];
+let selectedCamera;
 
 export const initCamera = () => {
 
@@ -183,7 +146,6 @@ export const initCamera = () => {
 
   });
 
-
   // Listen for target quad clicks
   canvas.addEventListener('mousedown', function(event) {
 
@@ -242,27 +204,17 @@ export const initCamera = () => {
 
 const onDevicesGathered = (deviceInfos) => {
 
-  // Temp - should come from variable..
-  const targetDeviceName = 'FaceTime HD Camera';
+  // Save all current camera options
+  this.cameraOptions = [];
+  for (let i = 0; i !== deviceInfos.length; ++i) {
 
-  for (var i = 0; i !== deviceInfos.length; ++i) {
-
-    var deviceInfo = deviceInfos[i];
+    const deviceInfo = deviceInfos[i];
 
     if (deviceInfo.kind === 'videoinput') {
 
-      console.log('videoinput option::', i, deviceInfo);
+      console.log('[o] option:', JSON.stringify(deviceInfo));
 
-      // Use usb camera if available
-      if (deviceInfo.label.indexOf(targetDeviceName) != -1) {
-
-        console.log('Found target cam:', targetDeviceName);
-
-        cameraToUse = deviceInfo;
-
-        // break;
-
-      }
+      this.cameraOptions.push(deviceInfo);
 
     }
   }
@@ -554,6 +506,19 @@ const listMarkers = (markers) => {
 
   for (let i = 0; i < markers.length; i++) {
     context.fillText(markers[i].id + ', ', i * 64, canvas.height - 64);
+  }
+
+};
+
+export let setCamera = function(deviceInfo) {
+
+  if (selectedCamera.deviceId != deviceInfo.deviceId) {
+    selectedCamera = deviceInfo;
+
+    // TODO: restart camera connection.
+
+  } else {
+    console.log('ArCamera::setCamera::Camera already selected.', deviceInfo.label);
   }
 
 };
