@@ -1,7 +1,7 @@
 /* eslint-disable max-len, no-return-assign */
 
 import React from 'react';
-import { ButtonToolbar, ButtonGroup, Button } from 'react-bootstrap';
+import { Setting } from './Setting';
 
 export class SettingsGroup extends React.Component {
 
@@ -31,17 +31,40 @@ export class SettingsGroup extends React.Component {
     }
   }
 
+  renderGroupChildren() {
+
+    if (this.props.options) {
+
+      let settings = [];
+      for (var i = 0; i < this.props.options.length; i++) {
+
+        const option = this.props.options[i];
+        const idStr = option.label;
+
+        settings.push( <Setting key={i} id={idStr}></Setting> );
+      }
+
+      return <div>{settings}</div>;
+
+    } else {
+
+      return this.props.children;
+
+    }
+  }
+
   render() {
 
     return <div className='debug-settings-group'>
               {this.renderGroupLabel()}
-              {this.props.children}
+              {this.renderGroupChildren()}
            </div>;
   }
 }
 
 SettingsGroup.propTypes = {
   label: React.PropTypes.string,
+  options: React.PropTypes.array,
 };
 
 SettingsGroup.defaultProps = {

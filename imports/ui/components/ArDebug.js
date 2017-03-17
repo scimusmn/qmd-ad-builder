@@ -69,10 +69,6 @@ export class ArDebug extends React.Component {
 
   }
 
-  getCamOption() {
-    return arCam.getSelectedCameraLabel();
-  }
-
   render() {
 
     return <div className='ar-debug'>
@@ -87,11 +83,12 @@ export class ArDebug extends React.Component {
                 <Setting id='flip-output-h' label='Flip Output'/>
                 <Setting id='background-image'/>
               </SettingsGroup>
-              <div className='cam-settings'>
-              <SettingsGroup label='Cameras' >
-                  <Setting id='xooxoxox' label={this.getCamOption()}/>
-                  <Setting id='oxoxoxox' label='Flip CHUG'/>
-              </SettingsGroup>
+
+              <div className='cam-settings' >
+                <SettingsGroup label='Cameras' options={arCam.getCameraOptions()}>
+                    <Setting id='xooxoxox' label={arCam.getSelectedCameraLabel()}/>
+                    <Setting id='oxoxoxox' label='Flip CHUG'/>
+                </SettingsGroup>
               </div>
 
            </div>;

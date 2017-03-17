@@ -180,7 +180,7 @@ export const initCamera = () => {
 const onDevicesGathered = (deviceInfos) => {
 
   // Save all current camera options
-  this.cameraOptions = [];
+  cameraOptions = [];
   for (let i = 0; i !== deviceInfos.length; ++i) {
 
     const deviceInfo = deviceInfos[i];
@@ -189,7 +189,7 @@ const onDevicesGathered = (deviceInfos) => {
 
       console.log('[o] option:', JSON.stringify(deviceInfo));
 
-      this.cameraOptions.push(deviceInfo);
+      cameraOptions.push(deviceInfo);
 
       // TEMP
       // Select first viable camera
@@ -492,7 +492,7 @@ const listMarkers = (markers) => {
 
 };
 
-export let setCamera = function(deviceInfo) {
+export const setCamera = function(deviceInfo) {
 
   if (!selectedCamera || selectedCamera.deviceId != deviceInfo.deviceId) {
     selectedCamera = deviceInfo;
@@ -505,18 +505,24 @@ export let setCamera = function(deviceInfo) {
 
 };
 
-export let getSelectedCameraLabel = function() {
+export const getCameraOptions = function() {
+
+  return cameraOptions;
+
+};
+
+export const getSelectedCameraLabel = function() {
 
   if (selectedCamera) {
     return selectedCamera.label;
   } else {
-    return 'x cam x';
+    return 'No cam selected.';
   }
 
 };
 
 /* Utils */
-export let getCamDimensions = function() {
+export const getCamDimensions = function() {
 
   return {width:video.width, height:video.height};
 
@@ -541,6 +547,7 @@ const arCam = {
   toggleDebugMode,
   setMarkerUpdateCallback,
   getSelectedCameraLabel,
+  getCameraOptions,
 };
 
 export default arCam;
