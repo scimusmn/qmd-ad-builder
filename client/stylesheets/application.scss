@@ -1,6 +1,7 @@
 @import "base/extends";
 @import "base/animations";
 @import "base/forms";
+@import "base/debug";
 
 @import "module/Loading";
 @import "module/Login";
@@ -142,6 +143,15 @@
 /* ************* */
 /* Debug Overlay */
 /* ************* */
+$debug-gold: #ffd847;
+$debug-light-blue: #6dc2e8;
+$debug-salmon: #f58277;
+$debug-turqoise: #07b6ca;
+$debug-purple: #9178ea;
+
+$debug-gray: rgba(33,44,55, 0.6);
+$debug-white: rgba(255,255,255, 1.0);
+
 .ar-debug {
 
   width: 100%;
@@ -151,31 +161,104 @@
   top: 0px;
   left: 0px;
 
-  background-color: rgba(0,20,25,0.65);
-
-  color:  #07b6ca;
+  background-color: $debug-gray;
+  color:  $debug-turqoise;
 
   z-index: 2;
 
 }
 
 .ar-debug h1 {
-  color: #f58277;
-  background-color: #ffd847;
+  color: $debug-salmon;
+  background-color: $debug-gold;
 }
 
 .ar-debug h2,
 .ar-debug h3 {
-  color: #ffd847;
-  background-color: #6dc2e8;
+  color: $debug-gold;
+  background-color: $debug-light-blue;
 }
 
 .ar-debug .debug-settings-group {
   position: absolute;
-  top: 200px;
-  left: 1280px;
+  top: 110px;
+  left: 1482px;
 }
 
+.ar-debug .cam-settings .debug-settings-group {
+  position: absolute;
+  top: 600px;
+  left: 1482px;
+}
+
+.debug-setting{
+  background-color: $debug-turqoise;
+  padding:0px;
+}
+
+.setting-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  position: relative;
+  top: 13.33333px;
+  width: 40px;
+  height: 40px;
+  -webkit-transition: all 0.15s ease-out 0;
+  -moz-transition: all 0.15s ease-out 0;
+  transition: all 0.15s ease-out 0;
+  background: $debug-turqoise;
+  border: none;
+  color: $debug-white;
+  cursor: pointer;
+  display: inline-block;
+  outline: none;
+  position: relative;
+  margin-right: 0.5rem;
+  z-index: 1000;
+}
+
+.setting-input:hover {
+  /*background: $debug-gray;*/
+}
+
+.setting-input:active {
+  background: $debug-gray;
+}
+
+.setting-input:checked {
+  background: $debug-turqoise;
+}
+
+.setting-input:checked::before {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  content: '\2716';
+  display: inline-block;
+  font-size: 26.66667px;
+  text-align: center;
+  line-height: 40px;
+  color: white;
+}
+
+.setting-input.radio {
+  border-radius: 50%;
+}
+
+.setting-input.radio::after {
+  border-radius: 50%;
+}
+
+.setting-label {
+  color: $debug-white;
+  font-size: 2em;
+  padding-left: 14px;
+  font-weight: 100;
+  letter-spacing: 0.1em;
+}
 
 /* ************* */
 /* Miscellaneous */
@@ -197,3 +280,4 @@
   filter: FlipV;
   -ms-filter: "FlipV";
 }
+

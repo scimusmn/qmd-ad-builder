@@ -25,7 +25,7 @@ export class Setting extends React.Component {
 
     if (startChecked === undefined) {
       // Session var was never set
-      // Let's default to the defaultState
+      // Default to the defaultState
       startChecked = this.props.defaultState;
 
       Session.set(this.props.id, startChecked);
@@ -40,39 +40,47 @@ export class Setting extends React.Component {
   }
 
   handleCheckboxChange(event) {
-    const checkState = event.target.checked;
-    this.setState({isChecked: checkState});
-    Session.set(this.props.id, checkState);
 
-    // console.log('ALL SESSION VARS ///////')
-    // _.each(Session.keys, function(element, index, list) {
-    //   console.log(index, element);
-    // });
+    Session.set(this.props.id, event.target.checked);
+    this.setState({isChecked: event.target.checked});
+
+    console.log('//// SESSION VARS ///////');
+
+    _.each(Session.keys, function(element, index, list) {
+      console.log(index, element);
+    });
+
+    console.log('////////////////////////');
 
   }
 
   toggleIsChecked() {
-    const checkState = !this.state.isChecked;
-    this.setState({isChecked: checkState});
-    Session.set(this.props.id, checkState);
+
+    Session.set(this.props.id, !this.state.isChecked);
+    this.setState({isChecked: !this.state.isChecked});
+
   }
 
-  renderLabel() {
+  getLabel() {
 
     let labelTxt = this.props.label;
 
     if (labelTxt == undefined) {
-      labelTxt = s.humanize(this.props.id);
+      labelTxt = s.titleize(s.humanize(this.props.id));
     }
 
-    return <h3>{labelTxt}</h3>;
+    return labelTxt;
   }
 
   render() {
 
     return <div className='debug-setting'>
-              {this.renderLabel()}
-              <input id={this.props.id} type='checkbox' name={this.props.id} value={this.props.id} onChange={this.handleCheckboxChange} checked={this.state.isChecked}></input>
+
+              <label>
+                <input id={this.props.id} type='checkbox' className='checkbox setting-input' onChange={this.handleCheckboxChange} checked={this.state.isChecked}></input>
+                <span className='setting-label' >{this.getLabel()}</span>
+              </label>
+
            </div>;
   }
 }

@@ -108,42 +108,17 @@ export const initCamera = () => {
 
   }
 
-  // Listen for checkbox changes
-  // TODO: This should go into ArDebug.js, where
-  // it can set a session variable.
-  const invertCB = document.getElementById('invert');
-  invertCB.addEventListener('change', function() {
+  // Listen for session variable changes,
+  // and update corresponding variables.
 
-    detector.invertDetection = invertCB.checked;
-
+  // Invert detection
+  Tracker.autorun(function() {
+    detector.invertDetection = Session.get('invert-detection');
   });
 
-  const flipCamCB = document.getElementById('flip-input');
-  flipCamCB.addEventListener('change', function() {
-
-    flipCamera = flipCamCB.checked;
-
-  });
-
-  const flipOutCB = document.getElementById('flip-output');
-  flipOutCB.addEventListener('change', function() {
-
-    Session.set('flip-output-h', flipOutCB.checked);
-
-  });
-
-  // Set default
-  Session.set('flip-output-h', flipOutCB.checked);
-
-  const bgImageCB = document.getElementById('bg-image');
-  bgImageCB.addEventListener('change', function() {
-
-    if (bgImageCB.checked) {
-      $('.workspace').addClass('newspaper');
-    } else {
-      $('.workspace').removeClass('newspaper');
-    }
-
+  // Flip input
+  Tracker.autorun(function() {
+    flipCamera = Session.get('flip-input-h');
   });
 
   // Listen for target quad clicks
@@ -215,6 +190,13 @@ const onDevicesGathered = (deviceInfos) => {
       console.log('[o] option:', JSON.stringify(deviceInfo));
 
       this.cameraOptions.push(deviceInfo);
+
+      // TEMP
+      // Select first viable camera
+      // by default
+      if (!selectedCamera){
+        setCamera(deviceInfo);
+      }
 
     }
   }
@@ -512,13 +494,23 @@ const listMarkers = (markers) => {
 
 export let setCamera = function(deviceInfo) {
 
-  if (selectedCamera.deviceId != deviceInfo.deviceId) {
+  if (!selectedCamera || selectedCamera.deviceId != deviceInfo.deviceId) {
     selectedCamera = deviceInfo;
-
+    console.log('setCamera success:', selectedCamera.label);
     // TODO: restart camera connection.
 
   } else {
     console.log('ArCamera::setCamera::Camera already selected.', deviceInfo.label);
+  }
+
+};
+
+export let getSelectedCameraLabel = function() {
+
+  if (selectedCamera) {
+    return selectedCamera.label;
+  } else {
+    return 'x cam x';
   }
 
 };
@@ -548,6 +540,7 @@ const arCam = {
   getCamDimensions,
   toggleDebugMode,
   setMarkerUpdateCallback,
+  getSelectedCameraLabel,
 };
 
 export default arCam;

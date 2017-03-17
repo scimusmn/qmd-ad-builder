@@ -23,14 +23,27 @@ export class SettingsGroup extends React.Component {
 
   }
 
+  renderGroupLabel() {
+    if (this.props.label != '') {
+      return <h2>{this.props.label}</h2>;
+    } else {
+      return '';
+    }
+  }
+
   render() {
 
     return <div className='debug-settings-group'>
+              {this.renderGroupLabel()}
               {this.props.children}
            </div>;
   }
 }
 
 SettingsGroup.propTypes = {
+  label: React.PropTypes.string,
+};
 
+SettingsGroup.defaultProps = {
+  label: '',
 };

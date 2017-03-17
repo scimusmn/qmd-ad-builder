@@ -35,6 +35,18 @@ export class ArDebug extends React.Component {
     // Set initial state.
     this.toggleVisible(this.state.showing);
 
+    // Listen for session variable changes,
+    // and update corresponding variables.
+    Tracker.autorun(function() {
+
+      if (Session.get('background-image')) {
+        $('.workspace').addClass('newspaper');
+      } else {
+        $('.workspace').removeClass('newspaper');
+      }
+
+    });
+
   }
 
   componentWillUnmount() {
@@ -57,6 +69,10 @@ export class ArDebug extends React.Component {
 
   }
 
+  getCamOption() {
+    return arCam.getSelectedCameraLabel();
+  }
+
   render() {
 
     return <div className='ar-debug'>
@@ -64,19 +80,20 @@ export class ArDebug extends React.Component {
               <div><h2><strong>-=///////DEBUG///////=-</strong></h2></div>
               <video id='debug-video' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
               <canvas id='debug-canvas' style={{width:'960px', height:'620px'}}></canvas><br/>
-              <input id='invert' type='checkbox' name='invert' value='Invert'></input> Invert Detection<br/>
-              <input id='flip-input' type='checkbox' name='flip-input' value='FlipInput'></input> Flip Input<br/>
-              <input id='flip-output' type='checkbox' name='flip-output' value='FlipOutput' checked></input> Flip Output<br/>
-              <input id='bg-image' type='checkbox' name='bg-image' value='BackgroundImage'></input> Background image<br/><br/>
-              <div className='select'>
-                <label htmlFor='videoSource'>Camera: </label><select id='videoSource'></select>
+
+              <SettingsGroup label='Options'>
+                <Setting id='invert-detection'/>
+                <Setting id='flip-input-h' label='Flip Input'/>
+                <Setting id='flip-output-h' label='Flip Output'/>
+                <Setting id='background-image'/>
+              </SettingsGroup>
+              <div className='cam-settings'>
+              <SettingsGroup label='Cameras' >
+                  <Setting id='xooxoxox' label={this.getCamOption()}/>
+                  <Setting id='oxoxoxox' label='Flip CHUG'/>
+              </SettingsGroup>
               </div>
 
-              <SettingsGroup>
-                <Setting id='flipInput'/>
-                <Setting id='flipOutput'/>
-                <Setting id='mySweet_Setting-guys'/>
-              </SettingsGroup>
            </div>;
   }
 }
