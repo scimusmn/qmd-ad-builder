@@ -22,10 +22,6 @@
 
 }
 
-.workspace.newspaper {
-  background-image:url('images/newspaper-bg.png') !important;
-}
-
 /* ********** */
 /* The Poster */
 /* ********** */
@@ -41,20 +37,16 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
+}
 
+.ar-poster.show-frame {
   -webkit-box-shadow: 0px 3px 59px -11px rgba(41,39,35,0.4);
   -moz-box-shadow: 0px 3px 59px -11px rgba(41,39,35,0.4);
   box-shadow: 0px 3px 59px -11px rgba(41,39,35,0.4);
 
-  background-image:url('images/paper-texture.png');
+  background-color:rgba(255,255,255,0.85);
   background-repeat:no-repeat;
   background-size:100% 100%;
-
-}
-
-.workspace.newspaper .ar-poster {
-  background: none !important;
-  box-shadow: none !important;
 }
 
 .ar-poster .item {
@@ -179,16 +171,62 @@ $debug-white: rgba(255,255,255, 1.0);
   background-color: $debug-light-blue;
 }
 
-.ar-debug .debug-settings-group {
+.ar-debug #all-options {
   position: absolute;
   top: 110px;
   left: 1482px;
 }
 
-.ar-debug .cam-settings .debug-settings-group {
+
+.ar-debug #cam-selection {
   position: absolute;
   top: 600px;
   left: 1482px;
+}
+
+.ar-debug #background-selection {
+  position: absolute;
+  top: 600px;
+  left: 50px;
+}
+
+.ar-debug #toggles-example {
+  position: absolute;
+  top: 900px;
+  left: 500px;
+}
+
+.debug-settings-group {
+
+  color: $debug-turqoise;
+  background-color: $debug-gold;
+
+  -webkit-box-shadow: 1px 9px 33px -4px rgba(25,30,31,0.2);
+  -moz-box-shadow: 1px 9px 33px -4px rgba(25,30,31,0.2);
+  box-shadow: 1px 9px 33px -4px rgba(25,30,31,0.2);
+
+}
+
+.debug-settings-group .label {
+
+  color: $debug-salmon;
+  background-color: $debug-gold;
+
+}
+
+.setting-label {
+  color: $debug-white;
+  font-size: 1.6em;
+  padding-left: 14px;
+  padding-right: 18px;
+  font-weight: 100;
+  letter-spacing: 0.08em;
+}
+
+.debug-toggle {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
 }
 
 .debug-setting{
@@ -210,6 +248,7 @@ $debug-white: rgba(255,255,255, 1.0);
   -moz-transition: all 0.15s ease-out 0;
   transition: all 0.15s ease-out 0;
   background: $debug-turqoise;
+  /*background-color: rgba(255,255,255,0.1);*/
   border: none;
   color: $debug-white;
   cursor: pointer;
@@ -218,10 +257,11 @@ $debug-white: rgba(255,255,255, 1.0);
   position: relative;
   margin-right: 0.5rem;
   z-index: 1000;
+  border: 1px solid $debug-white;
 }
 
 .setting-input:hover {
-  /*background: $debug-gray;*/
+  background: rgba(0,5,7,0.05);
 }
 
 .setting-input:active {
@@ -237,7 +277,7 @@ $debug-white: rgba(255,255,255, 1.0);
   height: 40px;
   position: absolute;
   content: '\2716';
-  display: inline-block;
+  display: inline-block !important;
   font-size: 26.66667px;
   text-align: center;
   line-height: 40px;
@@ -252,13 +292,6 @@ $debug-white: rgba(255,255,255, 1.0);
   border-radius: 50%;
 }
 
-.setting-label {
-  color: $debug-white;
-  font-size: 2em;
-  padding-left: 14px;
-  font-weight: 100;
-  letter-spacing: 0.1em;
-}
 
 /* ************* */
 /* Miscellaneous */

@@ -121,6 +121,12 @@ export const initCamera = () => {
     flipCamera = Session.get('flip-input-h');
   });
 
+  // Select camera
+  Tracker.autorun(function() {
+    const camId = Session.get('cam-selection');
+    console.log('Session::cam-selection:', camId);
+  });
+
   // Listen for target quad clicks
   canvas.addEventListener('mousedown', function(event) {
 
@@ -511,16 +517,6 @@ export const getCameraOptions = function() {
 
 };
 
-export const getSelectedCameraLabel = function() {
-
-  if (selectedCamera) {
-    return selectedCamera.label;
-  } else {
-    return 'No cam selected.';
-  }
-
-};
-
 /* Utils */
 export const getCamDimensions = function() {
 
@@ -546,7 +542,6 @@ const arCam = {
   getCamDimensions,
   toggleDebugMode,
   setMarkerUpdateCallback,
-  getSelectedCameraLabel,
   getCameraOptions,
 };
 

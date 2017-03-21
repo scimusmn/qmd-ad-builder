@@ -3,7 +3,7 @@
 import React from 'react';
 import s from 'underscore.string';
 
-export class Setting extends React.Component {
+export class Option extends React.Component {
 
   constructor(props) {
 
@@ -40,15 +40,9 @@ export class Setting extends React.Component {
 
   handleChange(event) {
 
-    Session.set(this.props.id, event.target.checked);
     this.setState({isChecked: event.target.checked});
+    this.props.changeCallback(event);
 
-    // TEMP
-/*    console.log('//// SESSION VARS ///////');
-    _.each(Session.keys, function(element, index, list) {
-      console.log(index, element);
-    });
-*/
   }
 
   getLabel() {
@@ -67,7 +61,7 @@ export class Setting extends React.Component {
     return <div className='debug-setting'>
 
               <label>
-                <input id={this.props.id} type='checkbox' className='checkbox setting-input' onChange={this.handleChange} checked={this.state.isChecked}></input>
+                <input id={this.props.id} type='radio' name={this.props.groupName} className='setting-input radio' onChange={this.handleChange} ></input>
                 <span className='setting-label' >{this.getLabel()}</span>
               </label>
 
@@ -75,13 +69,19 @@ export class Setting extends React.Component {
   }
 }
 
-Setting.propTypes = {
+Option.propTypes = {
   id: React.PropTypes.string,
   label: React.PropTypes.string,
   defaultState: React.PropTypes.bool,
+  type:React.PropTypes.string,
+  groupName:React.PropTypes.string,
+  value:React.PropTypes.object,
 };
 
-Setting.defaultProps = {
+Option.defaultProps = {
   defaultState: false,
+  type:'checkbox',
+  groupName:'',
+  value: null,
 };
 

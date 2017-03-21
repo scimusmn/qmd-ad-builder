@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { Setting } from './Setting';
+import { Option } from './Option';
+import _ from 'underscore';
 
 export class SettingsGroup extends React.Component {
 
@@ -13,6 +15,8 @@ export class SettingsGroup extends React.Component {
 
     };
 
+    this.optionChangeCallback = this.optionChangeCallback.bind(this);
+
   }
 
   componentDidMount() {
@@ -23,50 +27,91 @@ export class SettingsGroup extends React.Component {
 
   }
 
-  renderGroupLabel() {
+  optionChangeCallback(event) {
+
+    console.log('Settings group change: ', this.props.id, '->', event.target.id);
+
+    const optionId = event.target.id;
+
+    Session.set(this.props.id, optionId);
+
+  }
+
+  groupLabel() {
+
+    let label = this.props.label;
+
+    if (label == undefined) {
+      label = s.titleize(s.humanize(this.props.id));
+    }
+
+    return label;
+
+  }
+
+  renderLabel() {
     if (this.props.label != '') {
-      return <h2>{this.props.label}</h2>;
+      return <h2 className='label'>{this.props.label}</h2>;
     } else {
       return '';
     }
   }
 
-  renderGroupChildren() {
+  renderChildren() {
 
     if (this.props.options) {
 
-      let settings = [];
+      // Create children from passed array...
+      let optionsJSX = [];
+
       for (var i = 0; i < this.props.options.length; i++) {
 
-        const option = this.props.options[i];
-        const idStr = option.label;
+        let option = this.props.options[i];
 
-        settings.push( <Setting key={i} id={idStr}></Setting> );
+        // Convert string to usesable object.
+        if (typeof option == 'string') {
+          option = {id:option,label:option};
+        }
+
+        if (_.has(option, 'id') == false) {
+          option.id = option.label;
+        }
+
+        if (_.has(option, 'label') == false) {
+          option.label = option.id;
+        }
+
+        optionsJSX.push(<Option key={i} id={option.label} groupName={this.props.label} changeCallback={this.optionChangeCallback}></Option>);
+
       }
 
-      return <div>{settings}</div>;
+      return <div>{optionsJSX}</div>;
 
     } else {
 
       return this.props.children;
 
     }
+
   }
 
   render() {
 
-    return <div className='debug-settings-group'>
-              {this.renderGroupLabel()}
-              {this.renderGroupChildren()}
+    return <div id={this.props.id} className='debug-settings-group'>
+              {this.renderLabel()}
+              {this.renderChildren()}
            </div>;
+
   }
 }
 
 SettingsGroup.propTypes = {
+  id: React.PropTypes.string,
   label: React.PropTypes.string,
   options: React.PropTypes.array,
 };
 
 SettingsGroup.defaultProps = {
+  id: '',
   label: '',
 };

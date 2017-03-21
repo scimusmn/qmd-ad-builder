@@ -6,6 +6,7 @@ import Mousetrap from 'mousetrap';
 import arCam from '../../modules/client/ArCamera';
 import { SettingsGroup } from './debug/SettingsGroup';
 import { Setting } from './debug/Setting';
+import { Option } from './debug/Option';
 
 export class ArDebug extends React.Component {
 
@@ -39,10 +40,21 @@ export class ArDebug extends React.Component {
     // and update corresponding variables.
     Tracker.autorun(function() {
 
-      if (Session.get('background-image')) {
-        $('.workspace').addClass('newspaper');
+      const bg = Session.get('background-selection');
+      if (bg == 'None') {
+        $('.workspace').css('background-image', 'none');
       } else {
-        $('.workspace').removeClass('newspaper');
+        $('.workspace').css('background-image', 'url(images/' + bg + ')');
+      }
+
+    });
+
+    Tracker.autorun(function() {
+
+      if (Session.get('show-frame')) {
+        $('.workspace .ar-poster').addClass('show-frame');
+      } else {
+        $('.workspace .ar-poster').removeClass('show-frame');
       }
 
     });
@@ -72,24 +84,25 @@ export class ArDebug extends React.Component {
   render() {
 
     return <div className='ar-debug'>
-              <h1>DEBUG</h1>
-              <div><h2><strong>-=///////DEBUG///////=-</strong></h2></div>
+
+              <h1>DEBUG VIEW</h1>
+              <div><h2><strong>//////////////////////////////////////////////////////</strong></h2></div>
+
               <video id='debug-video' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
               <canvas id='debug-canvas' style={{width:'960px', height:'620px'}}></canvas><br/>
 
-              <SettingsGroup label='Options'>
+              <SettingsGroup id='all-options' label='OPTIONS'>
                 <Setting id='invert-detection'/>
                 <Setting id='flip-input-h' label='Flip Input'/>
                 <Setting id='flip-output-h' label='Flip Output'/>
-                <Setting id='background-image'/>
+                <Setting id='show-frame' label='Poster Frame'/>
               </SettingsGroup>
 
-              <div className='cam-settings' >
-                <SettingsGroup label='Cameras' options={arCam.getCameraOptions()}>
-                    <Setting id='xooxoxox' label={arCam.getSelectedCameraLabel()}/>
-                    <Setting id='oxoxoxox' label='Flip CHUG'/>
-                </SettingsGroup>
-              </div>
+              <SettingsGroup id='cam-selection' label='CAMERAS' options={arCam.getCameraOptions()}>
+              </SettingsGroup>
+
+              <SettingsGroup id='background-selection' label='BACKGROUNDS' options={['newspaper-bg.png', 'news-temp-bg.png', 'None']}>
+              </SettingsGroup>
 
            </div>;
   }
