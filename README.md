@@ -10,12 +10,13 @@ Learn to recognize red flags in advertising by constructing your own questionabl
 4) Navigate Google Chrome to `http://localhost:3000/`
 
 
-### Notes
-• Pressing the `D` key brings up the debug view.
+### Usage Notes
+• Pressing the `D` key toggles the debug view.
+• Pressing the `LEFT` and `RIGHT` keys cycle through assets for 'active' item.
 
-• In debug mode, you can drag the corners of the quad in the upper-left so it fits the area you'd like to track. This remaps the ditorted coordinates from the camera space into the poster space.
+• In debug mode, you can drag the corners of the quad in the upper-left so it fits the area you'd like to track. This remaps the distorted coordinates from the camera space into the poster space.
 
-• If USB camera is not being recognized after plugging in, try running these two commands in succession:
+• If USB camera is not recognized after plugging in, try running these two commands in succession:
 ```
   sudo killall VDCAssistant
   sudo killall AppleCameraAssistant
