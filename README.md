@@ -2,7 +2,7 @@
 Learn to recognize red flags in advertising by constructing your own questionable advertisement.
 
 
-### Launch Instructions
+## Launch Instructions
 
 1) If Meteor isn't installed on your machine, install via Terminal: `curl https://install.meteor.com/ | sh`
 2) Run `meteor npm install` from project directory
@@ -10,10 +10,8 @@ Learn to recognize red flags in advertising by constructing your own questionabl
 4) Navigate Google Chrome to `http://localhost:3000/`
 
 
-### Usage Notes
-• Pressing the `D` key toggles the debug view.
-
-• Pressing the `LEFT` and `RIGHT` keys cycle through assets for 'active' item.
+## Usage Notes
+• Pressing the `D` key toggles the debug view. Pressing the `LEFT` and `RIGHT` keys cycle through assets for 'active' item.
 
 • In debug mode, you can drag the corners of the quad in the upper-left so it fits the area you'd like to track. This remaps the distorted coordinates from the camera space into the poster space.
 
