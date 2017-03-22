@@ -71,7 +71,7 @@ export const initCamera = () => {
   });
 
 
-  // startTracking();
+  startTracking();
 
   // Listen for session variable changes,
   // and update corresponding variables.
