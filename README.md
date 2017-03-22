@@ -12,6 +12,7 @@ Learn to recognize red flags in advertising by constructing your own questionabl
 
 ### Usage Notes
 • Pressing the `D` key toggles the debug view.
+
 • Pressing the `LEFT` and `RIGHT` keys cycle through assets for 'active' item.
 
 • In debug mode, you can drag the corners of the quad in the upper-left so it fits the area you'd like to track. This remaps the distorted coordinates from the camera space into the poster space.
