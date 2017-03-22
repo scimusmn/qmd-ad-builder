@@ -13,10 +13,10 @@ Learn to recognize red flags in advertising by constructing your own questionabl
 ### Notes
 • Pressing the `D` key brings up the debug view.
 
-• On debug screen you can drag the corners of the quad in the upper-left to fit the area to map for tracking. This remaps the (potentially) distorted coordinates from the camera onto the poster space.
+• In debug mode, you can drag the corners of the quad in the upper-left so it fits the area you'd like to track. This remaps the ditorted coordinates from the camera space into the poster space.
 
 • If USB camera is not being recognized after plugging in, try running these two commands in succession:
-
-  `sudo killall VDCAssistant`
-  
-  `sudo killall AppleCameraAssistant`
+```
+  sudo killall VDCAssistant
+  sudo killall AppleCameraAssistant
+```
