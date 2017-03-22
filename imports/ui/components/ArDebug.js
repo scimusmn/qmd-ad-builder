@@ -104,6 +104,7 @@ export class ArDebug extends React.Component {
               <SettingsGroup id='background-selection' label='BACKGROUNDS' options={['newspaper-bg.png', 'news-temp-bg.png', 'None']}>
               </SettingsGroup>
 
+
            </div>;
   }
 }

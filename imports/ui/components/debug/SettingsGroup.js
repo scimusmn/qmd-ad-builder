@@ -73,7 +73,7 @@ export class SettingsGroup extends React.Component {
           option = {id:option,label:option};
         }
 
-        if (_.has(option, 'id') == false) {
+        if (_.has(option, 'id') == false && _.has(option, 'label') == true) {
           option.id = option.label;
         }
 

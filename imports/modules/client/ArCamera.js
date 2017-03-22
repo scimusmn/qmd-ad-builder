@@ -70,50 +70,15 @@ export const initCamera = () => {
     console.log('navigator.getUserMedia error: ', error);
   });
 
-  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-  if (navigator.getUserMedia) {
 
-    function successCallback(stream) {
-        if (window.webkitURL) {
-          video.src = window.webkitURL.createObjectURL(stream);
-        } else if (video.mozSrcObject !== undefined) {
-          video.mozSrcObject = stream;
-        } else {
-          video.src = stream;
-        }
-      }
-
-    function errorCallback(error) {
-      console.log('ERROR', error);
-    }
-
-    // IR cam
-    // const deviceConstraints = {video: {deviceId: '4b72c45be401f96e41125eaefc9fbdf702b2c04ae2ee9043be5b85d39847535a'}};
-
-    // Non-IR naked cam
-    const deviceConstraints = {video: {deviceId: '1c4c5317efe3aff1818f8fbca8e68d34a9daa7a7104340944c0bba683e34a1f7'}};
-
-    // const deviceConstraints = {video:true};
-    navigator.getUserMedia(deviceConstraints, successCallback, errorCallback);
-
-    imageData = context.getImageData(0, 0, video.width, video.height);
-    pixels = [];
-    detector = new AR.Detector();
-
-    debugImage = context.createImageData(video.width, video.height);
-    warpImage = context.createImageData(49, 49);
-    homographyImage = new CV.Image();
-
-    requestAnimationFrame(tick);
-
-  }
+  // startTracking();
 
   // Listen for session variable changes,
   // and update corresponding variables.
 
   // Invert detection
   Tracker.autorun(function() {
-    detector.invertDetection = Session.get('invert-detection');
+    if (detector) detector.invertDetection = Session.get('invert-detection');
   });
 
   // Flip input
@@ -123,8 +88,9 @@ export const initCamera = () => {
 
   // Select camera
   Tracker.autorun(function() {
-    const camId = Session.get('cam-selection');
-    console.log('Session::cam-selection:', camId);
+    const camLabel = Session.get('cam-selection');
+    console.log('Session::cam-selection:', camLabel);
+    setCameraByLabel(camLabel);
   });
 
   // Listen for target quad clicks
@@ -183,6 +149,67 @@ export const initCamera = () => {
 
 };
 
+const startCamera = () => {
+
+  console.log('startCam');
+
+  if (navigator.getUserMedia) {
+
+    console.log('startCam - getUserMedia');
+
+    if (window.stream) {
+      console.log('stream found - x -x - x- x- -x -x -x -x');
+      window.stream.getTracks().forEach(function(track) {
+        track.stop();
+      });
+    }
+
+    const deviceConstraints = {
+      video: {deviceId: selectedCamera.deviceId},
+    };
+
+    navigator.getUserMedia(deviceConstraints, successCallback, errorCallback);
+
+
+
+  }
+
+};
+
+const startTracking = () => {
+
+  console.log('startTracking');
+
+  imageData = context.getImageData(0, 0, video.width, video.height);
+  pixels = [];
+  detector = new AR.Detector();
+
+  debugImage = context.createImageData(video.width, video.height);
+  warpImage = context.createImageData(49, 49);
+  homographyImage = new CV.Image();
+
+  requestAnimationFrame(tick);
+
+};
+
+const successCallback = (stream) => {
+  console.log('successCallback');
+  if (window.webkitURL) {
+    video.src = window.webkitURL.createObjectURL(stream);
+  } else if (video.mozSrcObject !== undefined) {
+    video.mozSrcObject = stream;
+  } else {
+    video.src = stream;
+  }
+
+  startTracking();
+
+};
+
+const errorCallback = (error) => {
+  console.log('ERROR', error);
+};
+
 const onDevicesGathered = (deviceInfos) => {
 
   // Save all current camera options
@@ -197,16 +224,36 @@ const onDevicesGathered = (deviceInfos) => {
 
       cameraOptions.push(deviceInfo);
 
-      // TEMP
       // Select first viable camera
       // by default
-      if (!selectedCamera){
+      if (!selectedCamera) {
         setCamera(deviceInfo);
       }
 
     }
   }
-}
+
+  // At this point, camera should
+  // be selected, start camera stream.
+  startCamera();
+
+};
+
+const setCameraByLabel = (camLabel) => {
+
+  // Find matching device by label
+  for (let i = 0; i !== cameraOptions.length; ++i) {
+
+    const deviceInfo = cameraOptions[i];
+
+    if (deviceInfo.label === camLabel) {
+
+      console.log('[o] cam selection:', JSON.stringify(deviceInfo));
+      setCamera(deviceInfo);
+
+    }
+  }
+};
 
 const tick = () => {
 
@@ -501,12 +548,15 @@ const listMarkers = (markers) => {
 export const setCamera = function(deviceInfo) {
 
   if (!selectedCamera || selectedCamera.deviceId != deviceInfo.deviceId) {
+
     selectedCamera = deviceInfo;
     console.log('setCamera success:', selectedCamera.label);
-    // TODO: restart camera connection.
+    startCamera();
 
   } else {
+
     console.log('ArCamera::setCamera::Camera already selected.', deviceInfo.label);
+
   }
 
 };

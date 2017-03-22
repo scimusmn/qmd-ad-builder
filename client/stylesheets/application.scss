@@ -173,21 +173,21 @@ $debug-white: rgba(255,255,255, 1.0);
 
 .ar-debug #all-options {
   position: absolute;
-  top: 110px;
+  top: 140px;
   left: 1482px;
 }
 
 
 .ar-debug #cam-selection {
   position: absolute;
-  top: 600px;
+  top: 440px;
   left: 1482px;
 }
 
 .ar-debug #background-selection {
   position: absolute;
-  top: 600px;
-  left: 50px;
+  top: 750px;
+  left: 1482px;
 }
 
 .ar-debug #toggles-example {
@@ -252,7 +252,7 @@ $debug-white: rgba(255,255,255, 1.0);
   border: none;
   color: $debug-white;
   cursor: pointer;
-  display: inline-block;
+  display: inline-block !important;
   outline: none;
   position: relative;
   margin-right: 0.5rem;

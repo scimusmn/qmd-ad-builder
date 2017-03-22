@@ -11,8 +11,10 @@ Temp Instructions
 
 
 Notes
-Pressing the `D` key brings up the debug view.
+• Pressing the `D` key brings up the debug view.
 
-If USB camera is not being recognized after plugging in, try running these two commands in succession:
+• On debug screen you can drag the corners of the quad in the upper-left to fit the area to map for tracking. This remaps the (potentially) distorted coordinates from the camera onto the poster space.
+
+• If USB camera is not being recognized after plugging in, try running these two commands in succession:
 `sudo killall VDCAssistant`
 `sudo killall AppleCameraAssistant`
