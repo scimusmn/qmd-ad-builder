@@ -197,23 +197,20 @@ export class ArPoster extends React.Component {
       item = this.items[key];
 
       if (key == activeId) {
+
         item.active = true;
         this.activeItem = this.items[key];
-
-        // TweenMax.set(item.image, {borderColor:'rgba(5,5,5,0.2)'});
-        // TweenMax.set(item.image, {boxShadow: ' 2px 9px 5px -8px rgba(0,0,0,0.57)'});
 
         // Move arrows into active
         // item's div
         this.activeItem.target.append($('#arrows'));
 
+        // Hide no-block instructions.
+        $('#intro-instruct').hide();
+
       } else {
 
         item.active = false;
-
-        // TweenMax.set(item.image, {borderColor:'rgba(255,255,100,0.0)'});
-
-        // TweenMax.set(item.image, {boxShadow: '4px 5px 12px 5px rgba(255,163,163,0.0)'});
 
       }
 
@@ -390,7 +387,13 @@ export class ArPoster extends React.Component {
           // shift, highlight to another
           // random alive item.
           const aliveItemId = this.fishAliveIDs();
-          this.setActiveItem(aliveItemId);
+          if(aliveItemId === undefined) {
+            // No blocks remaining.
+            // Show inactive instruction message.
+            $('#intro-instruct').show();
+          } else {
+            this.setActiveItem(aliveItemId);
+          }
 
         }
 
@@ -449,6 +452,10 @@ export class ArPoster extends React.Component {
               <div id='arrows'>
                 <img src='images/arrow.png' className='right'/>
                 <img src='images/arrow.png' className='left'/>
+              </div>
+
+              <div id='intro-instruct' className='center-overlay'>
+                <img src='images/intro-instruct.png'/>
               </div>
 
           </div>;
