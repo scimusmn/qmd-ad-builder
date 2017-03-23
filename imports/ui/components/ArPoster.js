@@ -79,6 +79,7 @@ export class ArPoster extends React.Component {
                           prevRot:-1,
                           prevX:-1,
                           prevY:-1,
+                          scale:1.0,
                         };
 
       // Hide
@@ -108,21 +109,22 @@ export class ArPoster extends React.Component {
 
       this.incrementImage(-1);
 
-      // TweenMax.from($(this.activeItem.target).find('#arrows .left'), 0.3, { scaleX:1.7, scaleY:-1.7,ease:Bounce.easeOut});
-      // TweenMax.from($(this.activeItem.target).find('#arrows .left'), 0.4, { x:'-=90px',ease:Bounce.easeOut});
-
     });
 
     Mousetrap.bind(['right', 'b'], () => {
 
       this.incrementImage(1);
 
-      // TweenMax.from($(this.activeItem.target).find('#arrows .right'), 0.3, { scaleX:1.7, scaleY:1.7,ease:Bounce.easeOut});
-      // TweenMax.from($(this.activeItem.target).find('#arrows .right'), 0.4, { x:'+=90px',ease:Bounce.easeOut});
+    });
+
+    Mousetrap.bind(['s', 'c'], () => {
+
+      console.log('Resize Image');
+      this.incrementSize();
 
     });
 
-    Mousetrap.bind(['s', 'e'], () => {
+    Mousetrap.bind(['return', 'enter', 'e'], () => {
 
       console.log('Save Image');
 
@@ -238,6 +240,24 @@ export class ArPoster extends React.Component {
 
   }
 
+  incrementSize() {
+
+    const currentScale = this.activeItem.scale;
+    let newScale = 1.0;
+
+    if (currentScale >= 1.0) {
+      newScale = 0.7;
+    } else if (currentScale >= 0.7) {
+      newScale = 0.49;
+    } else {
+      newScale = 1.0;
+    }
+
+    this.activeItem.scale = newScale;
+    TweenMax.set(this.activeItem.target, { scale: newScale });
+
+  }
+
   updateItemDisplay(item, marker) {
 
     // Calculate item's position
@@ -273,8 +293,8 @@ export class ArPoster extends React.Component {
       item.deadCount = 0;
 
       TweenMax.killTweensOf(item.target);
-      TweenMax.set(item.target, {opacity:1.0, scale: 1.0, x:x, y:y, rotation:rotation + '_short'});
-      TweenMax.from(item.target, 0.2, {opacity:0.0, scale:1.45});
+      TweenMax.set(item.target, {opacity:1.0, scale: item.scale, x:x, y:y, rotation:rotation + '_short'});
+      TweenMax.from(item.target, 0.2, {opacity:0.0, scale:item.scale + 0.4});
 
     } else {
 
@@ -362,7 +382,7 @@ export class ArPoster extends React.Component {
           // let's assume the user has intentionally
           // removed it from the poster and remove.
           TweenMax.killTweensOf(item.target);
-          TweenMax.to(item.target, 0.15, { scale: 0.6, opacity:0.0});
+          TweenMax.to(item.target, 0.15, { scale: item.scale - 0.3, opacity:0.0});
 
           item.alive = false;
 
