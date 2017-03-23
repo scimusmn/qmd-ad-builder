@@ -3,8 +3,8 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import arCam from '../../modules/client/ArCamera';
-import TweenMax from 'gsap';
 import Utils from '../../modules/client/Utils';
+import TweenMax from 'gsap';
 
 export class ArPoster extends React.Component {
 
@@ -18,21 +18,15 @@ export class ArPoster extends React.Component {
 
     // Dictionary to find
     // item ids from marker ids.
-    // TODO: Once all lookup ids
-    // are added here. Create official
-    // marker print docs for this project
-    // and add to repo. Also, use the
-    // lookup dict to loop through
-    // on mount and pre find all jquery
-    // objects. (e.g., 6:$('#headline'));
     this.lookup = {
-      5:'headline',
-      6:'quote',
-      255:'name',
-      991:'details',
-      383:'claim',
-      767:'endorsement',
-      682:'image',
+      5:{id:'headline', label:'Appeal to vanity'},
+      6:{id:'quote', label:'Jargon'},
+      255:{id:'name', label:'(Suspicious) Name'},
+      991:{id:'details', label:'(The devil\'s in the...)  details'},
+      383:{id:'claim', label:'(False) Claim'},
+      767:{id:'endorsement', label:'(Meaningless) Endorsement'},
+      682:{id:'image', label:'(Misleading) Images'},
+      999:{id:'flair', label:'(Attention-grabbing) Flair'},
     };
 
     // Holds all poster items.
@@ -41,7 +35,7 @@ export class ArPoster extends React.Component {
 
     this.activeItem;
 
-    // Bind to 'this'
+    // Bind to this instance.
     this.markerUpdate = this.markerUpdate.bind(this);
 
   }
@@ -64,11 +58,13 @@ export class ArPoster extends React.Component {
     // ready initial display state.
     for (let key in this.lookup) {
 
-      const itemId = this.lookup[key];
+      const itemId = this.lookup[key].id;
+      const label = this.lookup[key].label;
       const $target = $('#' + itemId);
       const $image = $target.find('img');
 
       this.items[key] = { id:itemId,
+                          label:label,
                           target:$target,
                           image:$image,
                           alive:false,
@@ -119,7 +115,6 @@ export class ArPoster extends React.Component {
 
     Mousetrap.bind(['s', 'c'], () => {
 
-      console.log('Resize Image');
       this.incrementSize();
 
     });
@@ -324,14 +319,21 @@ export class ArPoster extends React.Component {
       // and target position...
       TweenMax.to(item.target, 0.2, {x:x, y:y, rotation:rotation + '_short'});
 
-      // TEMP - Set arrow positions
-      // on active
+      // TEMP: Set arrow positions
+      // based on active item's
+      // size. Could be optimized
+      // further. Should probably
+      // not calc size each tick or
+      // do jq lookup each tick
       if (item.active == true) {
 
         const offset = (item.image.outerWidth() + $(item.target).find('#arrows .right').outerWidth()) * 0.5;
 
         TweenMax.to($(item.target).find('#arrows .right'), 0.15, {left:offset});
         TweenMax.to($(item.target).find('#arrows .left'), 0.15, {left:-offset});
+
+        const offsetTop = item.image.outerHeight() * 0.5;
+        TweenMax.to($(item.target).find('#arrows #label'), 0.15, {top:-offsetTop});
 
       }
 
@@ -387,7 +389,7 @@ export class ArPoster extends React.Component {
           // shift, highlight to another
           // random alive item.
           const aliveItemId = this.fishAliveIDs();
-          if(aliveItemId === undefined) {
+          if (aliveItemId === undefined) {
             // No blocks remaining.
             // Show inactive instruction message.
             $('#intro-instruct').show();
@@ -450,6 +452,7 @@ export class ArPoster extends React.Component {
               </div>
 
               <div id='arrows'>
+                <h3 id='label'>(Temporary) Label Here</h3>
                 <img src='images/arrow.png' className='right'/>
                 <img src='images/arrow.png' className='left'/>
               </div>

@@ -115,6 +115,27 @@
 
 }
 
+.ar-poster #arrows #label {
+
+  position: absolute;
+  top:0px;
+  left:0px;
+  width:600px;
+
+  color: rgba(255,0,0,0.9);
+/*  background-color: rgba(102,244,255,0.6);
+*/
+  pointer-events: none;
+  text-align: center;
+
+  /* Center label on point */
+  -moz-transform: translate(-50%, -225%);
+  -ms-transform: translate(-50%, -225%);
+  -o-transform: translate(-50%, -225%);
+  transform: translate(-50%, -225%);
+
+}
+
 .ar-poster .item #arrows img.right {
 
   position: absolute;
