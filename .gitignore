@@ -7,3 +7,4 @@ node_modules
 #tn - work files
 /public/work
 /public/images/*
+/public/saved-ads/*.png

@@ -5,6 +5,7 @@ import React from 'react';
 import arCam from '../../modules/client/ArCamera';
 import Utils from '../../modules/client/Utils';
 import TweenMax from 'gsap';
+import html2canvas from 'html2canvas';
 
 export class ArPoster extends React.Component {
 
@@ -19,14 +20,14 @@ export class ArPoster extends React.Component {
     // Dictionary to find
     // item ids from marker ids.
     this.lookup = {
-      5:{id:'headline', label:'Appeal to vanity'},
-      6:{id:'quote', label:'Jargon'},
-      255:{id:'name', label:'(Suspicious) Name'},
-      991:{id:'details', label:'(The devil\'s in the...)  details'},
-      383:{id:'claim', label:'(False) Claim'},
-      767:{id:'endorsement', label:'(Meaningless) Endorsement'},
-      682:{id:'image', label:'(Misleading) Images'},
-      999:{id:'flair', label:'(Attention-grabbing) Flair'},
+      5:{ id:'headline', label:'Appeal to vanity' },
+      6:{ id:'quote', label:'Jargon' },
+      255:{ id:'name', label:'(Suspicious) Name' },
+      991:{ id:'details', label:'(The devil\'s in the...)  details' },
+      383:{ id:'claim', label:'(False) Claim' },
+      767:{ id:'endorsement', label:'(Meaningless) Endorsement' },
+      682:{ id:'image', label:'(Misleading) Images' },
+      999:{ id:'flair', label:'(Attention-grabbing) Flair' },
     };
 
     // Holds all poster items.
@@ -34,6 +35,8 @@ export class ArPoster extends React.Component {
     this.items = {};
 
     this.activeItem;
+
+    this.inactivitySeconds = 0;
 
     // Bind to this instance.
     this.markerUpdate = this.markerUpdate.bind(this);
@@ -101,7 +104,7 @@ export class ArPoster extends React.Component {
     }
 
     // Listen for Arrow keys
-    Mousetrap.bind(['left', 'a'], () => {
+    Mousetrap.bind(['left', 'c'], () => {
 
       this.incrementImage(-1);
 
@@ -113,17 +116,25 @@ export class ArPoster extends React.Component {
 
     });
 
-    Mousetrap.bind(['s', 'c'], () => {
+    Mousetrap.bind(['s', 'a'], () => {
 
       this.incrementSize();
 
     });
 
-    Mousetrap.bind(['return', 'enter', 'e'], () => {
+    Mousetrap.bind(['return', 'e'], () => {
 
       console.log('Save Image');
+      this.saveLayoutAsImage();
 
     });
+
+    // Start inactivity counter
+    setInterval(() => {
+
+      this.inactivitySeconds++;
+
+    }, 1000);
 
   }
 
@@ -200,6 +211,9 @@ export class ArPoster extends React.Component {
         // item's div
         this.activeItem.target.append($('#arrows'));
 
+        // Update active block label
+        $('#arrows #label').html(this.activeItem.label);
+
         // Hide no-block instructions.
         $('#intro-instruct').hide();
 
@@ -238,9 +252,9 @@ export class ArPoster extends React.Component {
     let newScale = 1.0;
 
     if (currentScale >= 1.0) {
-      newScale = 0.7;
-    } else if (currentScale >= 0.7) {
-      newScale = 0.49;
+      newScale = 0.6;
+    } else if (currentScale >= 0.6) {
+      newScale = 0.36;
     } else {
       newScale = 1.0;
     }
@@ -281,12 +295,24 @@ export class ArPoster extends React.Component {
     // 'alive', show and awake.
     if (item.alive == false) {
 
+      // New item added to workspace
+
       item.alive = true;
       item.deadCount = 0;
 
       TweenMax.killTweensOf(item.target);
       TweenMax.set(item.target, {opacity:1.0, scale: item.scale, x:x, y:y, rotation:rotation + '_short'});
       TweenMax.from(item.target, 0.2, {opacity:0.0, scale:item.scale + 0.4});
+
+      // First asset defaults
+      // to instruction blocks.
+      if (this.getAliveCount() <= 1 || this.inactivitySeconds >= 20) {
+        item.image.attr('src', '/images/block-instruct.png');
+      } else {
+        // Assume user doesn't need instructions.
+        // Default to most recent asset.
+        item.image.attr('src', item.assets[item.assetIndex]);
+      }
 
     } else {
 
@@ -297,14 +323,22 @@ export class ArPoster extends React.Component {
       // should be static.
       if (Math.abs(item.prevRot - rotation) < 3) {
         rotation = item.prevRot;
+      } else {
+        // If significant change,
+        // reset inactivity counter.
+        this.resetInactivity();
       }
 
       if (Math.abs(item.prevX - x) < 3) {
         x = item.prevX;
+      } else {
+        this.resetInactivity();
       }
 
       if (Math.abs(item.prevY - y) < 3) {
         y = item.prevY;
+      } else {
+        this.resetInactivity();
       }
 
       // Snap rotation when close to 0°
@@ -405,6 +439,12 @@ export class ArPoster extends React.Component {
 
   }
 
+  resetInactivity() {
+
+    this.inactivitySeconds = 0;
+
+  }
+
   fishAliveIDs() {
 
     for (let key in this.items) {
@@ -416,6 +456,81 @@ export class ArPoster extends React.Component {
       }
 
     }
+
+  }
+
+  getAliveCount() {
+
+    let count = 0;
+
+    for (let key in this.items) {
+
+      if (this.items[key].alive == true) {
+
+        count++;
+
+      }
+
+    }
+
+    return count;
+
+  }
+
+  /**
+   * Save ad layout as image.
+   */
+  saveLayoutAsImage() {
+
+    // TODO: Hide anything not wanted
+    // in exported image.
+
+    // Flatten desired layers into canvas
+    const renderContainer = $('.ar-poster')[0];
+
+    html2canvas(renderContainer, {
+      onrendered: (canvas) => {
+        // Canvas is the final rendered <canvas> element
+        this.handleSavedImage(canvas);
+      },
+    });
+
+  }
+
+  /**
+   * Do things with saved image.
+   */
+  handleSavedImage(canvas) {
+
+    const img = canvas.toDataURL('image/png');
+    const blob = this.dataURItoBlob(img);
+
+    const fileReader = new FileReader();
+    const method = 'readAsBinaryString';
+
+    fileReader.onload = function(file) {
+      Meteor.call('saveImageToFile', file.srcElement.result);
+    };
+
+    fileReader[method](blob);
+
+    // TODO: Reset advertisment.
+
+  }
+
+  // Converts image string
+  // to image blob.
+  dataURItoBlob(dataURI) {
+
+    let byteString = atob(dataURI.split(',')[1]);
+    let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    let ab = new ArrayBuffer(byteString.length);
+    let ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mimeString });
 
   }
 
@@ -452,7 +567,7 @@ export class ArPoster extends React.Component {
               </div>
 
               <div id='arrows'>
-                <h3 id='label'>(Temporary) Label Here</h3>
+                <h3 id='label'>(Block) Label Here</h3>
                 <img src='images/arrow.png' className='right'/>
                 <img src='images/arrow.png' className='left'/>
               </div>
