@@ -146,7 +146,7 @@ export class ArPoster extends React.Component {
 
       this.inactivitySeconds++;
 
-      if (this.inactivitySeconds == 6) {
+      if (this.inactivitySeconds == 8) {
         // If red UI is hidden, show.
         TweenMax.to($('.ar-poster #arrows'), 0.3, {autoAlpha:0.0});
       }
@@ -553,33 +553,7 @@ export class ArPoster extends React.Component {
     return new Blob([ab], { type: mimeString });
 
   }
-/*
-  renderLayoutItems() {
 
-    if (this.items) {
-
-      let itemsJSX = [];
-
-      for (var i = 0; i < this.items.length; i++) {
-
-        const item = this.items[i];
-
-        const itemJSX = <div key={i} id={item.id} className='item'>
-                          <img src='#' className='asset'/>
-                        </div>;
-
-        itemsJSX.push(itemJSX);
-
-      }
-
-      return <div>{itemsJSX}</div>;
-
-    }
-
-    return '';
-
-  }
-*/
   render() {
 
     return <div className='ar-poster'>
