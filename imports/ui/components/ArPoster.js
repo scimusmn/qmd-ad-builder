@@ -20,14 +20,19 @@ export class ArPoster extends React.Component {
     // Dictionary to find
     // item ids from marker ids.
     this.lookup = {
-      5:{ id:'headline', label:'Appeal to vanity' },
-      6:{ id:'quote', label:'Jargon' },
-      255:{ id:'name', label:'(Suspicious) Name' },
-      991:{ id:'details', label:'(The devil\'s in the...)  details' },
-      383:{ id:'claim', label:'(False) Claim' },
-      767:{ id:'endorsement', label:'(Meaningless) Endorsement' },
-      682:{ id:'image', label:'(Misleading) Images' },
-      999:{ id:'flair', label:'(Attention-grabbing) Flair' },
+      343:{ id:'name', label:'(Suspicious) Name' },
+      672:{ id:'details', label:'(The devil\'s in the...)  details' },
+      1019:{ id:'claim', label:'(False) Claim' },
+      839:{ id:'endorsement', label:'(Meaningless) Endorsement' },
+      975:{ id:'image', label:'(Misleading) Images' },
+      767:{ id:'flair', label:'(Attention-grabbing) Flair' },
+
+      863:{ id:'name-modern', label:'(Suspicious) Name' },
+      1023:{ id:'details-modern', label:'(The devil\'s in the...)  details' },
+      383:{ id:'claim-modern', label:'(False) Claim' },
+      255:{ id:'endorsement-modern', label:'(Meaningless) Endorsement' },
+      991:{ id:'image-modern', label:'(Misleading) Images' },
+      682:{ id:'flair-modern', label:'(Attention-grabbing) Flair' },
     };
 
     // Holds all poster items.
@@ -65,6 +70,9 @@ export class ArPoster extends React.Component {
       const label = this.lookup[key].label;
       const $target = $('#' + itemId);
       const $image = $target.find('img');
+
+      // TODO: Should add div to container
+      // here. So
 
       this.items[key] = { id:itemId,
                           label:label,
@@ -107,25 +115,29 @@ export class ArPoster extends React.Component {
     Mousetrap.bind(['left', 'c'], () => {
 
       this.incrementImage(-1);
+      this.resetInactivity();
 
     });
 
     Mousetrap.bind(['right', 'b'], () => {
 
       this.incrementImage(1);
+      this.resetInactivity();
 
     });
 
     Mousetrap.bind(['s', 'a'], () => {
 
       this.incrementSize();
+      this.resetInactivity();
 
     });
 
     Mousetrap.bind(['return', 'e'], () => {
 
       console.log('Save Image');
-      this.saveLayoutAsImage();
+
+      // this.saveLayoutAsImage();
 
     });
 
@@ -133,6 +145,11 @@ export class ArPoster extends React.Component {
     setInterval(() => {
 
       this.inactivitySeconds++;
+
+      if (this.inactivitySeconds == 6) {
+        // If red UI is hidden, show.
+        TweenMax.to($('.ar-poster #arrows'), 0.3, {autoAlpha:0.0});
+      }
 
     }, 1000);
 
@@ -251,10 +268,10 @@ export class ArPoster extends React.Component {
     const currentScale = this.activeItem.scale;
     let newScale = 1.0;
 
-    if (currentScale >= 1.0) {
+    if (currentScale >= 1.4) {
       newScale = 0.6;
-    } else if (currentScale >= 0.6) {
-      newScale = 0.36;
+    } else if (currentScale >= 1.0) {
+      newScale = 1.4;
     } else {
       newScale = 1.0;
     }
@@ -443,6 +460,9 @@ export class ArPoster extends React.Component {
 
     this.inactivitySeconds = 0;
 
+    // If red UI is hidden, show.
+    TweenMax.to($('.ar-poster #arrows'), 0.2, {autoAlpha:1.0});
+
   }
 
   fishAliveIDs() {
@@ -533,18 +553,36 @@ export class ArPoster extends React.Component {
     return new Blob([ab], { type: mimeString });
 
   }
+/*
+  renderLayoutItems() {
 
+    if (this.items) {
+
+      let itemsJSX = [];
+
+      for (var i = 0; i < this.items.length; i++) {
+
+        const item = this.items[i];
+
+        const itemJSX = <div key={i} id={item.id} className='item'>
+                          <img src='#' className='asset'/>
+                        </div>;
+
+        itemsJSX.push(itemJSX);
+
+      }
+
+      return <div>{itemsJSX}</div>;
+
+    }
+
+    return '';
+
+  }
+*/
   render() {
 
     return <div className='ar-poster'>
-
-              <div id='headline' className='item'>
-                <img src='#' className='asset'/>
-              </div>
-
-              <div id='quote' className='item'>
-                <img src='#' className='asset'/>
-              </div>
 
               <div id='name' className='item'>
                 <img src='#' className='asset'/>
@@ -563,6 +601,34 @@ export class ArPoster extends React.Component {
               </div>
 
               <div id='image' className='item'>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='flair' className='item'>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='name-modern' className='item'>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='details-modern' className='item'>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='claim-modern' className='item'>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='endorsement-modern' className='item'>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='image-modern' className='item'>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='flair-modern' className='item'>
                 <img src='#' className='asset'/>
               </div>
 
