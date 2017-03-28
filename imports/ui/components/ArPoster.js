@@ -75,6 +75,7 @@ export class ArPoster extends React.Component {
       // here. So
 
       this.items[key] = { id:itemId,
+                          key:key,
                           label:label,
                           target:$target,
                           image:$image,
@@ -87,6 +88,7 @@ export class ArPoster extends React.Component {
                           prevX:-1,
                           prevY:-1,
                           scale:1.0,
+                          zIndex:1,
                         };
 
       // Hide
@@ -146,9 +148,9 @@ export class ArPoster extends React.Component {
 
       this.inactivitySeconds++;
 
-      if (this.inactivitySeconds == 8) {
+      if (this.inactivitySeconds == 7) {
         // If red UI is hidden, show.
-        TweenMax.to($('.ar-poster #arrows'), 0.3, {autoAlpha:0.0});
+        TweenMax.to($('.ar-poster #arrows'), 0.25, {autoAlpha:0.0});
       }
 
     }, 1000);
@@ -213,6 +215,12 @@ export class ArPoster extends React.Component {
 
   setActiveItem(activeId) {
 
+    // Exit early if trying
+    // to set same active item.
+    if (this.activeItem && this.activeItem.key == activeId) {
+      return;
+    }
+
     let item;
 
     for (let key in this.items) {
@@ -221,11 +229,16 @@ export class ArPoster extends React.Component {
 
       if (key == activeId) {
 
+        // Deal with active item.
         item.active = true;
         this.activeItem = this.items[key];
 
-        // Move arrows into active
-        // item's div
+        // Z-sort active item to top
+        item.zIndex = _.size(this.items) + 1;
+        item.target.css('z-index', item.zIndex);
+
+        // Move arrows into
+        // active item's div
         this.activeItem.target.append($('#arrows'));
 
         // Update active block label
@@ -237,6 +250,10 @@ export class ArPoster extends React.Component {
       } else {
 
         item.active = false;
+
+        // Reduce z sorting layer.
+        item.zIndex = item.zIndex - 1;
+        item.target.css('z-index', item.zIndex);
 
       }
 
@@ -506,7 +523,7 @@ export class ArPoster extends React.Component {
     // in exported image.
 
     // Flatten desired layers into canvas
-    const renderContainer = $('.ar-poster')[0];
+    const renderContainer = $('.workspace')[0];
 
     html2canvas(renderContainer, {
       onrendered: (canvas) => {
