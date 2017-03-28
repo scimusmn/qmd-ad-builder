@@ -135,11 +135,15 @@ export class ArPoster extends React.Component {
 
     });
 
-    Mousetrap.bind(['return', 'e'], () => {
+    Mousetrap.bind(['return return return', 'e e e'], () => {
 
       console.log('Save Image');
 
-      // this.saveLayoutAsImage();
+      if (this.inactivitySeconds > 5) {
+
+        this.saveLayoutAsImage();
+
+      }
 
     });
 
@@ -148,9 +152,11 @@ export class ArPoster extends React.Component {
 
       this.inactivitySeconds++;
 
-      if (this.inactivitySeconds == 7) {
+      if (this.inactivitySeconds == 5) {
+
         // If red UI is hidden, show.
         TweenMax.to($('.ar-poster #arrows'), 0.25, {autoAlpha:0.0});
+
       }
 
     }, 1000);
