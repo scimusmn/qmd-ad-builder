@@ -122,9 +122,38 @@
   left:0px;
   width:600px;
 
+  font-family: 'Avant Garde';
+  font-weight: 300;
+
   color: rgba(255,0,0,0.9);
-/*  background-color: rgba(102,244,255,0.6);
-*/
+  background-color: rgba(255,255,255,0.8);
+
+  pointer-events: none;
+  text-align: center;
+
+  /* Center label on point */
+  -moz-transform: translate(-50%, -225%);
+  -ms-transform: translate(-50%, -225%);
+  -o-transform: translate(-50%, -225%);
+  transform: translate(-50%, -225%);
+
+}
+
+.ar-poster #arrows #label.antique {
+  font-family: 'Georgia';
+  font-weight: 300;
+}
+
+.ar-poster #arrows #label {
+
+  position: absolute;
+  top:0px;
+  left:0px;
+  width:600px;
+
+  color: rgba(255,0,0,0.9);
+  background-color: rgba(255,255,255,0.7);
+
   pointer-events: none;
   text-align: center;
 
@@ -170,11 +199,20 @@
 
 }
 
+/* Todo - sizes should be restrained in source asset to prevent scaling in multiple places */
+.ar-poster .item .asset {
+  max-width: 800px;
+  max-height: 800px;
+  min-width: 350px;
+  /*min-height: 500px;*/
+}
+
 .ar-poster #image img,
 .ar-poster #image-modern img {
 
-  max-width: 620px;
-  max-height: 620px;
+  /*  max-width: 620px;
+    max-height: 620px;
+  */
 
 }
 

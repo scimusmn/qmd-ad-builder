@@ -346,7 +346,7 @@ export class ArPoster extends React.Component {
 
       // First asset defaults
       // to instruction blocks.
-      if (this.getAliveCount() <= 1 || this.inactivitySeconds >= 20) {
+      if (this.getAliveCount() <= 1 || this.inactivitySeconds >= 15) {
         item.image.attr('src', '/images/block-instruct.png');
       } else {
         // Assume user doesn't need instructions.
@@ -463,10 +463,12 @@ export class ArPoster extends React.Component {
           // shift, highlight to another
           // random alive item.
           const aliveItemId = this.fishAliveIDs();
+          console.log('aliveItemId', aliveItemId);
           if (aliveItemId === undefined) {
             // No blocks remaining.
             // Show inactive instruction message.
             $('#intro-instruct').show();
+            this.activeItem = null;
           } else {
             this.setActiveItem(aliveItemId);
           }

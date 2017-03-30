@@ -9,6 +9,7 @@ manifest.files = {};
 const allowedTypes = [
                         'image/jpeg',
                         'image/png',
+                        'image/gif',
                       ];
 
 // Path to our images folder
@@ -43,7 +44,7 @@ Meteor.startup(() => {
 
             if (_.includes(allowedTypes, mimeType)) {
 
-              // console.log('Adding to manifest:', folder, file);
+              // console.log('Adding to manifest:', file);
 
               manifest.files[folder].push(filePath);
 
