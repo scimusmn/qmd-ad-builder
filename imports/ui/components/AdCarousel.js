@@ -2,6 +2,7 @@
 
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
+import moment from 'moment';
 
 export class AdCarousel extends React.Component {
 
@@ -31,7 +32,10 @@ export class AdCarousel extends React.Component {
     if (this.props.savedAds && this.props.savedAds.length != 0) {
 
       const ad = this.props.savedAds[0];
-      console.log(ad);
+
+      ad.timestampLabel = moment(ad.timestamp).format('MMMM Do YYYY, h:mm a');
+
+      // TODO: If created today, show format "Create XX hours and XX minutes ago."
 
       return ad;
 
@@ -41,15 +45,16 @@ export class AdCarousel extends React.Component {
 
   }
 
-
   render() {
 
     const curAd = this.getCurrentAd();
 
     return <div className='ad-carousel'>
-              <img src={ curAd.imgURL } width='420px'/>
-              <p>Created: { curAd.timestamp } </p>
-              <p>To share go to: { curAd.slug }</p>
+
+              <img src={ curAd.imgURL } height='600px'/>
+              <img src='images/placard-frame.png'/>
+              <p className='time'>Created <span className='highlight'>{ curAd.timestampLabel }</span>.</p>
+              {/* <p className='slug'>View online at <span className='highlight'> www.smm.org/{ curAd.slug }</span> (Coming soon)</p> */}
 
            </div>;
   }

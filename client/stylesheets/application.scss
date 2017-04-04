@@ -377,6 +377,59 @@ $debug-white: rgba(255,255,255, 1.0);
 }
 
 
+/* ********** */
+/* The Placrd */
+/* ********** */
+.placard {
+
+  width: 800px;
+  height: 600px;
+  overflow: hidden;
+  background-color: black;
+  left: 0px;
+  top:0px;
+  position: absolute;
+}
+
+.placard .ad-carousel img {
+
+  height: 600px;
+  overflow: hidden;
+
+  /* Center */
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0%);
+
+}
+
+.placard .ad-carousel p {
+
+  /* Center */
+  position: absolute;
+  color:rgba(255,255,255,0.9);
+  font-size: 11px;
+  width: 100%;
+  text-align: center;
+
+}
+
+.placard .ad-carousel span.highlight {
+  /*color: rgba(255,0,0,0.9);*/
+  /*text-decoration: underline;*/
+}
+
+.placard .ad-carousel p.time {
+  top: 23px;
+}
+
+.placard .ad-carousel p.slug {
+  bottom: 14px;
+}
+
+
+
 /* ************* */
 /* Miscellaneous */
 /* ************* */
