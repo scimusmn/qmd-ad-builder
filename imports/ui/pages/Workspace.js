@@ -5,7 +5,7 @@ import { ArDebug } from '../components/ArDebug';
 import { ArPoster } from '../components/ArPoster';
 
 const Workspace = () => (
-  <div className="workspace">
+  <div className='workspace'>
     <ArDebug/>
     <ArPoster/>
   </div>

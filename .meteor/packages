@@ -35,3 +35,5 @@ dburles:factory@1.0.0
 ddp-rate-limiter@1.0.6
 shell-server@0.2.1
 izzilab:shelljs
+cfs:standard-packages
+cfs:filesystem

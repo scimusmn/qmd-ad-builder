@@ -1,5 +1,16 @@
 import { Meteor } from 'meteor/meteor';
-import fs from 'fs';
+import SavedAds from '../../api/savedAds/savedAds.js';
+
+
+
+/**
+ *
+ * TODO: This file no longer is performing
+ * its original intention, and should be renamed
+ * and reorganized. It could probably become a
+ * smaller part of another file.
+ *
+ */
 
 /**
  * Server side methods
@@ -12,44 +23,31 @@ Meteor.methods({
    * @param blob Image data in a blob from the web camera stream
    */
 
-  saveImageToFile: function(blob) {
+  saveAdvertisement: function(imgFileId) {
 
-    check(blob, String);
+    check(imgFileId, String);
 
-    // Generate a filename and filePath
-    const filePath = process.env.PWD + '/public/saved-ads/';
-    const uniqueId = uuid();
-    const filename = uniqueId + '.png';
-    const filePathName = filePath + filename;
+    const imgURL = 'cfs/files/images/' + imgFileId;
+    console.log('imgURL:', imgURL);
 
-    // Save file
-    fs.writeFile(filePathName, blob, 'binary', function(err) {
+    console.log('The file ' + imgFileId + ' was saved to ' + imgURL);
 
-      if (err) {
+    const timestamp = Date.now();
 
-        console.log('Failed', err);
-
-      } else {
-
-        console.log('The file ' + filename + ' was saved to ' + filePath);
-
+    // TEMP: We can do something like this to create memorable slugs.
+    const slugAdjs = ['trusty', 'tricky', 'reliable', 'realish', 'not-fake', 'kinda', 'endorsed'];
+    const slugNouns = ['product', 'ad', 'invention', 'miracle', 'discovery'];
+    let slug = '';
+    for (i = 0; i <= 3; i++) {
+      slug += ('' + slugAdjs[Math.floor(Math.random() * slugAdjs.length)] + '-');
+      if (i == 3) {
+        slug += slugNouns[Math.floor(Math.random() * slugNouns.length)];
       }
-
-    });
-
-    /**
-     * Generate a unique (enough) string for saved file names
-     * @return {string} uuid
-     */
-    function uuid() {
-      return uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
-        function(c) {
-          const r = Math.random() * 16 | 0;
-          const v = c == 'x' ? r : r & 0x3 | 0x8;
-          return v.toString(16);
-        }
-      );
     }
+
+    const adDoc = {timestamp:timestamp, slug:slug, imgId:imgFileId, imgURL:imgURL};
+
+    SavedAds.insert(adDoc);
 
   },
 

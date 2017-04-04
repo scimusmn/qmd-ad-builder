@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import arCam from '../../modules/client/ArCamera';
 import Utils from '../../modules/client/Utils';
+import ImageFiles from '../../api/ImageFiles';
 import TweenMax from 'gsap';
 import html2canvas from 'html2canvas';
 
@@ -137,13 +138,11 @@ export class ArPoster extends React.Component {
 
     Mousetrap.bind(['return return return', 'e e e'], () => {
 
-      console.log('Save Image');
+      // if (this.inactivitySeconds > 5) {
 
-      if (this.inactivitySeconds > 5) {
+      this.saveLayoutAsImage();
 
-        this.saveLayoutAsImage();
-
-      }
+      // }
 
     });
 
@@ -341,8 +340,8 @@ export class ArPoster extends React.Component {
       item.deadCount = 0;
 
       TweenMax.killTweensOf(item.target);
-      TweenMax.set(item.target, {opacity:1.0, scale: item.scale, x:x, y:y, rotation:rotation + '_short'});
-      TweenMax.from(item.target, 0.2, {opacity:0.0, scale:item.scale + 0.4});
+      TweenMax.set(item.target, {autoAlpha:1.0, scale: item.scale, x:x, y:y, rotation:rotation + '_short'});
+      TweenMax.from(item.target, 0.2, {autoAlpha:0.0, scale:item.scale + 0.4});
 
       // First asset defaults
       // to instruction blocks.
@@ -455,7 +454,7 @@ export class ArPoster extends React.Component {
           // let's assume the user has intentionally
           // removed it from the poster and remove.
           TweenMax.killTweensOf(item.target);
-          TweenMax.to(item.target, 0.15, { scale: item.scale - 0.3, opacity:0.0});
+          TweenMax.to(item.target, 0.15, { scale: item.scale - 0.3, autoAlpha:0.0});
 
           item.alive = false;
 
@@ -463,7 +462,7 @@ export class ArPoster extends React.Component {
           // shift, highlight to another
           // random alive item.
           const aliveItemId = this.fishAliveIDs();
-          console.log('aliveItemId', aliveItemId);
+
           if (aliveItemId === undefined) {
             // No blocks remaining.
             // Show inactive instruction message.
@@ -527,6 +526,8 @@ export class ArPoster extends React.Component {
    */
   saveLayoutAsImage() {
 
+    console.log('saveLayoutAsImage()');
+
     // TODO: Hide anything not wanted
     // in exported image.
 
@@ -553,13 +554,32 @@ export class ArPoster extends React.Component {
     const fileReader = new FileReader();
     const method = 'readAsBinaryString';
 
-    fileReader.onload = function(file) {
-      Meteor.call('saveImageToFile', file.srcElement.result);
-    };
+    // TEMP CFS file save
+    ImageFiles.insert(blob, function(err, fileObj) {
 
-    fileReader[method](blob);
+      // Inserted new doc with ID fileObj._id,
+      // and kicked off the data upload using HTTP
 
-    // TODO: Reset advertisment.
+      if (err) {
+        // Handle error
+        console.log('Images.insert::ERROR ');
+        console.log(err);
+      } else {
+        console.log('Images.insert::SUCCESS');
+
+        fileObj.on('uploaded', () => {
+          fileObj.off('uploaded'); // Remove listener
+          console.log('fileObj uploaded');
+
+          // Add new ad to saved ads collection
+          Meteor.call('saveAdvertisement', fileObj._id);
+        });
+
+      }
+
+    });
+
+    // TODO: Reset advertisement.
 
   }
 
