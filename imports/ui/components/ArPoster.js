@@ -88,7 +88,7 @@ export class ArPoster extends React.Component {
                           prevRot:-1,
                           prevX:-1,
                           prevY:-1,
-                          scale:1.0,
+                          scale:0.6,
                           zIndex:1,
                         };
 
@@ -290,12 +290,12 @@ export class ArPoster extends React.Component {
     const currentScale = this.activeItem.scale;
     let newScale = 1.0;
 
-    if (currentScale >= 1.4) {
-      newScale = 0.6;
-    } else if (currentScale >= 1.0) {
-      newScale = 1.4;
-    } else {
+    if (currentScale >= 1.0) {
+      newScale = 0.36;
+    } else if (currentScale >= 0.6) {
       newScale = 1.0;
+    } else {
+      newScale = 0.6;
     }
 
     this.activeItem.scale = newScale;
@@ -338,6 +338,9 @@ export class ArPoster extends React.Component {
 
       item.alive = true;
       item.deadCount = 0;
+
+      // New item's always default to middle size
+      item.scale = 0.6;
 
       TweenMax.killTweensOf(item.target);
       TweenMax.set(item.target, {autoAlpha:1.0, scale: item.scale, x:x, y:y, rotation:rotation + '_short'});
@@ -400,12 +403,12 @@ export class ArPoster extends React.Component {
       // do jq lookup each tick
       if (item.active == true) {
 
-        const offset = (item.image.outerWidth() + $(item.target).find('#arrows .right').outerWidth()) * 0.5;
+        const offset = (item.image.outerWidth() + $(item.target).find('#arrows .right').outerWidth()) * 0.51;
 
         TweenMax.to($(item.target).find('#arrows .right'), 0.15, {left:offset});
         TweenMax.to($(item.target).find('#arrows .left'), 0.15, {left:-offset});
 
-        const offsetTop = item.image.outerHeight() * 0.5;
+        const offsetTop = item.image.outerHeight() * 0.36;
         TweenMax.to($(item.target).find('#arrows #label'), 0.15, {top:-offsetTop});
 
       }
