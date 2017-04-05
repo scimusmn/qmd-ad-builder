@@ -14,7 +14,7 @@ const allowedTypes = [
 
 // Path to our images folder
 const parentDirectory = `${process.env.PWD}/public/images/`;
-const targetFolders = ['name', 'details', 'claim', 'endorsement', 'image', 'flair', 'name-modern', 'details-modern', 'claim-modern', 'endorsement-modern', 'image-modern', 'flair-modern'];
+const targetFolders = ['name', 'details', 'claim', 'endorsement', 'image', 'flair', 'motion1', 'motion2', 'motion3'];
 
 // On startup, gather all
 // filepaths in public/ folder.

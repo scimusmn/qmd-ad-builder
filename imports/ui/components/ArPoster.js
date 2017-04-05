@@ -21,6 +21,7 @@ export class ArPoster extends React.Component {
     // Dictionary to find
     // item ids from marker ids.
     this.lookup = {
+
       343:{ id:'name', label:'(Suspicious) Name' },
       672:{ id:'details', label:'(The devil\'s in the...)  details' },
       1019:{ id:'claim', label:'(False) Claim' },
@@ -34,6 +35,11 @@ export class ArPoster extends React.Component {
       255:{ id:'endorsement', label:'(Meaningless) Endorsement' },
       991:{ id:'image', label:'(Misleading) Images' },
       682:{ id:'flair', label:'(Attention-grabbing) Flair' },
+
+      84:{ id:'motion1', label:'(Eye-catching) Motion (1)' },
+      85:{ id:'motion2', label:'(Eye-catching) Motion (2)' },
+      340:{ id:'motion3', label:'(Eye-catching) Motion (3)' },
+
     };
 
     // Holds all poster items.
@@ -349,7 +355,7 @@ export class ArPoster extends React.Component {
       // First asset defaults
       // to instruction blocks.
       if (this.getAliveCount() <= 1 || this.inactivitySeconds >= 15) {
-        item.image.attr('src', '/images/block-instruct.png');
+        item.image.attr('src', 'images/block-instruct.png');
       } else {
         // Assume user doesn't need instructions.
         // Default to most recent asset.
@@ -627,6 +633,18 @@ export class ArPoster extends React.Component {
               </div>
 
               <div id='flair' className='item'>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='motion1' className='item'>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='motion2' className='item'>
+                <img src='#' className='asset'/>
+              </div>
+
+              <div id='motion3' className='item'>
                 <img src='#' className='asset'/>
               </div>
 
