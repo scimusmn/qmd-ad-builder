@@ -101,7 +101,7 @@ export class ArDebug extends React.Component {
               <SettingsGroup id='cam-selection' label='CAMERAS' options={arCam.getCameraOptions()}>
               </SettingsGroup>
 
-              <SettingsGroup id='background-selection' label='BACKGROUNDS' options={['newspaper-modern.png', 'newspaper-bg.png', 'None']}>
+              <SettingsGroup id='background-selection' label='BACKGROUNDS' options={['newspaper-modern.png', 'newspaper-bg.png','web-bg.png', 'None']}>
               </SettingsGroup>
 
 

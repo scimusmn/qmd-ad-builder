@@ -144,11 +144,11 @@ export class ArPoster extends React.Component {
 
     Mousetrap.bind(['return return return', 'e e e'], () => {
 
-      // if (this.inactivitySeconds > 5) {
+      if (this.inactivitySeconds > 5) {
 
-      this.saveLayoutAsImage();
+        this.saveLayoutAsImage();
 
-      // }
+      }
 
     });
 
