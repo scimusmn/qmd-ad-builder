@@ -3,7 +3,8 @@ Learn to recognize red flags in advertising by constructing your own questionabl
 
 ## Install Instructions
 1) If Meteor isn't installed on your machine, install via Terminal: `curl https://install.meteor.com/ | sh`
-2) Run `meteor npm install` from project directory
+2) Clone this repo from desired directory. `git clone https://github.com/scimusmn/qmd-ad-builder.git`
+2) Run `meteor npm install` from project directory.
 
 ## Launch Instructions
 1) Using Terminal, change directories into project. e.g. `cd ~/Desktop/qmd-ad-builder`
