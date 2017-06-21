@@ -6,7 +6,7 @@ Learn to recognize red flags in advertising by constructing your own questionabl
 2) Run `meteor npm install` from project directory
 
 ## Launch Instructions
-1) In Terminal, change directories into project. e.g. `cd ~/Desktop/qmd-ad-builder`
+1) Using Terminal, change directories into project. e.g. `cd ~/Desktop/qmd-ad-builder`
 2) Run `meteor --settings settings-kiosk.json` from project directory.
 3) Navigate Google Chrome to `http://localhost:3000/`
 
