@@ -210,6 +210,11 @@ $debug-white: rgba(255,255,255, 1.0);
 .ar-debug h1 {
   color: $debug-salmon;
   background-color: $debug-gold;
+  font-size: 64px;
+  margin: 0px;
+  padding: 4px;
+  padding-left: 16px;
+  font-weight: 900;
 }
 
 .ar-debug h2,
@@ -218,23 +223,29 @@ $debug-white: rgba(255,255,255, 1.0);
   background-color: $debug-light-blue;
 }
 
-.ar-debug #all-options {
+.ar-debug #options {
   position: absolute;
   top: 140px;
   left: 1482px;
 }
 
 
-.ar-debug #cam-selection {
+.ar-debug #cameras {
   position: absolute;
   top: 440px;
   left: 1482px;
 }
 
-.ar-debug #background-selection {
+.ar-debug #backgrounds {
   position: absolute;
-  top: 750px;
+  top: 680px;
   left: 1482px;
+}
+
+.ar-debug #save-btn {
+  position: absolute;
+  top: 21px;
+  right: 12px;
 }
 
 .ar-debug #toggles-example {
@@ -243,7 +254,7 @@ $debug-white: rgba(255,255,255, 1.0);
   left: 500px;
 }
 
-.debug-settings-group {
+.settings-group {
 
   color: $debug-turqoise;
   background-color: $debug-gold;
@@ -254,7 +265,38 @@ $debug-white: rgba(255,255,255, 1.0);
 
 }
 
-.debug-settings-group .label {
+.settings-group h2 {
+
+  text-transform: uppercase;
+
+}
+
+.settings-group#marker-detection {
+
+  width: 960px !important;
+
+}
+
+.debug-save .btn-success {
+  color: $debug-salmon;
+  background-color: rgba($debug-gold, 1);
+  border-color: $debug-gold;
+  font-weight: 900;
+  font-size: 23px;
+  padding: 3px 62px;
+}
+
+.debug-save .btn-success:hover {
+  color: $debug-white;
+  background-color: $debug-salmon;
+  border-color: $debug-salmon;
+}
+
+.debug-save .btn-success:active {
+  background-color: rgba($debug-salmon, 0.6);
+}
+
+.settings-group .label {
 
   color: $debug-salmon;
   background-color: $debug-gold;
@@ -281,6 +323,11 @@ $debug-white: rgba(255,255,255, 1.0);
   padding:0px;
 }
 
+.setting-vis {
+  color: $debug-white;
+  background-color: $debug-gray;
+}
+
 .setting-input {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -295,7 +342,6 @@ $debug-white: rgba(255,255,255, 1.0);
   -moz-transition: all 0.15s ease-out 0;
   transition: all 0.15s ease-out 0;
   background: $debug-turqoise;
-  /*background-color: rgba(255,255,255,0.1);*/
   border: none;
   color: $debug-white;
   cursor: pointer;

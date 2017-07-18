@@ -43,12 +43,14 @@ export class Setting extends React.Component {
     Session.set(this.props.id, event.target.checked);
     this.setState({isChecked: event.target.checked});
 
-    // TEMP
-/*    console.log('//// SESSION VARS ///////');
-    _.each(Session.keys, function(element, index, list) {
-      console.log(index, element);
-    });
-*/
+  }
+
+  renderLabel() {
+
+    let labelTxt = this.props.label;
+    if (labelTxt === '') label = s.titleize(s.humanize(this.props.id));
+    return labelTxt;
+
   }
 
   getLabel() {
@@ -60,6 +62,7 @@ export class Setting extends React.Component {
     }
 
     return labelTxt;
+
   }
 
   render() {

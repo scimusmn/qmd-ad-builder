@@ -4,6 +4,7 @@ import React from 'react';
 import Mousetrap from 'mousetrap';
 
 import arCam from '../../modules/client/ArCamera';
+import { SettingsLayer } from './debug/SettingsLayer';
 import { SettingsGroup } from './debug/SettingsGroup';
 import { Setting } from './debug/Setting';
 import { Option } from './debug/Option';
@@ -26,6 +27,8 @@ export class ArDebug extends React.Component {
 
     });
 
+    this.backgroundOptions = ['newspaper-modern.png', 'newspaper-bg.png','web-bg.png', 'None'];
+
   }
 
   componentDidMount() {
@@ -40,7 +43,7 @@ export class ArDebug extends React.Component {
     // and update corresponding variables.
     Tracker.autorun(function() {
 
-      const bg = Session.get('background-selection');
+      const bg = Session.get('backgrounds');
       if (bg == 'None') {
         $('.workspace').css('background-image', 'none');
       } else {
@@ -85,28 +88,38 @@ export class ArDebug extends React.Component {
 
     return <div className='ar-debug'>
 
-              <h1>DEBUG VIEW</h1>
-              <div><h2><strong>//////////////////////////////////////////////////////</strong></h2></div>
+              <SettingsLayer label='Ad Builder Settings'>
 
-              <video id='debug-video' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
-              <canvas id='debug-canvas' style={{width:'960px', height:'620px'}}></canvas><br/>
+                <SettingsGroup id='marker-detection'>
+                  <video id='debug-video' className='setting-vis' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
+                  <canvas id='debug-canvas' className='setting-vis' style={{width:'960px', height:'620px'}}></canvas><br/>
+                </SettingsGroup>
 
-              <SettingsGroup id='all-options' label='OPTIONS'>
-                <Setting id='invert-detection'/>
-                <Setting id='flip-input-h' label='Flip Input'/>
-                <Setting id='flip-output-h' label='Flip Output'/>
-                <Setting id='show-frame' label='Poster Frame'/>
-              </SettingsGroup>
+                <SettingsGroup id='options'>
+                  <Setting id='invert-detection'/>
+                  <Setting id='flip-input-h'/>
+                  <Setting id='flip-output-h'/>
+                  <Setting id='show-frame'/>
+                </SettingsGroup>
 
-              <SettingsGroup id='cam-selection' label='CAMERAS' options={arCam.getCameraOptions()}>
-              </SettingsGroup>
+                <SettingsGroup id='backgrounds' type='select'>
+                  {this.backgroundOptions.map(key =>
+                    <Setting key={key} id={key}></Setting>
+                  )}
+                </SettingsGroup>
 
-              <SettingsGroup id='background-selection' label='BACKGROUNDS' options={['newspaper-modern.png', 'newspaper-bg.png','web-bg.png', 'None']}>
-              </SettingsGroup>
+                <SettingsGroup id='cameras' type='select'>
+                  {arCam.getCameraOptions().map((cam, index) =>
+                    <Setting key={index} id={cam.label}></Setting>
+                  )}
+                </SettingsGroup>
 
+              </SettingsLayer>
 
            </div>;
+
   }
+
 }
 
 ArDebug.propTypes = {

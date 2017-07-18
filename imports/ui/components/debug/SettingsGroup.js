@@ -3,7 +3,7 @@
 import React from 'react';
 import { Setting } from './Setting';
 import { Option } from './Option';
-import _ from 'underscore';
+import s from 'underscore.string';
 
 export class SettingsGroup extends React.Component {
 
@@ -19,17 +19,9 @@ export class SettingsGroup extends React.Component {
 
   }
 
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
-
   optionChangeCallback(event) {
 
-    console.log('Settings group change: ', this.props.id, '->', event.target.id);
+    console.log('Selection group change: ', this.props.id, '->', event.target.id);
 
     const optionId = event.target.id;
 
@@ -37,67 +29,45 @@ export class SettingsGroup extends React.Component {
 
   }
 
-  groupLabel() {
-
-    let label = this.props.label;
-
-    if (label == undefined) {
-      label = s.titleize(s.humanize(this.props.id));
-    }
-
-    return label;
-
-  }
-
   renderLabel() {
-    if (this.props.label != '') {
-      return <h2 className='label'>{this.props.label}</h2>;
-    } else {
-      return '';
-    }
+    let label = this.props.label;
+    if (label === '') label = s.titleize(s.humanize(this.props.id));
+    return <h2 className='label'>{label}</h2>;
   }
 
   renderChildren() {
 
-    if (this.props.options) {
+    if (this.props.type == 'select') {
 
-      // Create children from passed array...
-      let optionsJSX = [];
-
-      for (var i = 0; i < this.props.options.length; i++) {
-
-        let option = this.props.options[i];
-
-        // Convert string to usesable object.
-        if (typeof option == 'string') {
-          option = {id:option,label:option};
-        }
-
-        if (_.has(option, 'id') == false && _.has(option, 'label') == true) {
-          option.id = option.label;
-        }
-
-        if (_.has(option, 'label') == false) {
-          option.label = option.id;
-        }
-
-        optionsJSX.push(<Option key={i} id={option.label} groupName={this.props.label} changeCallback={this.optionChangeCallback}></Option>);
-
-      }
-
-      return <div>{optionsJSX}</div>;
+      return this.renderSelectionGroup();
 
     } else {
 
+      // Render children as individual toggles.
       return this.props.children;
 
     }
 
   }
 
+  renderSelectionGroup() {
+
+    // Create children from passed array...
+    let optionsJSX = [];
+
+    for (var i = 0; i < this.props.children.length; i++) {
+
+      let option = this.props.children[i];
+      optionsJSX.push(<Option key={option.key} id={option.props.id} groupName={this.props.id} changeCallback={this.optionChangeCallback}></Option>);
+
+    }
+
+    return <div>{optionsJSX}</div>;
+  }
+
   render() {
 
-    return <div id={this.props.id} className='debug-settings-group'>
+    return <div id={this.props.id} className='settings-group'>
               {this.renderLabel()}
               {this.renderChildren()}
            </div>;
@@ -108,10 +78,11 @@ export class SettingsGroup extends React.Component {
 SettingsGroup.propTypes = {
   id: React.PropTypes.string,
   label: React.PropTypes.string,
-  options: React.PropTypes.array,
+  type: React.PropTypes.string,
 };
 
 SettingsGroup.defaultProps = {
   id: '',
   label: '',
+  type: 'generic',
 };

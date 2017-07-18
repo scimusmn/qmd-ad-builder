@@ -83,13 +83,14 @@ export const initCamera = () => {
 
   // Flip input
   Tracker.autorun(function() {
+    console.log('flip inni',Session.get('flip-input-h'));
     flipCamera = Session.get('flip-input-h');
   });
 
   // Select camera
   Tracker.autorun(function() {
-    const camLabel = Session.get('cam-selection');
-    console.log('Session::cam-selection:', camLabel);
+    const camLabel = Session.get('cameras');
+    console.log('Session::cameras:', camLabel);
     setCameraByLabel(camLabel);
   });
 
