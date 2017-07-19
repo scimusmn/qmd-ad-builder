@@ -4,6 +4,7 @@ import React from 'react';
 import { Setting } from './Setting';
 import { Option } from './Option';
 import s from 'underscore.string';
+import Draggable from 'react-draggable'; // The default
 
 export class SettingsGroup extends React.Component {
 
@@ -29,10 +30,18 @@ export class SettingsGroup extends React.Component {
 
   }
 
+  handleDragStop(event, position) {
+    console.log('handleDragStop');
+    console.log(position);
+  }
+
   renderLabel() {
     let label = this.props.label;
     if (label === '') label = s.titleize(s.humanize(this.props.id));
-    return <h2 className='label'>{label}</h2>;
+    return <div>
+      <h2 className='label'>{label}</h2>
+      <div className='handle bar'></div>
+    </div>;
   }
 
   renderChildren() {
@@ -67,12 +76,24 @@ export class SettingsGroup extends React.Component {
 
   render() {
 
+    return <Draggable id={this.props.id} handle='.handle' onStop={this.handleDragStop}>
+              <div id={this.props.id} className='settings-group'>
+                {this.renderLabel()}
+                {this.renderChildren()}
+             </div>
+           </Draggable>;
+
+  }
+/*
+  render() {
+
     return <div id={this.props.id} className='settings-group'>
               {this.renderLabel()}
               {this.renderChildren()}
            </div>;
 
   }
+  */
 }
 
 SettingsGroup.propTypes = {
