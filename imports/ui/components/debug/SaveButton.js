@@ -11,14 +11,17 @@ export class SaveButton extends React.Component {
 
     super(props);
 
-    // Bind methods to this instance.
-    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleSaveClick(event) {
+
+    this.props.onSave();
 
   }
 
-  handleClick(event) {
+  handleResetClick(event) {
 
-    this.props.onSave();
+    this.props.onReset();
 
   }
 
@@ -26,8 +29,12 @@ export class SaveButton extends React.Component {
 
     return <div id={this.props.id} className='debug-save'>
 
-              <Button bsStyle='success' bsSize='large' onClick={this.handleClick}>
-                SAVE
+              <Button bsStyle='success' bsSize='large' onClick={this.handleSaveClick.bind(this)} className={this.props.unsavedChanges ? 'unsaved' : 'saved'}>
+                {this.props.unsavedChanges ? 'SAVE' : 'SAVED'}
+              </Button>
+
+              <Button bsStyle='success' bsSize='large' onClick={this.handleResetClick.bind(this)}>
+                RESET
               </Button>
 
            </div>;
@@ -38,9 +45,11 @@ export class SaveButton extends React.Component {
 SaveButton.propTypes = {
   id: React.PropTypes.string,
   onSave: React.PropTypes.func,
+  onReset: React.PropTypes.func,
+  unsavedChanges: React.PropTypes.bool,
 };
 
 SaveButton.defaultProps = {
-
+  unsavedChanges: true,
 };
 

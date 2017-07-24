@@ -79,7 +79,6 @@ export const initCamera = () => {
 
   // Invert detection
   Tracker.autorun(function() {
-    console.log('Change detected: invert-detection');
     if (detector) {
       detector.invertDetection = Session.get('invert-detection');
     }
@@ -87,13 +86,11 @@ export const initCamera = () => {
 
   // Flip input
   Tracker.autorun(function() {
-    console.log('Change detected: flip-input-h');
     flipCamera = Session.get('flip-input-h');
   });
 
   // Target quad update
   Tracker.autorun(() => {
-    console.log('Change detected: targetQuad');
     const newQuad = Session.get('targetQuad');
     if (newQuad && newQuad.length == 4) {
       targetQuad = newQuad;

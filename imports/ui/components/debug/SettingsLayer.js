@@ -13,7 +13,7 @@ export class SettingsLayer extends React.Component {
     super(props);
 
     this.state = {
-
+      unsavedChanges:false,
     };
 
     // Determine key string for local storage.
@@ -44,28 +44,27 @@ export class SettingsLayer extends React.Component {
 
   }
 
-  componentWillUnmount() {
-
-  }
-
   onGroupChange(key, value) {
 
     console.log('Settings Update:', key, value);
 
-    this.currentSettings[key] = value;
-
     // Update session var
     Session.set(key, value);
+
+    // Update settings object
+    this.currentSettings[key] = value;
+
+    this.setState({unsavedChanges:true});
 
   }
 
   saveCurrentSettings() {
-    console.log('saveCurrentSettings');
-    console.log(this.currentSettings);
 
     // Record all current settings
     // as cookie on hard drive.
     localStorage.setItem(this.storageKey, JSON.stringify(this.currentSettings));
+
+    this.setState({unsavedChanges:false});
 
     // TODO: A future, more time consuming
     // version could be: each settings group for
@@ -124,11 +123,28 @@ export class SettingsLayer extends React.Component {
 
   }
 
+  resetAll() {
+
+    if (confirm('Are you sure? This will revert all settings to defaults.') == true) {
+
+      // Clear settings objects
+      this.currentSettings = {};
+
+      // Update local storage
+      this.saveCurrentSettings();
+
+      // Refresh browser
+      window.location.reload();
+
+    }
+
+  }
+
   renderHeader() {
 
     let jsx = <div>
                 <h1>{this.props.label}</h1>
-                <SaveButton onSave={this.saveCurrentSettings.bind(this)}></SaveButton>
+                <SaveButton onSave={this.saveCurrentSettings.bind(this)} onReset={this.resetAll.bind(this)} unsavedChanges={this.state.unsavedChanges}></SaveButton>
               </div>;
 
     return jsx;

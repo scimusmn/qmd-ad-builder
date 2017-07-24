@@ -67,12 +67,26 @@ export class SettingsGroup extends React.Component {
     console.log('onCollapseClick');
     this.setState({collapsed: !this.state.collapsed})
 
-    // this.emitSettings('COLLAPSED-' + this.props.id, this.state.collapsed);
+    // this.emitSettings('COLLAPSE-' + this.props.id, this.state.collapsed);
 
   }
 
   emitSettings(key, value) {
     this.props.onChange(key, value);
+  }
+
+  collapseClassName() {
+
+    let className = 'label collapse-btn';
+
+    if (this.state.collapsed == true) {
+      className += ' down';
+    } else {
+      className += ' up';
+    }
+
+    return className;
+
   }
 
   renderLabel() {
@@ -82,9 +96,10 @@ export class SettingsGroup extends React.Component {
 
       <h2 className='label'>{label}</h2>
       <div className='handle bar'></div>
-      {/* <h2 className='label collapse-btn' onClick={this.onCollapseClick}>^</h2> */}
+      <h2 className={this.collapseClassName()} onClick={this.onCollapseClick}><span className='tri-symbol'></span></h2>
 
     </div>;
+
   }
 
   renderChildren() {
@@ -99,10 +114,10 @@ export class SettingsGroup extends React.Component {
 
         // Add onChange property to all children
         const childrenWithProps = React.Children.map(this.props.children,
-       (child) => React.cloneElement(child, {
-         onChange: this.settingChangeCallback.bind(this),
-       })
-      );
+          (child) => React.cloneElement(child, {
+            onChange: this.settingChangeCallback.bind(this),
+          })
+        );
 
         return childrenWithProps;
 
