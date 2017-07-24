@@ -13,47 +13,104 @@ export class SettingsGroup extends React.Component {
     super(props);
 
     this.state = {
-
+      collapsed: false,
+      dragPosition: {x:0,y:0},
     };
 
     this.optionChangeCallback = this.optionChangeCallback.bind(this);
+    this.settingChangeCallback = this.settingChangeCallback.bind(this);
+    this.handleDragStop = this.handleDragStop.bind(this);
+    this.onCollapseClick = this.onCollapseClick.bind(this);
+
+  }
+
+  componentDidMount() {
+
+    // Listen for external changes
+    // to this setting.
+    Tracker.autorun(() => {
+
+      const newPosition = Session.get('POSXY-' + this.props.id);
+      console.log('new position detected', Session.get('POSXY-' + this.props.id));
+      this.setState({dragPosition:newPosition});
+
+    });
 
   }
 
   optionChangeCallback(event) {
 
-    console.log('Selection group change: ', this.props.id, '->', event.target.id);
-
     const optionId = event.target.id;
 
-    Session.set(this.props.id, optionId);
+    this.emitSettings(this.props.id, optionId);
+
+  }
+
+  settingChangeCallback(key, value) {
+
+    this.emitSettings(key, value);
 
   }
 
   handleDragStop(event, position) {
-    console.log('handleDragStop');
-    console.log(position);
+
+    const newPosition = {x:position.x,y:position.y};
+
+    this.setState({dragPosition:newPosition});
+
+    this.emitSettings('POSXY-' + this.props.id, newPosition);
+
+  }
+
+  onCollapseClick(event) {
+
+    console.log('onCollapseClick');
+    this.setState({collapsed: !this.state.collapsed})
+
+    // this.emitSettings('COLLAPSED-' + this.props.id, this.state.collapsed);
+
+  }
+
+  emitSettings(key, value) {
+    this.props.onChange(key, value);
   }
 
   renderLabel() {
     let label = this.props.label;
     if (label === '') label = s.titleize(s.humanize(this.props.id));
     return <div>
+
       <h2 className='label'>{label}</h2>
       <div className='handle bar'></div>
+      {/* <h2 className='label collapse-btn' onClick={this.onCollapseClick}>^</h2> */}
+
     </div>;
   }
 
   renderChildren() {
 
-    if (this.props.type == 'select') {
+    if (this.state.collapsed == false) {
 
-      return this.renderSelectionGroup();
+      if (this.props.type == 'select') {
+
+        return this.renderSelectionGroup();
+
+      } else {
+
+        // Add onChange property to all children
+        const childrenWithProps = React.Children.map(this.props.children,
+       (child) => React.cloneElement(child, {
+         onChange: this.settingChangeCallback.bind(this),
+       })
+      );
+
+        return childrenWithProps;
+
+      }
 
     } else {
 
-      // Render children as individual toggles.
-      return this.props.children;
+      return null;
 
     }
 
@@ -67,7 +124,7 @@ export class SettingsGroup extends React.Component {
     for (var i = 0; i < this.props.children.length; i++) {
 
       let option = this.props.children[i];
-      optionsJSX.push(<Option key={option.key} id={option.props.id} groupName={this.props.id} changeCallback={this.optionChangeCallback}></Option>);
+      optionsJSX.push(<Option key={option.key} id={option.props.id} groupName={this.props.id} changeCallback={this.optionChangeCallback.bind(this)}></Option>);
 
     }
 
@@ -76,7 +133,7 @@ export class SettingsGroup extends React.Component {
 
   render() {
 
-    return <Draggable id={this.props.id} handle='.handle' onStop={this.handleDragStop}>
+    return <Draggable id={this.props.id} handle='.handle' onStop={this.handleDragStop} position={this.state.dragPosition}>
               <div id={this.props.id} className='settings-group'>
                 {this.renderLabel()}
                 {this.renderChildren()}
@@ -84,22 +141,14 @@ export class SettingsGroup extends React.Component {
            </Draggable>;
 
   }
-/*
-  render() {
 
-    return <div id={this.props.id} className='settings-group'>
-              {this.renderLabel()}
-              {this.renderChildren()}
-           </div>;
-
-  }
-  */
 }
 
 SettingsGroup.propTypes = {
   id: React.PropTypes.string,
   label: React.PropTypes.string,
   type: React.PropTypes.string,
+  onChange: React.PropTypes.func,
 };
 
 SettingsGroup.defaultProps = {

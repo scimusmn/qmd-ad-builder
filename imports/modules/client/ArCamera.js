@@ -26,7 +26,9 @@ let detector;
 let debugImage;
 let warpImage;
 let homographyImage;
-let onMarkersUpdate = (markers) => {};
+let onMarkersUpdate = (markers) => {}
+
+let onTargetQuadUpdate = (quad) => {}
 
 let prevCorners = {};
 
@@ -70,7 +72,6 @@ export const initCamera = () => {
     console.log('navigator.getUserMedia error: ', error);
   });
 
-
   startTracking();
 
   // Listen for session variable changes,
@@ -78,13 +79,26 @@ export const initCamera = () => {
 
   // Invert detection
   Tracker.autorun(function() {
-    if (detector) detector.invertDetection = Session.get('invert-detection');
+    console.log('Change detected: invert-detection');
+    if (detector) {
+      detector.invertDetection = Session.get('invert-detection');
+    }
   });
 
   // Flip input
   Tracker.autorun(function() {
-    console.log('flip inni',Session.get('flip-input-h'));
+    console.log('Change detected: flip-input-h');
     flipCamera = Session.get('flip-input-h');
+  });
+
+  // Target quad update
+  Tracker.autorun(() => {
+    console.log('Change detected: targetQuad');
+    const newQuad = Session.get('targetQuad');
+    if (newQuad && newQuad.length == 4) {
+      targetQuad = newQuad;
+    }
+
   });
 
   // Select camera
@@ -105,7 +119,6 @@ export const initCamera = () => {
       let pt = targetQuad[i];
       const dist = Utils.distCalc(mousePos.x, mousePos.y, pt.x, pt.y);
       if (dist < 10) {
-        console.log('start drag. corner index', i);
         targetQuadDragIndex = i;
         break;
       }
@@ -142,9 +155,12 @@ export const initCamera = () => {
 
     targetQuadDragIndex = -1;
 
-    console.log('New targetQuad coords:');
-    console.dir(targetQuad);
-    console.log(JSON.stringify(targetQuad, null, 4));
+    // console.log('New targetQuad coords:');
+    // console.dir(targetQuad);
+    // console.log(JSON.stringify(targetQuad, null, 4));
+
+    // Update external markers.
+    Session.set('targetQuad', targetQuad);
 
   });
 
@@ -152,14 +168,11 @@ export const initCamera = () => {
 
 const startCamera = () => {
 
-  console.log('startCam');
-
   if (navigator.getUserMedia) {
 
     console.log('startCam - getUserMedia');
 
     if (window.stream) {
-      console.log('stream found - x -x - x- x- -x -x -x -x');
       window.stream.getTracks().forEach(function(track) {
         track.stop();
       });
@@ -171,19 +184,17 @@ const startCamera = () => {
 
     navigator.getUserMedia(deviceConstraints, successCallback, errorCallback);
 
-
-
   }
 
 };
 
 const startTracking = () => {
 
-  console.log('startTracking');
-
   imageData = context.getImageData(0, 0, video.width, video.height);
   pixels = [];
   detector = new AR.Detector();
+
+  detector.invertDetection = Session.get('invert-detection');
 
   debugImage = context.createImageData(video.width, video.height);
   warpImage = context.createImageData(49, 49);
@@ -585,6 +596,12 @@ export const toggleDebugMode = function(value) {
 export let setMarkerUpdateCallback = function(func) {
 
   onMarkersUpdate = func;
+
+};
+
+export let setTargetQuadUpdateCallback = function(func) {
+
+  onTargetQuadUpdate = func;
 
 };
 

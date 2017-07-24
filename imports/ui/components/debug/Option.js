@@ -20,17 +20,20 @@ export class Option extends React.Component {
 
   componentDidMount() {
 
-    let startChecked = Session.get(this.props.id);
+    // Listen for external changes
+    // to session change
+    Tracker.autorun(() => {
 
-    if (startChecked === undefined) {
-      // Session var was never set
-      // Default to the defaultState
-      startChecked = this.props.defaultState;
+      // When selected, groupName will match this id.
+      const selection = Session.get(this.props.groupName);
 
-      Session.set(this.props.id, startChecked);
-    }
+      if (selection == this.props.id) {
+        this.setState({isChecked: true});
+      } else {
+        this.setState({isChecked: false});
+      }
 
-    this.setState({isChecked: startChecked});
+    });
 
   }
 
@@ -61,7 +64,7 @@ export class Option extends React.Component {
     return <div className='debug-setting'>
 
               <label>
-                <input id={this.props.id} type='radio' name={this.props.groupName} className='setting-input radio' onChange={this.handleChange} ></input>
+                <input id={this.props.id} type='radio' name={this.props.groupName} className='setting-input radio' onChange={this.handleChange} checked={this.state.isChecked}></input>
                 <span className='setting-label' >{this.getLabel()}</span>
               </label>
 

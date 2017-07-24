@@ -32,6 +32,14 @@ export class Setting extends React.Component {
 
     this.setState({isChecked: startChecked});
 
+    // Listen for external changes
+    // to this setting.
+    Tracker.autorun(() => {
+
+      this.setState({isChecked: Session.get(this.props.id)});
+
+    });
+
   }
 
   componentWillUnmount() {
@@ -40,8 +48,9 @@ export class Setting extends React.Component {
 
   handleChange(event) {
 
-    Session.set(this.props.id, event.target.checked);
     this.setState({isChecked: event.target.checked});
+
+    this.props.onChange(this.props.id, event.target.checked);
 
   }
 
@@ -76,12 +85,14 @@ export class Setting extends React.Component {
 
            </div>;
   }
+
 }
 
 Setting.propTypes = {
   id: React.PropTypes.string,
   label: React.PropTypes.string,
   defaultState: React.PropTypes.bool,
+  onChange:React.PropTypes.func,
 };
 
 Setting.defaultProps = {

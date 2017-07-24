@@ -90,7 +90,7 @@ export class ArDebug extends React.Component {
 
               <SettingsLayer label='Ad Builder Settings'>
 
-                <SettingsGroup id='marker-detection'>
+                <SettingsGroup id='tracking'>
                   <video id='debug-video' className='setting-vis' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
                   <canvas id='debug-canvas' className='setting-vis' style={{width:'960px', height:'620px'}}></canvas><br/>
                 </SettingsGroup>
