@@ -37,10 +37,6 @@ export class Option extends React.Component {
 
   }
 
-  componentWillUnmount() {
-
-  }
-
   handleChange(event) {
 
     this.setState({isChecked: event.target.checked});

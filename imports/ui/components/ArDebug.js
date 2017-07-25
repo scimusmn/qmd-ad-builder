@@ -19,9 +19,9 @@ export class ArDebug extends React.Component {
       showing:false,
     };
 
-    // Listen for 'D' keystrokes
+    // Listen for 't' keystrokes
     // to toggle debug view.
-    Mousetrap.bind('d', () => {
+    Mousetrap.bind('t', () => {
 
       this.toggleVisible(!this.state.showing);
 

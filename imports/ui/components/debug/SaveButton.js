@@ -30,7 +30,7 @@ export class SaveButton extends React.Component {
     return <div id={this.props.id} className='debug-save'>
 
               <Button bsStyle='success' bsSize='large' onClick={this.handleSaveClick.bind(this)} className={this.props.unsavedChanges ? 'unsaved' : 'saved'}>
-                {this.props.unsavedChanges ? 'SAVE' : 'SAVED'}
+                {this.props.unsavedChanges ? 'SAVE' : '(SAVED)'}
               </Button>
 
               <Button bsStyle='success' bsSize='large' onClick={this.handleResetClick.bind(this)}>

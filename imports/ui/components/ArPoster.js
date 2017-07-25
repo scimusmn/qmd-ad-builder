@@ -15,7 +15,8 @@ export class ArPoster extends React.Component {
     super(props);
 
     this.state = {
-
+      assetGenre: 'new',
+      language: 'en',
     };
 
     // Dictionary to find
@@ -35,11 +36,11 @@ export class ArPoster extends React.Component {
       255:{ id:'endorsement', label:'(Meaningless) Endorsement' },
       991:{ id:'image', label:'(Misleading) Images' },
       682:{ id:'flair', label:'(Attention-grabbing) Flair' },
-
-      84:{ id:'motion1', label:'(Eye-catching) Motion (1)' },
-      85:{ id:'motion2', label:'(Eye-catching) Motion (2)' },
-      340:{ id:'motion3', label:'(Eye-catching) Motion (3)' },
-
+      /*
+            84:{ id:'motion1', label:'(Eye-catching) Motion (1)' },
+            85:{ id:'motion2', label:'(Eye-catching) Motion (2)' },
+            340:{ id:'motion3', label:'(Eye-catching) Motion (3)' },
+*/
     };
 
     // Holds all poster items.
@@ -49,6 +50,8 @@ export class ArPoster extends React.Component {
     this.activeItem;
 
     this.inactivitySeconds = 0;
+    this.holdToSaveTimer = {};
+    this.holdToSaveStart = 0;
 
     // Bind to this instance.
     this.markerUpdate = this.markerUpdate.bind(this);
@@ -56,8 +59,6 @@ export class ArPoster extends React.Component {
   }
 
   componentDidMount() {
-
-    console.log('ArPoster::componentDidMount()');
 
     // Update local variables
     this.posterWidth = parseInt($('.ar-poster').css('width'));
@@ -78,8 +79,10 @@ export class ArPoster extends React.Component {
       const $target = $('#' + itemId);
       const $image = $target.find('img');
 
-      // TODO: Should add div to container
-      // here. So
+      // TODO: Should add div to container here?
+      // That way we can add/remove categories
+      // more easily without having to tie
+      // to specific divs.
 
       this.items[key] = { id:itemId,
                           key:key,
@@ -109,48 +112,94 @@ export class ArPoster extends React.Component {
 
           const item = this.items[key];
 
-          item.assets = result;
+          item.assets = {};
+
+          // Separate assets into 2 sets of 2 sets.
+          item.assets.new = { en: this.filterAssets(result, 'new', 'en'),
+                              es:this.filterAssets(result, 'new', 'es'),
+                            };
+
+          item.assets.old = { en: this.filterAssets(result, 'old', 'en'),
+                              es:this.filterAssets(result, 'old', 'es'),
+                            };
+
+          // Default to new english set.
+          item.activeAssets = item.assets.new.en;
 
           // Set default asset
-          item.image.attr('src', item.assets[item.assetIndex]);
+          item.image.attr('src', item.activeAssets[item.assetIndex]);
 
         }
 
       });
 
-    }
+    };
 
-    // Listen for Arrow keys
-    Mousetrap.bind(['left', 'c'], () => {
+    /* Keyboard events */
+
+    // Asset left
+    Mousetrap.bind(['left', 'a'], () => {
 
       this.incrementImage(-1);
       this.resetInactivity();
 
     });
 
-    Mousetrap.bind(['right', 'b'], () => {
+    // Asset right
+    Mousetrap.bind(['right', 'c'], () => {
 
       this.incrementImage(1);
       this.resetInactivity();
 
     });
 
-    Mousetrap.bind(['s', 'a'], () => {
+    // Size up
+    Mousetrap.bind(['up', 'b'], () => {
 
-      this.incrementSize();
+      this.incrementScale(1);
       this.resetInactivity();
 
     });
 
-    Mousetrap.bind(['return return return', 'e e e'], () => {
+    // Size down
+    Mousetrap.bind(['down', 'd'], () => {
 
-      if (this.inactivitySeconds > 5) {
-
-        this.saveLayoutAsImage();
-
-      }
+      this.incrementScale(-1);
+      this.resetInactivity();
 
     });
+
+    // Old/New Toggle
+    Mousetrap.bind(['shift', 'f'], () => {
+
+      this.toggleOldNew();
+      this.resetInactivity();
+
+    });
+
+    // Old/New Toggle
+    Mousetrap.bind(['l', 'g'], () => {
+
+      this.toggleLanguage();
+      this.resetInactivity();
+
+    });
+
+    // Hold to save
+    Mousetrap.bind(['return', 'e'], (event) => {
+
+      // Ignore key repeats
+      if (event.repeat == false) {
+        this.startHoldToSave();
+      }
+
+    }, 'keydown');
+
+    Mousetrap.bind(['return', 'e'], () => {
+
+      this.stopHoldToSave();
+
+    }, 'keyup');
 
     // Start inactivity counter
     setInterval(() => {
@@ -274,7 +323,9 @@ export class ArPoster extends React.Component {
 
   incrementImage(incremental) {
 
-    const numAssets = this.activeItem.assets.length;
+    if (!this.activeItem) return;
+
+    const numAssets = this.activeItem.activeAssets.length;
     let index = this.activeItem.assetIndex;
 
     index += incremental;
@@ -287,21 +338,34 @@ export class ArPoster extends React.Component {
 
     // Update img source
     this.activeItem.assetIndex = index;
-    this.activeItem.image.attr('src', this.activeItem.assets[index]);
+    this.activeItem.image.attr('src', this.activeItem.activeAssets[index]);
 
   }
 
-  incrementSize() {
+  incrementScale(dir) {
+
+    if (!this.activeItem) return;
 
     const currentScale = this.activeItem.scale;
-    let newScale = 1.0;
 
     if (currentScale >= 1.0) {
-      newScale = 0.36;
+      if (dir > 0) {
+        newScale = 0.36;
+      } else {
+        newScale = 0.6;
+      }
     } else if (currentScale >= 0.6) {
-      newScale = 1.0;
+      if (dir > 0) {
+        newScale = 1.0;
+      } else {
+        newScale = 0.36;
+      }
     } else {
-      newScale = 0.6;
+      if (dir > 0) {
+        newScale = 0.6;
+      } else {
+        newScale = 1.0;
+      }
     }
 
     this.activeItem.scale = newScale;
@@ -359,7 +423,7 @@ export class ArPoster extends React.Component {
       } else {
         // Assume user doesn't need instructions.
         // Default to most recent asset.
-        item.image.attr('src', item.assets[item.assetIndex]);
+        item.image.attr('src', item.activeAssets[item.assetIndex]);
       }
 
     } else {
@@ -531,69 +595,170 @@ export class ArPoster extends React.Component {
   }
 
   /**
-   * Save ad layout as image.
+   * Toggle between old and new assets.
    */
-  saveLayoutAsImage() {
+   toggleOldNew() {
 
-    console.log('saveLayoutAsImage()');
+     if (this.state.assetGenre == 'new') {
+       this.setState({assetGenre:'old'});
+     } else {
+       this.setState({assetGenre:'new'});
+     }
 
-    // TODO: Hide anything not wanted
-    // in exported image.
+     this.refreshActiveAssets();
 
-    // Flatten desired layers into canvas
-    const renderContainer = $('.workspace')[0];
+   }
 
-    html2canvas(renderContainer, {
+   /**
+   * Toggle between languages.
+   */
+   toggleLanguage() {
+
+     if (this.state.language == 'en') {
+       this.setState({language:'es'});
+     } else {
+       this.setState({language:'en'});
+     }
+
+     this.refreshActiveAssets();
+
+   }
+
+   /**
+   * Filter assets based on toggles.
+   */
+   filterAssets(assets, genre, lang) {
+
+     return assets.filter((src)=> {
+       return (src.substring(src.length - 10, src.length - 7) == genre &&
+                src.substring(src.length - 6, src.length - 4) == lang);
+     });
+
+   }
+
+   /**
+   * Set active assets for all items.
+   */
+   refreshActiveAssets() {
+
+     let item;
+
+     for (let key in this.items) {
+
+       item = this.items[key];
+       item.activeAssets = item.assets[this.state.assetGenre][this.state.language];
+
+       // Reload image in current set.
+       item.image.attr('src', item.activeAssets[item.assetIndex]);
+
+     }
+
+   }
+
+   /**
+    * Hold to save.
+    */
+    startHoldToSave() {
+
+      console.log('Hold to save start.');
+
+      // Clear any current
+      // hold to save...
+      this.stopHoldToSave();
+
+      this.holdToSaveStart = Date.now();
+      const timeRequired = 5000;
+
+      this.holdToSaveTimer = setInterval(() => {
+
+        const timeHeld = Date.now() - this.holdToSaveStart;
+        const percentage = timeHeld / timeRequired;
+
+        console.log(percentage);
+
+        if (timeHeld > timeRequired) {
+          console.log('! - Hold to save success.');
+          this.stopHoldToSave();
+          this.saveLayoutAsImage();
+        }
+
+      }, 15);
+
+    }
+
+    /**
+    * Cancel attempt to save.
+    */
+    stopHoldToSave() {
+
+      clearInterval(this.holdToSaveTimer);
+
+    }
+
+   /**
+    * Save ad layout as image.
+    */
+    saveLayoutAsImage() {
+
+      console.log('saveLayoutAsImage()');
+
+      // TODO: Hide anything not wanted
+      // in exported image.
+
+      // Flatten desired layers into canvas
+      const renderContainer = $('.workspace')[0];
+
+      html2canvas(renderContainer, {
       onrendered: (canvas) => {
         // Canvas is the final rendered <canvas> element
         this.handleSavedImage(canvas);
       },
     });
 
-  }
+    }
 
-  /**
-   * Do things with saved image.
-   */
-  handleSavedImage(canvas) {
+    /**
+     * Do things with saved image.
+     */
+     handleSavedImage(canvas) {
 
-    const img = canvas.toDataURL('image/png');
-    const blob = this.dataURItoBlob(img);
+       const img = canvas.toDataURL('image/png');
+       const blob = this.dataURItoBlob(img);
 
-    const fileReader = new FileReader();
-    const method = 'readAsBinaryString';
+       const fileReader = new FileReader();
+       const method = 'readAsBinaryString';
 
-    // TEMP CFS file save
-    ImageFiles.insert(blob, function(err, fileObj) {
+       // TEMP CFS file save
+       ImageFiles.insert(blob, function(err, fileObj) {
 
-      // Inserted new doc with ID fileObj._id,
-      // and kicked off the data upload using HTTP
+         // Inserted new doc with ID fileObj._id,
+         // and kicked off the data upload using HTTP
 
-      if (err) {
-        // Handle error
-        console.log('Images.insert::ERROR ');
-        console.log(err);
-      } else {
-        console.log('Images.insert::SUCCESS');
+         if (err) {
+           // Handle error
+           console.log('Images.insert::ERROR ');
+           console.log(err);
+         } else {
+           console.log('Images.insert::SUCCESS');
 
-        fileObj.on('uploaded', () => {
-          fileObj.off('uploaded'); // Remove listener
-          console.log('fileObj uploaded');
+           fileObj.on('uploaded', () => {
+             fileObj.off('uploaded'); // Remove listener
+             console.log('fileObj uploaded');
 
-          // Add new ad to saved ads collection
-          Meteor.call('saveAdvertisement', fileObj._id);
-        });
+             // Add new ad to saved ads collection
+             Meteor.call('saveAdvertisement', fileObj._id);
+           });
 
-      }
+         }
 
-    });
+       });
 
-    // TODO: Reset advertisement.
+       // TODO: Reset advertisement.
 
-  }
+     }
 
-  // Converts image string
-  // to image blob.
+     // Converts image string
+     // to image blob.
   dataURItoBlob(dataURI) {
 
     let byteString = atob(dataURI.split(',')[1]);

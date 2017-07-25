@@ -39,6 +39,7 @@ export class SettingsLayer extends React.Component {
     Tracker.autorun(() => {
 
       this.currentSettings.targetQuad = Session.get('targetQuad');
+      this.setState({unsavedChanges:true});
 
     });
 
@@ -125,7 +126,7 @@ export class SettingsLayer extends React.Component {
 
   resetAll() {
 
-    if (confirm('Are you sure? This will revert all settings to defaults.') == true) {
+    if (confirm('Are you sure? This will revert all settings to defaults and refresh browser.') == true) {
 
       // Clear settings objects
       this.currentSettings = {};

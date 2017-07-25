@@ -122,13 +122,6 @@ export const initCamera = () => {
     }
 
     // Did not start drag.
-    // log output coordinate
-    console.log('pt click:');
-    console.log(mousePos);
-
-    const mappedPos = Utils.mapPointFromQuad(mousePos, targetQuad[0], targetQuad[1], targetQuad[2], targetQuad[3]);
-    console.log('mapped pt: ');
-    console.log(mappedPos);
 
   });
 

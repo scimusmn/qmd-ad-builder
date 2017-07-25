@@ -96,7 +96,7 @@ export class SettingsGroup extends React.Component {
 
       <h2 className='label'>{label}</h2>
       <div className='handle bar'></div>
-      <h2 className={this.collapseClassName()} onClick={this.onCollapseClick}><span className='tri-symbol'></span></h2>
+      {/* <h2 className={this.collapseClassName()} onClick={this.onCollapseClick}><span className='tri-symbol'></span></h2> */}
 
     </div>;
 
