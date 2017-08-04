@@ -671,7 +671,7 @@ export class ArPoster extends React.Component {
       this.stopHoldToSave();
 
       this.holdToSaveStart = Date.now();
-      const timeRequired = 5000;
+      const timeRequired = 4000;
 
       this.holdToSaveTimer = setInterval(() => {
 
