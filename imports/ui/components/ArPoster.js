@@ -653,6 +653,10 @@ export class ArPoster extends React.Component {
 
      }
 
+     // Refresh background
+     const bgSrc = 'bg_' + this.state.assetGenre + '_' + this.state.language + '.png';
+     Session.set('backgrounds', bgSrc);
+
    }
 
    /**

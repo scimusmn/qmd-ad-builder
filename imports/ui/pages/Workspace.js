@@ -6,6 +6,7 @@ import { ArPoster } from '../components/ArPoster';
 
 const Workspace = () => (
   <div className='workspace'>
+    <img src='#' className='poster-background'/>
     <ArDebug/>
     <ArPoster/>
   </div>

@@ -27,7 +27,7 @@ export class ArDebug extends React.Component {
 
     });
 
-    this.backgroundOptions = ['newspaper-modern.png', 'newspaper-bg.png','web-bg.png', 'None'];
+    this.backgroundOptions = ['bg_old_en.png', 'bg_new_en.png', 'None'];
 
   }
 
@@ -44,10 +44,10 @@ export class ArDebug extends React.Component {
     Tracker.autorun(function() {
 
       const bg = Session.get('backgrounds');
-      if (bg == 'None') {
-        $('.workspace').css('background-image', 'none');
+      if (!bg || bg == 'None') {
+        $('.poster-background').attr('src', '#');
       } else {
-        $('.workspace').css('background-image', 'url(images/' + bg + ')');
+        $('.poster-background').attr('src', 'images/' + bg);
       }
 
     });
