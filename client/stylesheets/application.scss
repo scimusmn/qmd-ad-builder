@@ -475,16 +475,28 @@ $debug-white: rgba(255,255,255, 1.0);
   position: absolute;
 }
 
-.placard .ad-carousel img {
-
-  height: 600px;
+.placard .slick-slide {
+  background-color: yellow;
+  height: 666px;
   overflow: hidden;
+}
 
-  /* Center */
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, 0%);
+.placard .slick-slide:nth-child(odd) {
+  background: #0aF
+}
+
+
+.placard .slick-slide img {
+  width: 960px;
+  height: 540px;
+  margin-left: -80px;
+
+}
+
+.placard .ad-carousel h3 {
+
+  font-size: 13px;
+  text-align: center;
 
 }
 

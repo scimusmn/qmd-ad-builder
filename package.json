@@ -79,6 +79,8 @@
     "react-draggable": "^2.2.6",
     "react-komposer": "^1.13.1",
     "react-router": "^3.0.0",
-    "react-router-bootstrap": "^0.23.1"
+    "react-router-bootstrap": "^0.23.1",
+    "react-slick": "^0.14.11",
+    "slick-carousel": "^1.6.0"
   }
 }
