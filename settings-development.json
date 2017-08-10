@@ -1,4 +1,8 @@
 {
-  "public": {},
+  "public": {
+    "camVendorId": "0xXXXX",
+    "camProductId": "0xXXXX",
+    "camStartExposure": "200"
+  },
   "private": {}
 }
