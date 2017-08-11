@@ -674,10 +674,10 @@ export class ArPoster extends React.Component {
       this.stopHoldToSave();
 
       this.holdToSaveStart = Date.now();
-      const timeRequired = 3000;
+      const timeRequired = 2000;
 
       // TEMP
-      TweenMax.to('.workspace', 0.4, { scale: 0.95});
+      TweenMax.to('.workspace', 0.4, { scale: 0.85});
       TweenMax.set('body', { backgroundColor: 'red'});
 
       this.holdToSaveTimer = setInterval(() => {
@@ -737,11 +737,11 @@ export class ArPoster extends React.Component {
       const renderContainer = $('.workspace')[0];
 
       html2canvas(renderContainer, {
-      onrendered: (canvas) => {
-        // Canvas is the final rendered <canvas> element
-        this.handleSavedImage(canvas);
-      },
-    });
+        onrendered: (canvas) => {
+          // Canvas is the final rendered <canvas> element
+          this.handleSavedImage(canvas);
+        },
+      });
 
     }
 

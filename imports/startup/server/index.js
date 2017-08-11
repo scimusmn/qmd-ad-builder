@@ -4,4 +4,3 @@ import './fixtures';
 import './api';
 import './FileManifest';
 import './FileSaver';
-import './CameraSettings';
