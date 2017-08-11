@@ -6,7 +6,7 @@
 # Requires uvc-ctrl [http://www.dm9.se/?p=734]
 # and dependency libusb [http://www.dm9.se/?p=659]
 # Copies of both are included in this directory, but
-# need to be installed on your machine.
+# need to be installed before running this script.
 
 # This script assumes the camera
 # you're targeting is Device #3 and
