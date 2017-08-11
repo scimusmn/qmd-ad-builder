@@ -30,16 +30,18 @@ export class ArPoster extends React.Component {
       975:{ id:'image', label:'(Misleading) Images' },
       767:{ id:'flair', label:'(Attention-grabbing) Flair' },
 
-      863:{ id:'name', label:'(Suspicious) Name' },
-      1023:{ id:'details', label:'(The devil\'s in the...)  details' },
-      383:{ id:'claim', label:'(False) Claim' },
-      255:{ id:'endorsement', label:'(Meaningless) Endorsement' },
-      991:{ id:'image', label:'(Misleading) Images' },
-      682:{ id:'flair', label:'(Attention-grabbing) Flair' },
+      /*     863:{ id:'name', label:'(Suspicious) Name' },
+            1023:{ id:'details', label:'(The devil\'s in the...)  details' },
+            383:{ id:'claim', label:'(False) Claim' },
+            255:{ id:'endorsement', label:'(Meaningless) Endorsement' },
+            991:{ id:'image', label:'(Misleading) Images' },
+            682:{ id:'flair', label:'(Attention-grabbing) Flair' },
+            */
+
       /*
-            84:{ id:'motion1', label:'(Eye-catching) Motion (1)' },
-            85:{ id:'motion2', label:'(Eye-catching) Motion (2)' },
-            340:{ id:'motion3', label:'(Eye-catching) Motion (3)' },
+      84:{ id:'motion1', label:'(Eye-catching) Motion (1)' },
+      85:{ id:'motion2', label:'(Eye-catching) Motion (2)' },
+      340:{ id:'motion3', label:'(Eye-catching) Motion (3)' },
 */
     };
 
@@ -103,6 +105,7 @@ export class ArPoster extends React.Component {
 
       // Hide
       TweenMax.set($target, {opacity:0.0});
+      TweenMax.to($target, 0.15, { scale: 0.1, autoAlpha:0.0});
 
       // Get list of possible
       // assets for this item
@@ -671,19 +674,36 @@ export class ArPoster extends React.Component {
       this.stopHoldToSave();
 
       this.holdToSaveStart = Date.now();
-      const timeRequired = 4000;
+      const timeRequired = 2000;
+
+      // TEMP
+      TweenMax.to('.workspace', 0.4, { scale: 0.85});
+      TweenMax.set('body', { backgroundColor: 'red'});
 
       this.holdToSaveTimer = setInterval(() => {
 
         const timeHeld = Date.now() - this.holdToSaveStart;
         const percentage = timeHeld / timeRequired;
 
-        console.log(percentage);
+        // TEMP - USE CSS TO DRAW CLOCK TIMER
+        let percDeg = Math.ceil(90 + (percentage * 360) * 0.5);
+        let backgroundClock = '';
+        if (percDeg < 180) {
+          backgroundClock = 'linear-gradient(' + percDeg + 'deg, transparent 50%, #222224 50%), linear-gradient(' + (-percDeg) + 'deg, transparent 50%, #222224 50%)';
+        } else {
+          backgroundClock = 'linear-gradient(' + percDeg + 'deg, red 50%, transparent 50%), linear-gradient(' + (-percDeg) + 'deg, red 50%, #222224 50%)';
+        }
+
+        TweenMax.set('body', { backgroundImage: backgroundClock });
 
         if (timeHeld > timeRequired) {
-          console.log('! - Hold to save success.');
+          console.log('! [o] ! • Hold to save success.');
           this.stopHoldToSave();
           this.saveLayoutAsImage();
+
+          TweenMax.set('body', { backgroundImage: 'linear-gradient(#fff 0%, #fff 100%)'});
+          TweenMax.from('.workspace', 3.0, { opacity: 0.01, ease:Power3.EaseIn});
+
         }
 
       }, 15);
@@ -696,6 +716,10 @@ export class ArPoster extends React.Component {
     stopHoldToSave() {
 
       clearInterval(this.holdToSaveTimer);
+
+      // TEMP
+      TweenMax.set('body', { backgroundColor: 'white'});
+      TweenMax.to('.workspace', 0.4, { scale: 1.0});
 
     }
 
@@ -713,11 +737,11 @@ export class ArPoster extends React.Component {
       const renderContainer = $('.workspace')[0];
 
       html2canvas(renderContainer, {
-      onrendered: (canvas) => {
-        // Canvas is the final rendered <canvas> element
-        this.handleSavedImage(canvas);
-      },
-    });
+        onrendered: (canvas) => {
+          // Canvas is the final rendered <canvas> element
+          this.handleSavedImage(canvas);
+        },
+      });
 
     }
 

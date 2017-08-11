@@ -10,6 +10,16 @@
 
 @import "state/Navbar";
 
+body {
+  display: block;
+  border-radius: 50%;
+  /*background-color: red !important;*/
+
+  width: 1920px;
+  height: 1080px;
+
+}
+
 .workspace {
 
   background-color: rgba(225,215,200,0.75);
@@ -19,6 +29,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
+  overflow: hidden;
 
 }
 
@@ -290,6 +301,12 @@ $debug-white: rgba(255,255,255, 1.0);
 
 }
 
+.settings-group#uvc-control {
+
+  width: 460px;
+
+}
+
 .debug-save .btn-success {
   color: $debug-salmon;
   background-color: rgba($debug-gold, 1);
@@ -324,7 +341,7 @@ $debug-white: rgba(255,255,255, 1.0);
 
 .settings-group .label:first-of-type {
 
-  padding-right: 18px;
+  padding-right: 22px;
   /*padding-left: 23px;*/
 
 }
@@ -334,19 +351,20 @@ $debug-white: rgba(255,255,255, 1.0);
   cursor: pointer !important;
   background: none !important;
   position: absolute;
-  left: 2px;
+  right: -5px;
+  padding: 15px;
 
 }
 
 .settings-group .collapse-btn.down {
 
-  top: -26px;
+  top: -38px;
 
 }
 
 .settings-group .collapse-btn.up {
 
-  top: -7px;
+  top: -21px;
 
 }
 
@@ -458,6 +476,11 @@ $debug-white: rgba(255,255,255, 1.0);
 
 .setting-input.radio::after {
   border-radius: 50%;
+}
+
+.settings-group .text,
+.settings-group .number {
+  color: $debug-salmon;
 }
 
 

@@ -31,7 +31,6 @@ export class SettingsGroup extends React.Component {
     Tracker.autorun(() => {
 
       const newPosition = Session.get('POSXY-' + this.props.id);
-      console.log('new position detected', Session.get('POSXY-' + this.props.id));
       this.setState({dragPosition:newPosition});
 
     });
@@ -65,7 +64,14 @@ export class SettingsGroup extends React.Component {
   onCollapseClick(event) {
 
     console.log('onCollapseClick');
-    this.setState({collapsed: !this.state.collapsed})
+
+    // TODO: Is there a more elegant way to do this?
+    // Set css width on group css to match
+    // calculated width to prevent width collapse.
+    const w = $(this.refs.group).outerWidth() + 1;
+    $(this.refs.group).css('width', w + 'px');
+
+    this.setState({collapsed: !this.state.collapsed});
 
     // this.emitSettings('COLLAPSE-' + this.props.id, this.state.collapsed);
 
@@ -96,7 +102,7 @@ export class SettingsGroup extends React.Component {
 
       <h2 className='label'>{label}</h2>
       <div className='handle bar'></div>
-      {/* <h2 className={this.collapseClassName()} onClick={this.onCollapseClick}><span className='tri-symbol'></span></h2> */}
+      <h2 className={this.collapseClassName()} onClick={this.onCollapseClick}><span className='tri-symbol'></span></h2>
 
     </div>;
 
@@ -149,7 +155,7 @@ export class SettingsGroup extends React.Component {
   render() {
 
     return <Draggable id={this.props.id} handle='.handle' onStop={this.handleDragStop} position={this.state.dragPosition}>
-              <div id={this.props.id} className='settings-group'>
+              <div id={this.props.id} className='settings-group' ref='group'>
                 {this.renderLabel()}
                 {this.renderChildren()}
              </div>

@@ -8,6 +8,7 @@ import { SettingsLayer } from './debug/SettingsLayer';
 import { SettingsGroup } from './debug/SettingsGroup';
 import { Setting } from './debug/Setting';
 import { Option } from './debug/Option';
+import { InputSetting } from './debug/InputSetting';
 
 export class ArDebug extends React.Component {
 
@@ -94,6 +95,14 @@ export class ArDebug extends React.Component {
                   <video id='debug-video' className='setting-vis' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
                   <canvas id='debug-canvas' className='setting-vis' style={{width:'960px', height:'620px'}}></canvas><br/>
                 </SettingsGroup>
+
+                {/*
+                <SettingsGroup id='uvc-control'>
+                  <InputSetting id='vendor-id' label='Vendor Id (XXXX:1234)'/>
+                  <InputSetting id='product-id' label='Product Id (1234:XXXX)'/>
+                  <InputSetting id='absolute-exposure' forceNum={true}/>
+                </SettingsGroup>
+              */}
 
                 <SettingsGroup id='options'>
                   <Setting id='invert-detection'/>
