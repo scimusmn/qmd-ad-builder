@@ -18,6 +18,7 @@ export class ArPoster extends React.Component {
       assetGenre: 'new',
       language: 'en',
       saveLockdown:false,
+      attractMode:false,
     };
 
     // Dictionary to find
@@ -214,6 +215,29 @@ export class ArPoster extends React.Component {
 
         // If red UI is showing, hide.
         TweenMax.to($('.ar-poster #arrows'), 0.25, {autoAlpha:0.0});
+
+      }
+
+      // After long inactivity, hide all items
+      // and show main intructions. This handles
+      // the scenario when someone walks away
+      // leaving blocks on the glass.
+      if (this.inactivitySeconds == 15) {
+
+        this.setState({attractMode:true});
+
+        let item;
+
+        // Fade out all items.
+        for (let key in this.items) {
+
+          item = this.items[key];
+          $(item.image).addClass('grayed');
+
+        }
+
+        // Show inactive instruction message.
+        $('#intro-instruct').show();
 
       }
 
@@ -564,6 +588,25 @@ export class ArPoster extends React.Component {
     // If red UI is hidden and not saving, show.
     if (this.state.saveLockdown == false) {
       TweenMax.to($('.ar-poster #arrows'), 0.2, {autoAlpha:1.0});
+    }
+
+    if (this.state.attractMode == true) {
+
+      this.setState({attractMode:false});
+
+      // Hide inactive instruction message.
+      $('#intro-instruct').hide();
+
+      let item;
+
+      // Fade in all items.
+      for (let key in this.items) {
+
+        item = this.items[key];
+        $(item.image).removeClass('grayed');
+
+      }
+
     }
 
   }

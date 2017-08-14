@@ -85,7 +85,6 @@ body {
   pointer-events: none;
 
 
-/*  background-color: rgba(136, 108, 43, 0.15); */
   /* Center image on point */
   -webkit-transform: translate(-50%, -50%);
   -moz-transform: translate(-50%, -50%);
@@ -100,6 +99,15 @@ body {
   -webkit-border-radius: 19px 19px 19px 19px;
   border: 6px dashed rgba(0,0,0,0.75);*/
 
+  transition: filter 0.3s, opacity 0.3s;
+
+}
+
+.ar-poster .item .asset.grayed {
+
+  filter: contrast(10%) grayscale(90%);
+  opacity: 0.05;
+
 
 }
 
@@ -108,6 +116,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
+  z-index: 101;
 
   -webkit-transform: translate(50%, 50%);
   -moz-transform: translate(50%, 50%);
@@ -141,11 +150,11 @@ body {
   position: absolute;
   top:0px;
   left:0px;
-  width:590px;
+  width:740px;
 
   font-family: 'Avenir Next Condensed Bold Italic', sans-serif;
   font-size: 42px;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   /*text-shadow:0px 2px 7px rgba(0,0,0, 0.5);*/
   /*-webkit-text-stroke: 1px #fff;*/
 /*   text-shadow:
@@ -168,6 +177,18 @@ body {
   transform: translate(-50%, -225%);
 
 }
+
+/*.ar-poster #arrows #label.small {
+  font-size: 70px;
+}
+
+.ar-poster #arrows #label.mid {
+  font-size: 42px;
+}
+
+.ar-poster #arrows #label.large {
+  font-size: 26px;
+}*/
 
 .ar-poster .item #arrows img.right {
 

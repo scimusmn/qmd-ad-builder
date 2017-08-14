@@ -5,6 +5,7 @@ import React from 'react';
 import moment from 'moment';
 
 import Slider from 'react-slick';
+import TweenMax from 'gsap';
 
 import '../../../node_modules/slick-carousel/slick/slick.css';
 import '../../../node_modules/slick-carousel/slick/slick-theme.css';
@@ -39,6 +40,8 @@ export class AdCarousel extends React.Component {
 
     this.refs.slider.slickGoTo(0);
 
+    TweenMax.from('.ad-carousel', 3.0, { opacity: 0.01, ease:Power3.EaseIn});
+
   }
 
   getCurrentAd() {
@@ -72,7 +75,7 @@ export class AdCarousel extends React.Component {
       infinite: true,
       speed: 500,
       autoplay: true,
-      autoplaySpeed: 5000,
+      autoplaySpeed: 11000,
     };
 
     const slides = this.props.savedAds.map((ad, index) =>
