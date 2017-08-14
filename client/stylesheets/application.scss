@@ -11,6 +11,7 @@
 @import "state/Navbar";
 
 body {
+
   display: block;
   border-radius: 50%;
   /*background-color: red !important;*/
@@ -499,20 +500,21 @@ $debug-white: rgba(255,255,255, 1.0);
 }
 
 .placard .slick-slide {
-  background-color: yellow;
+  background-color: black;
   height: 666px;
   overflow: hidden;
 }
 
 .placard .slick-slide:nth-child(odd) {
-  background: #0aF
+  background: #121212;
 }
 
 
 .placard .slick-slide img {
   width: 960px;
   height: 540px;
-  margin-left: -80px;
+  margin-left: -30px;
+  margin-top: 60px;
 
 }
 

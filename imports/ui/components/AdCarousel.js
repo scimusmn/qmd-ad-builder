@@ -79,7 +79,7 @@ export class AdCarousel extends React.Component {
 
         <div key={index}>
           <img src={ ad.imgURL } />
-          <h3>{index} | {this.getTimeLabel(ad.timestamp)} | {ad.slug} | {ad.imgURL}</h3>
+          {/* <h3>{index} | {this.getTimeLabel(ad.timestamp)} | {ad.slug} | {ad.imgURL}</h3> */}
         </div>
 
       );

@@ -17,6 +17,7 @@ export class ArPoster extends React.Component {
     this.state = {
       assetGenre: 'new',
       language: 'en',
+      saveLockdown:false,
     };
 
     // Dictionary to find
@@ -211,7 +212,7 @@ export class ArPoster extends React.Component {
 
       if (this.inactivitySeconds == 5) {
 
-        // If red UI is hidden, show.
+        // If red UI is showing, hide.
         TweenMax.to($('.ar-poster #arrows'), 0.25, {autoAlpha:0.0});
 
       }
@@ -560,8 +561,10 @@ export class ArPoster extends React.Component {
 
     this.inactivitySeconds = 0;
 
-    // If red UI is hidden, show.
-    TweenMax.to($('.ar-poster #arrows'), 0.2, {autoAlpha:1.0});
+    // If red UI is hidden and not saving, show.
+    if (this.state.saveLockdown == false) {
+      TweenMax.to($('.ar-poster #arrows'), 0.2, {autoAlpha:1.0});
+    }
 
   }
 
@@ -673,12 +676,16 @@ export class ArPoster extends React.Component {
       // hold to save...
       this.stopHoldToSave();
 
+      // If red UI is showing, hide.
+      this.setState({saveLockdown:true});
+      TweenMax.to($('.ar-poster #arrows'), 0.15, {autoAlpha:0.0});
+
       this.holdToSaveStart = Date.now();
       const timeRequired = 2000;
 
       // TEMP
-      TweenMax.to('.workspace', 0.4, { scale: 0.85});
-      TweenMax.set('body', { backgroundColor: 'red'});
+      TweenMax.to('.workspace', 1.5, { ease:Power3.easeOut, scale: 0.9});
+      TweenMax.set('body', { backgroundColor: 'rgba(255,0,0,0.8)'});
 
       this.holdToSaveTimer = setInterval(() => {
 
@@ -689,9 +696,9 @@ export class ArPoster extends React.Component {
         let percDeg = Math.ceil(90 + (percentage * 360) * 0.5);
         let backgroundClock = '';
         if (percDeg < 180) {
-          backgroundClock = 'linear-gradient(' + percDeg + 'deg, transparent 50%, #222224 50%), linear-gradient(' + (-percDeg) + 'deg, transparent 50%, #222224 50%)';
+          backgroundClock = 'linear-gradient(' + percDeg + 'deg, transparent 50%, #111114 50%), linear-gradient(' + (-percDeg) + 'deg, transparent 50%, #111114 50%)';
         } else {
-          backgroundClock = 'linear-gradient(' + percDeg + 'deg, red 50%, transparent 50%), linear-gradient(' + (-percDeg) + 'deg, red 50%, #222224 50%)';
+          backgroundClock = 'linear-gradient(' + percDeg + 'deg, rgba(255,0,0,0.8) 50%, transparent 50%), linear-gradient(' + (-percDeg) + 'deg, rgba(255,0,0,0.8) 50%, #111114 50%)';
         }
 
         TweenMax.set('body', { backgroundImage: backgroundClock });
@@ -706,7 +713,7 @@ export class ArPoster extends React.Component {
 
         }
 
-      }, 15);
+      }, 12);
 
     }
 
@@ -716,6 +723,7 @@ export class ArPoster extends React.Component {
     stopHoldToSave() {
 
       clearInterval(this.holdToSaveTimer);
+      this.setState({saveLockdown:false});
 
       // TEMP
       TweenMax.set('body', { backgroundColor: 'white'});
