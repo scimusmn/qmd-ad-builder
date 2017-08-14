@@ -2,6 +2,7 @@
 @import "base/animations";
 @import "base/forms";
 @import "base/debug";
+@import "base/fonts";
 
 @import "module/Loading";
 @import "module/Login";
@@ -140,12 +141,22 @@ body {
   position: absolute;
   top:0px;
   left:0px;
-  width:360px;
+  width:590px;
 
-  font-weight: 300;
+  font-family: 'Avenir Next Condensed Bold Italic', sans-serif;
+  font-size: 42px;
+  letter-spacing: 1px;
+  /*text-shadow:0px 2px 7px rgba(0,0,0, 0.5);*/
+  /*-webkit-text-stroke: 1px #fff;*/
+/*   text-shadow:
+       6px 7px 0 #FFF,
+     -6px -7px 0 #FFF,
+      6px -7px 0 #FFF,
+      -6px 7px 0 #FFF,
+       6px 7px 0 #FFF;*/
 
   color: rgba(255,0,0,0.9);
-  background-color: rgba(255,255,255,0.8);
+  /*background-color: rgba(255,255,255,0.8);*/
 
   pointer-events: none;
   text-align: center;

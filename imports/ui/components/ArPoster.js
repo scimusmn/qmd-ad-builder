@@ -482,8 +482,8 @@ export class ArPoster extends React.Component {
         TweenMax.to($(item.target).find('#arrows .right'), 0.15, {left:offset});
         TweenMax.to($(item.target).find('#arrows .left'), 0.15, {left:-offset});
 
-        const offsetTop = item.image.outerHeight() * 0.36;
-        TweenMax.to($(item.target).find('#arrows #label'), 0.15, {top:-offsetTop});
+        const itemTop = item.image.outerHeight() * -0.5;
+        TweenMax.to($(item.target).find('#arrows #label'), 0.15, {top:itemTop});
 
       }
 
