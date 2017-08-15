@@ -195,6 +195,7 @@ export class ArPoster extends React.Component {
 
       // Ignore key repeats
       if (event.repeat == false) {
+        this.resetInactivity();
         this.startHoldToSave();
       }
 
