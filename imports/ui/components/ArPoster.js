@@ -6,7 +6,7 @@ import arCam from '../../modules/client/ArCamera';
 import Utils from '../../modules/client/Utils';
 import ImageFiles from '../../api/ImageFiles';
 import TweenMax from 'gsap';
-import html2canvas from 'html2canvas';
+import html2canvas from '../../modules/client/vendor/html2canvas/dist/html2canvas';
 
 export class ArPoster extends React.Component {
 
