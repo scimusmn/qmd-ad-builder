@@ -501,13 +501,13 @@ $debug-white: rgba(255,255,255, 1.0);
 }
 
 
-/* ********** */
-/* The Placrd */
-/* ********** */
+/* *********** */
+/* The Placard */
+/* *********** */
 .placard {
 
-  width: 800px;
-  height: 600px;
+  width: 1024px;
+  height: 768px;
   overflow: hidden;
   background-color: black;
   left: 0px;
@@ -517,7 +517,7 @@ $debug-white: rgba(255,255,255, 1.0);
 
 .placard .slick-slide {
   background-color: black;
-  height: 666px;
+  height: 1111px;
   overflow: hidden;
 }
 
@@ -527,10 +527,10 @@ $debug-white: rgba(255,255,255, 1.0);
 
 
 .placard .slick-slide img {
-  width: 960px;
-  height: 540px;
-  margin-left: -30px;
-  margin-top: 60px;
+  width: 1080px;
+  height: 700px;
+  margin-left: 30px;
+  margin-top: 80px;
 
 }
 
