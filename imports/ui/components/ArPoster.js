@@ -221,9 +221,9 @@ export class ArPoster extends React.Component {
 
       // After long inactivity, hide all items
       // and show main intructions. This handles
-      // the scenario when someone walks away
+      // the scenario of someone walking away
       // leaving blocks on the glass.
-      if (this.inactivitySeconds == 15) {
+      if (this.inactivitySeconds == 22) {
 
         this.setState({attractMode:true});
 
