@@ -182,7 +182,7 @@ export class ArPoster extends React.Component {
 
     });
 
-    // Old/New Toggle
+    // Language Toggle
     Mousetrap.bind(['l', 'g'], () => {
 
       this.toggleLanguage();
