@@ -114,7 +114,7 @@ export class SettingsLayer extends React.Component {
 
     _.each(this.currentSettings, (element, index, list) => {
 
-      console.log('[emit setting] ' + index + ':', element);
+      // console.log('[emit setting] ' + index + ':', element);
 
       // Set Session variable,
       // which will alert all listeners.

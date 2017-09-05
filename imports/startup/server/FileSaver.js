@@ -7,7 +7,7 @@ import SavedAds from '../../api/savedAds/savedAds.js';
  *
  * TODO: This file no longer is performing
  * its original intention, and should be renamed
- * and reorganized. It could probably become a
+ * and reorganized. It could eventually become a
  * smaller part of another file.
  *
  */
@@ -52,3 +52,4 @@ Meteor.methods({
   },
 
 });
+

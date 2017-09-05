@@ -7,6 +7,7 @@ import Utils from '../../modules/client/Utils';
 import ImageFiles from '../../api/ImageFiles';
 import TweenMax from 'gsap';
 import html2canvas from '../../modules/client/vendor/html2canvas/dist/html2canvas';
+import CarouselContainer from '../containers/AdCarousel';
 
 export class ArPoster extends React.Component {
 
@@ -223,7 +224,7 @@ export class ArPoster extends React.Component {
       // and show main intructions. This handles
       // the scenario of someone walking away
       // leaving blocks on the glass.
-      if (this.inactivitySeconds == 22) {
+      if (this.inactivitySeconds == 20) {
 
         this.setState({attractMode:true});
 
@@ -238,7 +239,7 @@ export class ArPoster extends React.Component {
         }
 
         // Show inactive instruction message.
-        $('#intro-instruct').show();
+        $('#attract-overlay').show();
 
       }
 
@@ -334,7 +335,7 @@ export class ArPoster extends React.Component {
         $('#arrows #label').html(this.activeItem.label);
 
         // Hide no-block instructions.
-        $('#intro-instruct').hide();
+        $('#attract-overlay').hide();
 
       } else {
 
@@ -568,7 +569,7 @@ export class ArPoster extends React.Component {
           if (aliveItemId === undefined) {
             // No blocks remaining.
             // Show inactive instruction message.
-            $('#intro-instruct').show();
+            $('#attract-overlay').show();
             this.activeItem = null;
           } else {
             this.setActiveItem(aliveItemId);
@@ -596,7 +597,7 @@ export class ArPoster extends React.Component {
       this.setState({attractMode:false});
 
       // Hide inactive instruction message.
-      $('#intro-instruct').hide();
+      $('#attract-overlay').hide();
 
       let item;
 
@@ -786,6 +787,7 @@ export class ArPoster extends React.Component {
       // in exported image.
 
       // Flatten desired layers into canvas
+      TweenMax.set('.workspace', { scale: 1.0});
       const renderContainer = $('.workspace')[0];
 
       html2canvas(renderContainer, {
@@ -899,8 +901,11 @@ export class ArPoster extends React.Component {
                 <img src='images/arrow.png' className='left'/>
               </div>
 
-              <div id='intro-instruct' className='center-overlay'>
-                <img src='images/intro-instruct.png'/>
+              <div id='attract-overlay' >
+                <div id='intro-instruct' className='center-overlay'>
+                  <img src='images/intro-instruct.png'/>
+                </div>
+                <CarouselContainer/>
               </div>
 
           </div>;

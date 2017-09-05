@@ -10,9 +10,9 @@ if (Meteor.isServer) {
 
 }
 
-
 SavedAds.allow({
   insert: () => true,
   update: () => true,
   remove: () => true,
 });
+

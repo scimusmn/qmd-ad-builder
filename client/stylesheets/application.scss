@@ -3,6 +3,8 @@
 @import "base/forms";
 @import "base/debug";
 @import "base/fonts";
+@import "base/slick";
+@import "base/slick-theme";
 
 @import "module/Loading";
 @import "module/Login";
@@ -123,7 +125,7 @@ body {
   -moz-transform: translate(50%, 50%);
   -ms-transform: translate(50%, 50%);
   -o-transform: translate(50%, 50%);
-  transform: translate(50%, 50%);
+  transform: translate(50%, 14%);
 
 }
 
@@ -169,18 +171,6 @@ body {
 
 }
 
-/*.ar-poster #arrows #label.small {
-  font-size: 70px;
-}
-
-.ar-poster #arrows #label.mid {
-  font-size: 42px;
-}
-
-.ar-poster #arrows #label.large {
-  font-size: 26px;
-}*/
-
 .ar-poster .item #arrows img.right {
 
   position: absolute;
@@ -215,9 +205,60 @@ body {
 
 }
 
-/* ************* */
-/* Debug Overlay */
-/* ************* */
+/* *********** */
+/* Ad Carousel */
+/* *********** */
+
+.ad-carousel {
+
+  padding-top: 300px;
+
+}
+
+.slick-slider{
+  width: 100%;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.slick-slider .slick-slide {
+  margin-bottom: 30px;
+}
+
+/*.ad-carousel .slick-slide:nth-child(odd) {
+  background-color: rgba(22,23,222,0.2);
+}
+.ad-carousel .slick-slide:nth-child(even) {
+  background-color: rgba(222,23,2,0.4);
+}*/
+
+.ad-carousel img {
+
+  display:block;
+  margin:auto;
+  opacity:0.6;
+  filter: contrast(80%) grayscale(80%);
+
+  transform:scale(0.91);
+  width: 732px;
+
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier( 0.25, 0.8, 0.25, 1);
+
+}
+
+.ad-carousel .slick-center img {
+  opacity:1;
+  transform:scale(1.0);
+  transform-origin: 50% 50%;
+  filter: none;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+
+}
+
+/* **************** */
+/* Settings Overlay */
+/* **************** */
 $debug-gold: #ffd847;
 $debug-light-blue: #6dc2e8;
 $debug-salmon: #f58277;
@@ -294,6 +335,10 @@ $debug-white: rgba(255,255,255, 1.0);
   top: 900px;
   left: 500px;
 }
+
+/* ************** */
+/* Setting Groups */
+/* ************** */
 
 .settings-group {
 
@@ -499,72 +544,6 @@ $debug-white: rgba(255,255,255, 1.0);
 .settings-group .number {
   color: $debug-salmon;
 }
-
-
-/* *********** */
-/* The Placard */
-/* *********** */
-.placard {
-
-  width: 1024px;
-  height: 768px;
-  overflow: hidden;
-  background-color: black;
-  left: 0px;
-  top:0px;
-  position: absolute;
-}
-
-.placard .slick-slide {
-  background-color: black;
-  height: 1111px;
-  overflow: hidden;
-}
-
-.placard .slick-slide:nth-child(odd) {
-  background: #121212;
-}
-
-
-.placard .slick-slide img {
-  width: 1080px;
-  height: 700px;
-  margin-left: 30px;
-  margin-top: 80px;
-
-}
-
-.placard .ad-carousel h3 {
-
-  font-size: 13px;
-  text-align: center;
-
-}
-
-.placard .ad-carousel p {
-
-  /* Center */
-  position: absolute;
-  color:rgba(255,255,255,0.9);
-  font-size: 11px;
-  width: 100%;
-  text-align: center;
-
-}
-
-.placard .ad-carousel span.highlight {
-  /*color: rgba(255,0,0,0.9);*/
-  /*text-decoration: underline;*/
-}
-
-.placard .ad-carousel p.time {
-  top: 23px;
-}
-
-.placard .ad-carousel p.slug {
-  bottom: 14px;
-}
-
 
 
 /* ************* */
