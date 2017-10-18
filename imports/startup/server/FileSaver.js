@@ -1,8 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import SavedAds from '../../api/savedAds/savedAds.js';
 
-
-
 /**
  *
  * TODO: This file no longer is performing
@@ -23,14 +21,17 @@ Meteor.methods({
    * @param blob Image data in a blob from the web camera stream
    */
 
-  saveAdvertisement: function(imgFileId) {
+  saveAdvertisement: function(imgFileData) {
 
-    check(imgFileId, String);
+    check(imgFileData, {
+      imgFileId: String,
+      genre: String,
+    });
 
-    const imgURL = 'cfs/files/images/' + imgFileId;
+    const imgURL = 'cfs/files/images/' + imgFileData.imgFileId;
     console.log('imgURL:', imgURL);
 
-    console.log('The file ' + imgFileId + ' was saved to ' + imgURL);
+    console.log('The file ' + imgFileData.imgFileId + ' was saved to ' + imgURL);
 
     const timestamp = Date.now();
 
@@ -45,7 +46,7 @@ Meteor.methods({
       }
     }
 
-    const adDoc = {timestamp:timestamp, slug:slug, imgId:imgFileId, imgURL:imgURL};
+    const adDoc = {timestamp:timestamp, slug:slug, genre:imgFileData.genre, imgId:imgFileData.imgFileId, imgURL:imgURL};
 
     SavedAds.insert(adDoc);
 

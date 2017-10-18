@@ -52,7 +52,7 @@ export class AdCarousel extends React.Component {
     const slides = this.props.savedAds.map((ad, index) =>
 
         <div key={index}>
-          <img src={ ad.imgURL }/>
+          <img src={ ad.imgURL } className={ad.genre} />
         </div>
 
       );

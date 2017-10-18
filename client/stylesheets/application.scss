@@ -26,14 +26,48 @@ body {
 
 .workspace {
 
-  background-color: rgba(225,215,200,0.75);
-  background-color: #e5b562;
+  background-color: black;
   width: 1920px;
   height: 1080px;
   position: absolute;
   top: 0px;
   left: 0px;
   overflow: hidden;
+
+}
+
+.workspace .finale-sequence {
+
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 102;
+
+    background-color: black;
+
+}
+
+.workspace .finale-sequence img {
+
+  position: absolute;
+
+}
+
+/* Position saved image on newspaper */
+.workspace .finale-sequence .saved-ad.old {
+
+  left: 404px;
+  top: 410px;
+
+}
+
+/* Position saved image on popups */
+.workspace .finale-sequence .saved-ad.new {
+
+  left: 105px;
+  top: 105px;
 
 }
 
@@ -211,7 +245,7 @@ body {
 
 .ad-carousel {
 
-  padding-top: 300px;
+  padding-top: 260px;
 
 }
 
@@ -223,6 +257,10 @@ body {
 
 .slick-slider .slick-slide {
   margin-bottom: 30px;
+}
+
+.slick-slider .slick-slide img {
+  background-color: rgba(255,255,255,1.0);
 }
 
 /*.ad-carousel .slick-slide:nth-child(odd) {
@@ -240,10 +278,25 @@ body {
   filter: contrast(80%) grayscale(80%);
 
   transform:scale(0.91);
-  width: 732px;
-
+  width: 500px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: all 0.3s cubic-bezier( 0.25, 0.8, 0.25, 1);
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+}
+
+.ad-carousel img.new {
+
+  background-image: url('../images/bg_new_en.png');
+
+}
+
+.ad-carousel img.old {
+
+  background-image: url('../images/bg_old_en.png');
 
 }
 

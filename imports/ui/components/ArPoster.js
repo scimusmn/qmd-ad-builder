@@ -16,10 +16,12 @@ export class ArPoster extends React.Component {
     super(props);
 
     this.state = {
+
       assetGenre: 'new',
       language: 'en',
-      saveLockdown:false,
-      attractMode:false,
+      saveLockdown: false,
+      attractMode: false,
+
     };
 
     // Dictionary to find
@@ -122,11 +124,11 @@ export class ArPoster extends React.Component {
 
           // Separate assets into 2 sets of 2 sets.
           item.assets.new = { en: this.filterAssets(result, 'new', 'en'),
-                              es:this.filterAssets(result, 'new', 'es'),
+                              es: this.filterAssets(result, 'new', 'es'),
                             };
 
           item.assets.old = { en: this.filterAssets(result, 'old', 'en'),
-                              es:this.filterAssets(result, 'old', 'es'),
+                              es: this.filterAssets(result, 'old', 'es'),
                             };
 
           // Default to new english set.
@@ -737,7 +739,6 @@ export class ArPoster extends React.Component {
         const timeHeld = Date.now() - this.holdToSaveStart;
         const percentage = timeHeld / timeRequired;
 
-        // TEMP - USE CSS TO DRAW CLOCK TIMER
         let percDeg = Math.ceil(90 + (percentage * 360) * 0.5);
         let backgroundClock = '';
         if (percDeg < 180) {
@@ -748,13 +749,23 @@ export class ArPoster extends React.Component {
 
         TweenMax.set('body', { backgroundImage: backgroundClock });
 
+        // TODO - Once sequence is settled, refactor for comments and clarity...
         if (timeHeld > timeRequired) {
           console.log('! [o] ! • Hold to save success.');
+
+          Session.set('savedGenre', this.state.assetGenre);
+          console.log('! [o] ! • Genre:', Session.get('savedGenre'));
+
           this.stopHoldToSave();
+
+          TweenMax.set($('.poster-background'), { autoAlpha: 0});
           this.saveLayoutAsImage();
 
           TweenMax.set('body', { backgroundImage: 'linear-gradient(#fff 0%, #fff 100%)'});
-          TweenMax.from('.workspace', 3.0, { opacity: 0.01, ease:Power3.EaseIn});
+          TweenMax.from('.workspace', 3.0, { opacity: 0.01, ease:Power3.EaseIn, onComplete:() => {
+            // Display background once workspace fades back in (still covered by black overlay)
+            TweenMax.set($('.poster-background'), { autoAlpha: 1.0});
+          },});
 
         }
 
@@ -783,12 +794,12 @@ export class ArPoster extends React.Component {
 
       console.log('saveLayoutAsImage()');
 
-      // TODO: Hide anything not wanted
-      // in exported image.
-
       // Flatten desired layers into canvas
       TweenMax.set('.workspace', { scale: 1.0});
-      const renderContainer = $('.workspace')[0];
+
+      // TweenMax.set('.ar-poster', { backgroundColor: 'rgba(33,255,33, 0.5)' }); // TEMP
+
+      const renderContainer = $('.ar-poster')[0];
 
       html2canvas(renderContainer, {
         onrendered: (canvas) => {
@@ -810,7 +821,6 @@ export class ArPoster extends React.Component {
        const fileReader = new FileReader();
        const method = 'readAsBinaryString';
 
-       // TEMP CFS file save
        ImageFiles.insert(blob, function(err, fileObj) {
 
          // Inserted new doc with ID fileObj._id,
@@ -825,17 +835,21 @@ export class ArPoster extends React.Component {
 
            fileObj.on('uploaded', () => {
              fileObj.off('uploaded'); // Remove listener
-             console.log('fileObj uploaded');
 
              // Add new ad to saved ads collection
-             Meteor.call('saveAdvertisement', fileObj._id);
+             const imgFileData = {imgFileId: fileObj._id, genre: Session.get('savedGenre')};
+
+             Meteor.call('saveAdvertisement', imgFileData, (error, result) => {
+
+               // Ad is ready. Start finale sequence.
+
+             });
+
            });
 
          }
 
        });
-
-       // TODO: Reset advertisement.
 
      }
 
@@ -883,18 +897,6 @@ export class ArPoster extends React.Component {
                 <img src='#' className='asset'/>
               </div>
 
-              <div id='motion1' className='item'>
-                <img src='#' className='asset'/>
-              </div>
-
-              <div id='motion2' className='item'>
-                <img src='#' className='asset'/>
-              </div>
-
-              <div id='motion3' className='item'>
-                <img src='#' className='asset'/>
-              </div>
-
               <div id='arrows'>
                 <h3 id='label'>(Block) Label Here</h3>
                 <img src='images/arrow.png' className='right'/>
@@ -905,7 +907,7 @@ export class ArPoster extends React.Component {
                 <div id='intro-instruct' className='center-overlay'>
                   <img src='images/intro-instruct.png'/>
                 </div>
-                <CarouselContainer/>
+                <CarouselContainer></CarouselContainer>
               </div>
 
           </div>;
