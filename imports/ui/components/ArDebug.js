@@ -28,6 +28,8 @@ export class ArDebug extends React.Component {
 
     });
 
+    this.bgTransition = {};
+
     this.backgroundOptions = ['bg_old_en.png', 'bg_new_en.png', 'None'];
 
   }
@@ -48,7 +50,20 @@ export class ArDebug extends React.Component {
       if (!bg || bg == 'None') {
         $('.poster-background').attr('src', '#');
       } else {
-        $('.poster-background').attr('src', 'images/' + bg);
+        const postBG = $('.poster-background');
+
+        // Disappear for transition
+        postBG.removeClass('show');
+
+        clearTimeout(this.bgTransition);
+        this.bgTransition = setTimeout(() => {
+
+          // Reappear with new background image
+          postBG.attr('src', 'images/' + bg);
+          postBG.addClass('show');
+
+        }, 200);
+
       }
 
     });
@@ -95,14 +110,6 @@ export class ArDebug extends React.Component {
                   <video id='debug-video' className='setting-vis' autoPlay='true' style={{width:'320px', height:'240px', display:'none'}}></video>
                   <canvas id='debug-canvas' className='setting-vis' style={{width:'960px', height:'620px'}}></canvas><br/>
                 </SettingsGroup>
-
-                {/*
-                <SettingsGroup id='uvc-control'>
-                  <InputSetting id='vendor-id' label='Vendor Id (XXXX:1234)'/>
-                  <InputSetting id='product-id' label='Product Id (1234:XXXX)'/>
-                  <InputSetting id='absolute-exposure' forceNum={true}/>
-                </SettingsGroup>
-              */}
 
                 <SettingsGroup id='options'>
                   <Setting id='invert-detection'/>
