@@ -24,7 +24,7 @@ export class AdCarousel extends React.Component {
 
   componentWillUpdate(nextProps, nextState) {
 
-    console.log('AdCarousel.componentWillUpdate:', nextProps);
+    // console.log('AdCarousel.componentWillUpdate:', nextProps);
 
     if (this.props.savedAds.length != 0) this.refs.slider.slickGoTo(0);
 

@@ -853,8 +853,8 @@ export class ArPoster extends React.Component {
 
      }
 
-     // Converts image string
-     // to image blob.
+  // Converts image string
+  // to image blob.
   dataURItoBlob(dataURI) {
 
     let byteString = atob(dataURI.split(',')[1]);
@@ -903,7 +903,7 @@ export class ArPoster extends React.Component {
                 <img src='images/arrow.png' className='left'/>
               </div>
 
-              <div id='attract-overlay' >
+              <div id='attract-overlay'>
                 <div id='intro-instruct' className='center-overlay'>
                   <img src='images/intro-instruct.png'/>
                 </div>

@@ -44,6 +44,7 @@ export class FinaleSequence extends React.Component {
     if (this.props.savedAd && this.props.savedAd._id !== nextProps.savedAd._id) {
 
       $(this.refs.finaleContainer).show();
+      TweenMax.set(this.refs.finaleContainer, {autoAlpha: 1.0, scale: 1.0, transformOrigin:'900px 500px'});
       this.restartFinaleSequence(nextProps);
 
     } else {
@@ -53,54 +54,6 @@ export class FinaleSequence extends React.Component {
     }
 
   }
-
-/*
-
-  prepareFinaleSequences() {
-
-    // Init
-    this.tl = new TimelineMax({repeat:-1, delay:1});
-
-    // Transition in
-    this.tl.from(this.refs.bg, 0.5, {left:-500, autoAlpha:0.0,});
-    this.tl.from(this.refs.en, 0.5, {x:-500, autoAlpha:0.0}, '-=0.4');
-    this.tl.from(this.refs.es, 0.5, {x:-500, autoAlpha:0.0}, '-=0.8');
-
-    // Transition out
-    this.tl.to(this.refs.bg, 0.5, {left:500, autoAlpha:0.0, ease: Power2.easeIn, }, '+=18');
-    this.tl.to(this.refs.en, 0.5, {x:500, autoAlpha:0.0, ease: Power2.easeIn}, '-=0.4');
-    this.tl.to(this.refs.es, 0.5, {x:500, autoAlpha:0.0, ease: Power2.easeIn}, '-=0.4');
-
-    // Rotate dashed ring in
-    this.tl.to(this.refs.bg, 9.5, {rotation: 220, ease:Power2.easeOut}, 0.01);
-
-    // Rotate dashed ring out
-    this.tl.to(this.refs.bg, 3.5, {rotation: 570, ease:Power2.easeIn}, '-=2.725');
-
-    // Subtle hint movement
-    // for Os easter egg
-    // this.tl.to(this.refs.O_static, 3.14, {x:-8, y:5, rotation: 2, ease: Power2.easeInOut, yoyo:true, repeat:1}, 0.1);
-    // this.tl.to(this.refs.O_drag, 3.14, {x:5, y:-8, rotation: -2, ease: Power2.easeInOut, yoyo:true, repeat:1}, 0.2);
-
-    this.tl.from(this.refs.fader, 0.5, { backgroundColor: 'rgba(0,0,0,1.0)' }, 0.0);
-    this.tl.to(this.refs.fader, 0.5, { backgroundColor: 'rgba(0,0,0,1.0)' }, '-=0.5');
-
-  }
-
-  stopAllSequences() {
-    // DOM is about to become
-    // inaccessible. Clean up
-    // all timers ans tweens.
-    console.log('AttractLoop - componentWillUnmount');
-
-    // Kills the timeline and forces to completion
-    this.tl.kill();
-
-    // Set to null so the reference is garbage collected
-    this.tl = null;
-  }
-
-*/
 
   restartFinaleSequence(withProps) {
 
@@ -132,12 +85,30 @@ export class FinaleSequence extends React.Component {
     // Load newly saved image into newspaper
     $(divNewspaper).find('.saved-ad').attr('src', withProps.savedAd.imgURL);
 
+    // After news has spun in, position
+    // individual papers into long reel.
+    const sequence = this.sequence;
+    let reelLength = 0;
+    $(divNewspaper).find('.single').each(function(index) {
+      const topPos = index * 1510;
+      reelLength += 1510;
+
+      // Start position
+      sequence.set($(this), {top:0}, 0.0);
+
+      // Move into reel after delay.
+      sequence.set($(this), {top:topPos}, 4.0);
+
+    });
+
     this.sequence.set(divNewspaper, {x: 400, y:-170, scale:0.001, autoAlpha:0.0, transformOrigin:'574px 750px', webkitFilter:'blur(' + 0 + 'px)'}, 0.0);
     this.sequence.from(divNewspaper, 1.4, {webkitFilter:'blur(' + 24 + 'px)', ease:Power2.easeOut}, 2.1);
     this.sequence.to(divNewspaper, 0.2, {autoAlpha:1.0, ease:Power0.easeOut}, 2.1);
     this.sequence.from(divNewspaper, 1.34, {rotation: 1280, ease:Power1.easeInOut}, 2.1);
     this.sequence.to(divNewspaper, 1.1, {scale:1.2, ease:Power3.easeInOut }, 2.2);
     this.sequence.to(divNewspaper, 0.25, {scale:0.9, ease:Power3.easeIn }, 3.5);
+
+    this.sequence.to(divNewspaper, 7.5, {y:-reelLength, ease:Power2.easeIn }, 8.5);
 
     // Play timeline
     this.sequence.restart();
@@ -163,7 +134,7 @@ export class FinaleSequence extends React.Component {
 
       {ref:this.refs.divPopup1, x:450, y:100, s: 0.6, t: 0.4},
       {ref:this.refs.divPopup2, x:280, y:220, s: 0.6, t: 6.0},
-      {ref:this.refs.divPopup3, x:700, y:-100, s: 0.6, t: 8.6},
+      {ref:this.refs.divPopup3, x:700, y:-70, s: 0.6, t: 8.6},
       {ref:this.refs.divPopup4, x:300, y:220, s: 0.6, t: 9.9},
       {ref:this.refs.divPopup5, x:478, y:430, s: 0.6, t: 10.5},
       {ref:this.refs.divPopup6, x:990, y:278, s: 0.6, t: 10.8},
@@ -186,6 +157,11 @@ export class FinaleSequence extends React.Component {
 
       // TEMP - Add delay to all times
       popup.t += 2.0;
+
+      // TEMP - Scaling down to fit on laptop
+      popup.x = (popup.x * 0.6) + 150;
+      popup.y = (popup.y * 0.6) + 75;
+      popup.s = (popup.s * 0.25);
 
       // Load newly saved image into
       // all container divs
@@ -225,30 +201,6 @@ export class FinaleSequence extends React.Component {
 
     }
 
-    // TODO:  Add chaotic popups and cursor movement.
-
-    // Cursor movement
-    // this.sequence.set(imgCursor, {x: 2000, y:600, ease:Power2.easeInOut}, 0.0);
-    // this.sequence.to(imgCursor, 3.0, {x: 600, y:300, ease:Power2.easeInOut}, 1.5);
-    // this.sequence.to(imgCursor, 0.1, {scale: 0.9, repeat:1, yoyo:true, ease:Power2.easeIn}, '+=0.0');
-    // this.sequence.to(imgCursor, 2.0, {x: 970, y:410, ease:Power2.easeInOut}, '+=1.0');
-    // this.sequence.to(imgCursor, 0.1, {scale: 0.9, repeat:1, yoyo:true, ease:Power2.easeIn}, '+=0.0');
-    // this.sequence.to(imgCursor, 1.0, {x: 244, y:80, ease:Power2.easeInOut}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.1, {scale: 0.9, repeat:1, yoyo:true, ease:Power2.easeIn}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.6, {x: 970, y:410, ease:Power2.easeInOut}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.1, {scale: 0.9, repeat:1, yoyo:true, ease:Power2.easeIn}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.6, {x: 344, y:444, ease:Power2.easeInOut}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.1, {scale: 0.9, repeat:1, yoyo:true, ease:Power2.easeIn}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.6, {x: 970, y:410, ease:Power2.easeInOut}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.1, {scale: 0.9, repeat:1, yoyo:true, ease:Power2.easeIn}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.6, {x: 144, y:180, ease:Power2.easeInOut}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.1, {scale: 0.9, repeat:1, yoyo:true, ease:Power2.easeIn}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.5, {x: 844, y:580, ease:Power2.easeInOut}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.1, {scale: 0.9, repeat:1, yoyo:true, ease:Power2.easeIn}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.4, {x: 344, y:280, ease:Power2.easeInOut}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.1, {scale: 0.9, repeat:1, yoyo:true, ease:Power2.easeIn}, '+=0.0');
-    // this.sequence.to(imgCursor, 0.7, {x: 2000, y:-360, rotation: 990, autoAlpha: 0.0, ease:Power2.easeInOut}, '+=0.0');
-
     // Start the timeline animation
     this.sequence.restart();
 
@@ -256,20 +208,16 @@ export class FinaleSequence extends React.Component {
 
   endSequence() {
 
-    setTimeout(()=> {
+    TweenMax.to(this.refs.finaleContainer, 0.5, {autoAlpha: 0.0, scale: 1.5, ease:Power2.easeIn, delay:1.5, onComplete:() => {
 
-      $(this.refs.imgFinale).attr('src', '#');
-      $(this.refs.imgCursor).hide();
       Session.set('savedGenre', '');
       $(this.refs.finaleContainer).hide();
 
-    }, 7000);
+    },});
 
   }
 
   render() {
-
-    const genre = Session.get('savedGenre');
 
     return <div ref='finaleContainer' className='finale-sequence-container'>
 
@@ -278,13 +226,129 @@ export class FinaleSequence extends React.Component {
                 <div ref='containerOld'>
 
                   <div ref='divNewspaper' className='newspaper-container'>
-                    <img src='../images/newspaper.png' />
-                    <img className='saved-ad old' src='#' width='540px'/>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
+                    <div className='single'>
+                      <img src='../images/newspaper.png' />
+                      <img className='saved-ad old' src='#'/>
+                    </div>
                   </div>
 
                 </div>
 
                 <div ref='containerNew'>
+
+                  <img src='images/laptop.png' className='laptop' width='2700px'/>
 
                   <div ref='divPopup1' className='popup-container'>
                     <img src='../images/popup_02.png' />
