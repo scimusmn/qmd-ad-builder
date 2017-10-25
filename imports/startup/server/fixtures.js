@@ -36,7 +36,7 @@ if (!Meteor.isProduction) {
 
 const savedAds = SavedAds.find();
 const imageFiles = ImageFiles.find();
-const MAX_SAVED_ADS = 10;
+const MAX_SAVED_ADS = 75;
 
 console.log('Checking SavedAds count on startup. ', savedAds.count(), imageFiles.count());
 

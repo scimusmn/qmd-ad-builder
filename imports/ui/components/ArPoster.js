@@ -197,7 +197,9 @@ export class ArPoster extends React.Component {
     Mousetrap.bind(['return', 'e'], (event) => {
 
       // Ignore key repeats
-      if (event.repeat == false) {
+      // Ignore is savedGenre is set,
+      // meaning finale sequence in progress...
+      if (event.repeat == false && Session.get('savedGenre') == '') {
         this.resetInactivity();
         this.startHoldToSave();
       }
@@ -246,6 +248,10 @@ export class ArPoster extends React.Component {
       }
 
     }, 1000);
+
+    // Some initial display states
+    TweenMax.set($('.ar-poster #arrows'), {autoAlpha:0.0});
+    TweenMax.set($('.black-overlay'), { autoAlpha: 0.0});
 
   }
 
@@ -730,7 +736,6 @@ export class ArPoster extends React.Component {
       this.holdToSaveStart = Date.now();
       const timeRequired = 2000;
 
-      // TEMP
       TweenMax.to('.workspace', 1.5, { ease:Power3.easeOut, scale: 0.9});
       TweenMax.set('body', { backgroundColor: 'rgba(255,0,0,0.8)'});
 
@@ -760,11 +765,13 @@ export class ArPoster extends React.Component {
 
           TweenMax.set($('.poster-background'), { autoAlpha: 0});
           this.saveLayoutAsImage();
+          TweenMax.set($('.black-overlay'), { autoAlpha: 1.0});
 
           TweenMax.set('body', { backgroundImage: 'linear-gradient(#fff 0%, #fff 100%)'});
           TweenMax.from('.workspace', 3.0, { opacity: 0.01, ease:Power3.EaseIn, onComplete:() => {
             // Display background once workspace fades back in (still covered by black overlay)
             TweenMax.set($('.poster-background'), { autoAlpha: 1.0});
+            TweenMax.set($('.black-overlay'), { autoAlpha: 0.0});
           },});
 
         }
@@ -872,6 +879,7 @@ export class ArPoster extends React.Component {
   render() {
 
     return <div className='ar-poster'>
+
 
               <div id='name' className='item'>
                 <img src='#' className='asset'/>

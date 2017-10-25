@@ -43,6 +43,8 @@ export class FinaleSequence extends React.Component {
 
     if (this.props.savedAd && this.props.savedAd._id !== nextProps.savedAd._id) {
 
+      console.log('FinaleSequence: NEW AD');
+
       $(this.refs.finaleContainer).show();
       TweenMax.set(this.refs.finaleContainer, {autoAlpha: 1.0, scale: 1.0, transformOrigin:'900px 500px'});
       this.restartFinaleSequence(nextProps);
@@ -348,7 +350,7 @@ export class FinaleSequence extends React.Component {
 
                 <div ref='containerNew'>
 
-                  <img src='images/laptop.png' className='laptop' width='2700px'/>
+                  <img src='images/laptop.png' className='laptop' width='2590px'/>
 
                   <div ref='divPopup1' className='popup-container'>
                     <img src='../images/popup_02.png' />
