@@ -8,7 +8,7 @@ import FinaleSequence from '../containers/FinaleSequence';
 const Workspace = () => (
   <div className='workspace'>
     <div className='black-overlay'></div>
-    <img src='#' className='poster-background'/>
+    <img src='images/bg_new_en.png' className='poster-background'/>
     <ArDebug/>
     <ArPoster/>
     <FinaleSequence/>
