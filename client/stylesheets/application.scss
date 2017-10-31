@@ -190,7 +190,7 @@ body {
   height: 100%;
   z-index: 101;
 
-  transform: translate(50%, 25%);
+  transform: translate(50%, 32%);
 
 }
 
@@ -275,58 +275,93 @@ body {
 /* *********** */
 
 .ad-carousel {
-  /*background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQYV2NkQAX/GZH4/xkYGBhhAmAOSBJEwDkgAQCCrgQEjpMcPgAAAABJRU5ErkJggg==) repeat;*/
-  width: 336px;
-  height: 320px;
-  position: absolute;
-  left: 330px;
-  top: 560px;
-  border-radius: 18px;
-  background-color: rgba(44,11,11,0.1);
+  position: fixed;
+  left: -450px;
+  bottom: 112px;
+  width: 1920px;
+  height: 380px;
+  background: rgba(0,0,0,0.9);
+  box-shadow: 0px -5px 20px -6px rgba(0,0,0,0.6);
+}
 
+.ad-carousel .vignette-overlay {
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  position:absolute;
+
+  background: linear-gradient(to right, rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.5) 5%,rgba(0,0,0,0.5) 10%,rgba(0,0,0,0) 20%,rgba(0,0,0,0) 20%,rgba(0,0,0,0) 80%,rgba(0,0,0,0.5) 95%,rgba(0,0,0,0.75) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
+}
+
+.ad-carousel .fade-slider {
+  z-index: 2;
 }
 
 .ad-carousel .fade-slide {
+
   position: absolute;
-  top: 17px;
-  left: 28px;
-  opacity: 0.0;
-  transition: opacity 0.8s ease-out;
-  z-index: 2;
+  top: 10px;
+  left: 0px;
+  width: 620px;
+  height: 350px;
 
-}
-.ad-carousel .fade-slide.active {
-
-  opacity: 1.0;
-  transition: opacity 1.3s ease-in-out;
   z-index: 1;
 
+  transform-origin: 50% 50%;
+
 }
 
-.ad-carousel img {
+.ad-carousel .slide-container {
 
-  width: 280px;
-
-  display:block;
-  margin:auto;
-
+  width: 100%;
+  height: 100%;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
 
-  transform-origin: 50% 50%;
-  filter: none;
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.ad-carousel .fade-slide.new {
+
+  font-family: 'Arial';
 
 }
 
-.ad-carousel img.new {
+.ad-carousel .fade-slide.old {
+
+  font-family: 'Georgia';
+
+}
+
+.ad-carousel .fade-slide p {
+  position: absolute;
+  bottom: -12px;
+  left: 0px;
+  width: 100%;
+  font-size: 10px;
+  padding: 5px;
+  color: rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.65);
+  text-align: center;
+}
+
+.ad-carousel .fade-slide img {
+
+  position: absolute;
+  left: 164px;
+  top: 27px;
+  width: 290px;
+
+}
+
+.ad-carousel .fade-slide.new .slide-container {
 
   background-image: url('../images/bg_new_en.png');
 
 }
 
-.ad-carousel img.old {
+.ad-carousel .fade-slide.old .slide-container {
 
   background-image: url('../images/bg_old_en.png');
 

@@ -19,23 +19,46 @@ export class AdCarousel extends React.Component {
 
     this.slideshowTimer = {};
     this.currentSlideIndex = 0;
+    this.restartX = 0;
+    this.restartSecs = 0;
+
+    this.cabooseOnTheTrain = this.cabooseOnTheTrain.bind(this);
 
   }
 
   componentDidMount() {
-    this.slideshowTimer = setInterval(() => {
-      this.nextSlide();
-    }, 7000);
+
+    console.log('AdCarousel:componentDidMount()');
+    this.chooChooHereComesTheSlideTrain();
+
+    this.transitionIn();
+
   }
 
   componentWillUnmount() {
 
     // Stop all tweens
     // and timers.
+    console.log('AdCarousel:componentWillUnmount()');
+
+    this.transitionOut();
 
   }
 
-  nextSlide() {
+  transitionIn() {
+
+    TweenMax.set($('.ad-carousel'), {bottom: -600});
+    TweenMax.to($('.ad-carousel'), 0.75, {bottom: 112, ease:Power3.easeOut});
+
+  }
+
+  transitionOut() {
+
+    TweenMax.to($('.ad-carousel'), 0.75, {bottom: -600, ease:Power3.easeOut});
+
+  }
+
+  chooChooHereComesTheSlideTrain() {
 
     const count = this.props.savedAds.length;
     this.currentSlideIndex++;
@@ -44,8 +67,34 @@ export class AdCarousel extends React.Component {
       this.currentSlideIndex = 0;
     }
 
-    $('.ad-carousel .fade-slide').removeClass('active');
-    $('.ad-carousel .slide-' + this.currentSlideIndex).addClass('active');
+    const $allSlides = $('.ad-carousel .fade-slide');
+
+    this.restartX = this.props.offscreenX + (this.props.slideSpacing * $allSlides.length);
+
+    const amountOfPixelsToTravel = this.restartX - this.props.offscreenX;
+    const secs = amountOfPixelsToTravel * this.props.secsPerPixel;
+    this.restartSecs = amountOfPixelsToTravel * this.props.secsPerPixel;
+
+    const _this = this;
+
+    $allSlides.each(function(index) {
+
+      const xPos = (_this.props.slideSpacing * index) + _this.props.initialOffset;
+
+      const amountOfPixelsToTravel = xPos - _this.props.offscreenX;
+      const secs = amountOfPixelsToTravel * _this.props.secsPerPixel;
+
+      TweenMax.set($(this), {x:xPos});
+      TweenMax.to($(this), secs, {delay: 1.0, x: _this.props.offscreenX, ease: Linear.easeNone, onComplete: _this.cabooseOnTheTrain, onCompleteParams:[$(this)]});
+
+    });
+
+  }
+
+  cabooseOnTheTrain(element) {
+
+    console.log('cabooseOnTheTrain', element);
+    TweenMax.from(element, this.restartSecs, {x:this.restartX, ease:Linear.easeNone, onComplete: this.cabooseOnTheTrain, onCompleteParams:[element]});
 
   }
 
@@ -55,9 +104,11 @@ export class AdCarousel extends React.Component {
 
     const slides = this.props.savedAds.map((ad, index) =>
 
-        <div key={index} className={('fade-slide slide-' + index)}>
-          <img src={ ad.imgURL } className={ad.genre}/>
-          <p>Created {moment(ad.timestamp, 'x').fromNow()}</p>
+        <div key={index} className={('fade-slide slide-' + index + ' ' + ad.genre)}>
+          <div className='slide-container'>
+            <img src={ ad.imgURL }/>
+            <p>Created {moment(ad.timestamp, 'x').fromNow()}</p>
+          </div>
         </div>
 
       );
@@ -71,11 +122,31 @@ export class AdCarousel extends React.Component {
   render() {
 
     return <div className='ad-carousel'>
-              {this.renderSlideShow()}
-            </div>;
+
+            {this.renderSlideShow()}
+            <div className='vignette-overlay'></div>
+
+          </div>;
+
   }
 }
 
 AdCarousel.propTypes = {
+
   savedAds: React.PropTypes.array,
+  offscreenX: React.PropTypes.number,
+  secsPerPixel: React.PropTypes.number,
+  slideSpacing: React.PropTypes.number,
+  initialOffset: React.PropTypes.number,
+
 };
+
+AdCarousel.defaultProps = {
+
+  offscreenX: -1000,
+  secsPerPixel: 0.015,
+  slideSpacing: 744,
+  initialOffset: 590,
+
+};
+

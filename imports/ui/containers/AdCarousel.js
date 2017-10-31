@@ -13,7 +13,7 @@ const composer = (params, onData) => {
     // const savedAds = SavedAds.find().fetch();
 
     // Sort by timestamp, limit to 10
-    const savedAds = SavedAds.find({}, {sort: {timestamp: -1}, limit: 10}).fetch();
+    const savedAds = SavedAds.find({}, {sort: {timestamp: -1}, limit: 5}).fetch();
 
     onData(null, { savedAds });
 

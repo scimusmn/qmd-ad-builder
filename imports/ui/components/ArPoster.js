@@ -231,6 +231,7 @@ export class ArPoster extends React.Component {
       if (this.inactivitySeconds == 20) {
 
         this.setState({attractMode:true});
+        Session.set('attractMode', true);
 
         let item;
 
@@ -250,7 +251,7 @@ export class ArPoster extends React.Component {
     }, 1000);
 
     // Some initial display states
-    TweenMax.set($('.ar-poster #arrows'), {autoAlpha:0.0});
+    $('.ar-poster #arrows').hide();
     TweenMax.set($('.black-overlay'), { autoAlpha: 0.0});
 
   }
@@ -338,6 +339,7 @@ export class ArPoster extends React.Component {
         // Move arrows into
         // active item's div
         this.activeItem.target.append($('#arrows'));
+        $('.ar-poster #arrows').show();
 
         // Update active block label
         $('#arrows #label').html(this.activeItem.label);
@@ -603,6 +605,7 @@ export class ArPoster extends React.Component {
     if (this.state.attractMode == true) {
 
       this.setState({attractMode:false});
+      Session.set('attractMode', false);
 
       // Hide inactive instruction message.
       $('#attract-overlay').hide();
@@ -878,8 +881,12 @@ export class ArPoster extends React.Component {
 
   render() {
 
-    return <div className='ar-poster'>
+    let carouselJSX = null;
+    if (this.state.attractMode == true) {
+      carouselJSX = <CarouselContainer/>;
+    }
 
+    return <div className='ar-poster'>
 
               <div id='name' className='item'>
                 <img src='#' className='asset'/>
@@ -915,7 +922,7 @@ export class ArPoster extends React.Component {
                 <div id='intro-instruct' className='center-overlay'>
                   <img src='images/intro-instruct.png'/>
                 </div>
-                <CarouselContainer></CarouselContainer>
+                {carouselJSX}
               </div>
 
           </div>;
