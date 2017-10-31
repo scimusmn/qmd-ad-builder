@@ -145,7 +145,7 @@ AdCarousel.defaultProps = {
 
   offscreenX: -1000,
   secsPerPixel: 0.015,
-  slideSpacing: 744,
+  slideSpacing: 656,
   initialOffset: 590,
 
 };
