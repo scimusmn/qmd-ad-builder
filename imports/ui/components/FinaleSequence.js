@@ -41,7 +41,16 @@ export class FinaleSequence extends React.Component {
 
   componentWillReceiveProps(nextProps) {
 
-    if (this.props.savedAd && this.props.savedAd._id !== nextProps.savedAd._id) {
+    if (nextProps.savedAd == undefined) {
+      console.log('No saved ad available. Likely empty SavedAds collection.');
+      return;
+    }
+
+    if (this.props.savedAd == undefined) {
+      console.log('No previous saved ad found. Likely first SavedAd in collection.');
+    }
+
+    if (this.props.savedAd == undefined || this.props.savedAd._id !== nextProps.savedAd._id) {
 
       console.log('FinaleSequence: NEW AD');
 
@@ -51,7 +60,7 @@ export class FinaleSequence extends React.Component {
 
     } else {
 
-      console.log('No saved ad available. Likely empty SavedAds collection.');
+      console.log('Same ad as previous. Ignore. ');
 
     }
 
@@ -92,8 +101,8 @@ export class FinaleSequence extends React.Component {
     const sequence = this.sequence;
     let reelLength = 0;
     $(divNewspaper).find('.single').each(function(index) {
-      const topPos = index * 1510;
-      reelLength += 1510;
+      const topPos = index * 1515;
+      reelLength += 1515;
 
       // Start position
       sequence.set($(this), {top:0}, 0.0);
@@ -103,7 +112,7 @@ export class FinaleSequence extends React.Component {
 
     });
 
-    this.sequence.set(divNewspaper, {x: 400, y:-170, scale:0.001, autoAlpha:0.0, transformOrigin:'574px 750px', webkitFilter:'blur(' + 0 + 'px)'}, 0.0);
+    this.sequence.set(divNewspaper, {x: 400, y:-185, scale:0.001, autoAlpha:0.0, transformOrigin:'574px 750px', webkitFilter:'blur(' + 0 + 'px)'}, 0.0);
     this.sequence.from(divNewspaper, 1.4, {webkitFilter:'blur(' + 24 + 'px)', ease:Power2.easeOut}, 2.1);
     this.sequence.to(divNewspaper, 0.2, {autoAlpha:1.0, ease:Power0.easeOut}, 2.1);
     this.sequence.from(divNewspaper, 1.34, {rotation: 1280, ease:Power1.easeInOut}, 2.1);
@@ -129,27 +138,27 @@ export class FinaleSequence extends React.Component {
     // Cursor
     const imgCursor = this.refs.imgCursor;
     $(imgCursor).show();
-    this.sequence.set(imgCursor, {x: 2000, y:240, rotation:0.0}, 0.0);
+    this.sequence.set(imgCursor, {x: 200, y:640, rotation:0.0}, 0.0);
 
     // Popups
     const popups = [
 
-      {ref:this.refs.divPopup1, x:450, y:100, s: 0.6, t: 0.4},
-      {ref:this.refs.divPopup2, x:280, y:220, s: 0.6, t: 6.0},
-      {ref:this.refs.divPopup3, x:700, y:-70, s: 0.6, t: 8.6},
-      {ref:this.refs.divPopup4, x:300, y:220, s: 0.6, t: 9.9},
-      {ref:this.refs.divPopup5, x:478, y:430, s: 0.6, t: 10.5},
-      {ref:this.refs.divPopup6, x:990, y:278, s: 0.6, t: 10.8},
-      {ref:this.refs.divPopup7, x:330, y:-50, s: 0.6, t: 11.0},
-      {ref:this.refs.divPopup8, x:30, y:230, s: 0.6, t: 11.5},
-      {ref:this.refs.divPopup9, x:880, y:626, s: 0.65, t: 11.8},
-      {ref:this.refs.divPopup10, x:260, y:27, s: 0.5, t: 12.4},
-      {ref:this.refs.divPopup11, x:-30, y:20, s: 0.44, t: 12.8},
-      {ref:this.refs.divPopup12, x:30, y:630, s: 0.5, t: 13.2},
-      {ref:this.refs.divPopup13, x:1180, y:426, s: 0.34, t: 13.4},
-      {ref:this.refs.divPopup14, x:1111, y:-107, s: 0.7, t: 13.7},
-      {ref:this.refs.divPopup15, x:-100, y:680, s: 0.3, t: 13.8},
-      {ref:this.refs.divPopup16, x:530, y:130, s: 0.8, t: 13.9},
+      {ref:this.refs.divPopup1, x:510, y:75, s: 0.4, t: 3}, // Start with medium, centered popup.
+      {ref:this.refs.divPopup2, x:260, y:220, s: 0.25, t: 8},
+      {ref:this.refs.divPopup3, x:700, y:-40, s: 0.25, t: 11.0},
+      {ref:this.refs.divPopup4, x:300, y:220, s: 0.25, t: 11.5},
+      {ref:this.refs.divPopup5, x:478, y:390, s: 0.25, t: 12.0}, // Enter chaos mode.
+      {ref:this.refs.divPopup6, x:890, y:278, s: 0.25, t: 12.5},
+      {ref:this.refs.divPopup7, x:330, y:-50, s: 0.25, t: 13.0},
+      {ref:this.refs.divPopup8, x:80, y:190, s: 0.25, t: 13.5},
+      {ref:this.refs.divPopup9, x:650, y:426, s: 0.25, t: 14.0},
+      {ref:this.refs.divPopup10, x:550, y:27, s: 0.3, t: 14.5},
+      {ref:this.refs.divPopup11, x:-30, y:20, s: 0.25, t: 15.0},
+      {ref:this.refs.divPopup12, x:30, y:430, s: 0.15, t: 15.25},
+      {ref:this.refs.divPopup13, x:900, y:426, s: 0.3, t: 15.5},
+      {ref:this.refs.divPopup14, x:920, y:-70, s: 0.3, t: 15.75},
+      {ref:this.refs.divPopup15, x:90, y:680, s: 0.15, t: 16.0},
+      {ref:this.refs.divPopup16, x:490, y:55, s: 0.6, t: 17.0}, // Finish with large, centered popup.
 
     ];
 
@@ -157,17 +166,15 @@ export class FinaleSequence extends React.Component {
 
       const popup = popups[i];
 
-      // TEMP - Add delay to all times
-      popup.t += 2.0;
-
-      // TEMP - Scaling down to fit on laptop
-      popup.x = (popup.x * 0.6) + 150;
-      popup.y = (popup.y * 0.6) + 75;
-      popup.s = (popup.s * 0.25);
+      // Add initial delay to all popups
+      popup.t = popup.t + 1.5;
 
       // Load newly saved image into
       // all container divs
       $(popup.ref).find('.saved-ad').attr('src', withProps.savedAd.imgURL);
+
+      // TEMP for debug.
+      // $(popup.ref).append('<p> popup ' + (i + 1) + '</p>');
 
       // Set initial display values now
       this.sequence.set(popup.ref, {autoAlpha: 0.0, x: popup.x, y: popup.y, scale: popup.s, transformOrigin:'350px 350px'}, 0.0);
@@ -179,25 +186,34 @@ export class FinaleSequence extends React.Component {
       // upper-right of popup and closes it.
       const reactionTime = 1.0 / (i + 1);
       const cursorMoveTime = (2.0 / (i + 1)) + 0.75; // Gets faster each popup...
-      const closeX = popup.x + 740;
-      const closeY = popup.y + 100;
+
+      let closeX = popup.x + 580;
+      let closeY = popup.y + 206;
+      if (i == 0) {
+        closeX += 65;
+        closeY -= 35;
+      }
+
       this.sequence.to(imgCursor, cursorMoveTime, {x: closeX, y: closeY, ease:Power2.easeInOut}, (popup.t + reactionTime));
 
       // Plan successful popup close
-      if (i < 6) {
+      if (i < 4) {
 
         this.sequence.to(imgCursor, 0.1, {scale: 0.9, repeat:1, yoyo:true, ease:Power2.easeIn}, (popup.t + cursorMoveTime + reactionTime));
-        this.sequence.to(popup.ref, 0.2, {autoAlpha: 0.0, scale: popup.s}, popup.t + cursorMoveTime + reactionTime + 0.16);
+        this.sequence.to(popup.ref, 0.2, {autoAlpha: 0.0, scale: popup.s}, popup.t + cursorMoveTime + reactionTime + 0.19);
 
       }
 
       // Cursor gives up and flies away
       if (i == popups.length - 1) {
 
-        this.sequence.to(imgCursor, 0.7, {x: 2200, y:-360, rotation: 999, ease:Power2.easeInOut}, '+=0.0');
+        this.sequence.to(imgCursor, 0.7, {x: 1800, y:-160, rotation: 999, ease:Power2.easeInOut}, '+=0.0');
+
+        // Supplemental non-visible delay for effect...
+        this.sequence.to(imgCursor, 0.75, {x: 1900, ease:Power2.easeInOut}, '+=0.0');
 
         // Also feign cursor moving off screen after first popup close
-        this.sequence.to(imgCursor, 1.7, {x: 1744, y: 144, ease:Power1.easeInOut}, 6.5);
+        this.sequence.to(imgCursor, 2.2, {x: 1444, y: 190, ease:Power1.easeInOut}, 8.25);
 
       }
 
@@ -210,7 +226,7 @@ export class FinaleSequence extends React.Component {
 
   endSequence() {
 
-    TweenMax.to(this.refs.finaleContainer, 0.5, {autoAlpha: 0.0, scale: 1.5, ease:Power2.easeIn, delay:1.5, onComplete:() => {
+    TweenMax.to(this.refs.finaleContainer, 0.5, {autoAlpha: 0.0, scale: 1.5, ease:Power2.easeIn, delay:1.1, onComplete:() => {
 
       Session.set('savedGenre', '');
       $(this.refs.finaleContainer).hide();
@@ -350,10 +366,10 @@ export class FinaleSequence extends React.Component {
 
                 <div ref='containerNew'>
 
-                  <img src='images/laptop.png' className='laptop' width='2590px'/>
+                  <img src='images/laptop.png' className='laptop'/>
 
                   <div ref='divPopup1' className='popup-container'>
-                    <img src='../images/popup_02.png' />
+                    <img src='../images/popup_03.png' />
                     <img className='saved-ad new' src='#' width='700px'/>
                   </div>
 
@@ -363,7 +379,7 @@ export class FinaleSequence extends React.Component {
                   </div>
 
                   <div ref='divPopup3' className='popup-container'>
-                    <img src='../images/popup_03.png' />
+                    <img src='../images/popup_02.png' />
                     <img className='saved-ad new' src='#' width='700px'/>
                   </div>
 
@@ -428,11 +444,13 @@ export class FinaleSequence extends React.Component {
                   </div>
 
                   <div ref='divPopup16' className='popup-container'>
-                    <img src='../images/popup_02.png' />
+                    <img src='../images/popup_03.png' />
                     <img className='saved-ad new' src='#' width='700px'/>
                   </div>
 
                   <img id='imgCursor' ref='imgCursor' src='../images/cursor.png' />
+
+                  <img src='images/laptop_mask.png' className='laptop'/>
 
                 </div>
 

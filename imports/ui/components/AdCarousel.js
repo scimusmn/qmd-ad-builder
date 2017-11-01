@@ -70,6 +70,9 @@ export class AdCarousel extends React.Component {
     const $allSlides = $('.ad-carousel .fade-slide');
 
     this.restartX = this.props.offscreenX + (this.props.slideSpacing * $allSlides.length);
+    if (this.restartX < 1920) {
+      this.restartX = 1920;
+    }
 
     const amountOfPixelsToTravel = this.restartX - this.props.offscreenX;
     const secs = amountOfPixelsToTravel * this.props.secsPerPixel;
@@ -93,7 +96,6 @@ export class AdCarousel extends React.Component {
 
   cabooseOnTheTrain(element) {
 
-    console.log('cabooseOnTheTrain', element);
     TweenMax.from(element, this.restartSecs, {x:this.restartX, ease:Linear.easeNone, onComplete: this.cabooseOnTheTrain, onCompleteParams:[element]});
 
   }
@@ -123,7 +125,7 @@ export class AdCarousel extends React.Component {
 
     return <div className='ad-carousel'>
 
-            {this.renderSlideShow()}
+            { this.renderSlideShow() }
             <div className='vignette-overlay'></div>
 
           </div>;
@@ -146,7 +148,7 @@ AdCarousel.defaultProps = {
   offscreenX: -1000,
   secsPerPixel: 0.015,
   slideSpacing: 656,
-  initialOffset: 590,
+  initialOffset: 636,
 
 };
 

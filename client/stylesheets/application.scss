@@ -58,9 +58,9 @@ body {
 /* Position saved image on newspaper */
 .workspace .finale-sequence .saved-ad.old {
 
-  left: 404px;
-  top: 410px;
-  width: 520px;
+  left: 388px;
+  top: 400px;
+  width: 564px;
 
 }
 
@@ -81,9 +81,18 @@ body {
 
 }
 
+.finale-sequence .popup-container p {
+  color: yellow;
+  background-color: black;
+  font-size:99px;
+  position: absolute;
+  text-align: center;
+  left: 300px;
+}
+
 .finale-sequence .laptop {
-  top: -305px;
-  left: -384px;
+  top: 0px;
+  left: 0px;
 }
 
 /* ********** */
@@ -341,8 +350,8 @@ body {
   width: 100%;
   font-size: 10px;
   padding: 5px;
-  color: rgba(255,255,255,0.8);
-  background: rgba(0,0,0,0.65);
+  color: rgba(255,255,255,0.85);
+  background: rgba(0,0,0,0.5);
   text-align: center;
 }
 
