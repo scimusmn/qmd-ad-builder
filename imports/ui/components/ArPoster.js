@@ -250,7 +250,7 @@ export class ArPoster extends React.Component {
 
       // After longer inactivity, refresh
       // browser to clear cache and cobwebs.
-      if (this.inactivitySeconds == 150) {
+      if (this.inactivitySeconds == 300) {
 
         location.reload();
 

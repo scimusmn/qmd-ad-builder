@@ -22,6 +22,11 @@ body {
 
   width: 1920px;
   height: 1080px;
+
+}
+
+h1,h2,h3{
+  font-family: 'Avenir Next Condensed Bold Italic', sans-serif;
 }
 
 .workspace {
@@ -331,28 +336,19 @@ body {
 
 }
 
-.ad-carousel .fade-slide.new {
-
-  font-family: 'Arial';
-
-}
-
-.ad-carousel .fade-slide.old {
-
-  font-family: 'Georgia';
-
-}
-
 .ad-carousel .fade-slide p {
   position: absolute;
-  bottom: -12px;
+  bottom: -14px;
   left: 0px;
   width: 100%;
-  font-size: 10px;
-  padding: 5px;
-  color: rgba(255,255,255,0.85);
-  background: rgba(0,0,0,0.5);
+  font-size: 9px;
+  padding: 1px;
+  color: rgba(255,255,255,0.7);
+  background: rgba(0,0,0,0.6);
   text-align: center;
+
+  font-family: 'Georgia';
+  letter-spacing: 0.06em;
 }
 
 .ad-carousel .fade-slide img {
