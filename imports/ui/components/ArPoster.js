@@ -44,10 +44,10 @@ export class ArPoster extends React.Component {
             */
 
       /*
-      84:{ id:'motion1', label:'(Eye-catching) Motion (1)' },
-      85:{ id:'motion2', label:'(Eye-catching) Motion (2)' },
-      340:{ id:'motion3', label:'(Eye-catching) Motion (3)' },
-*/
+            84:{ id:'motion1', label:'(Eye-catching) Motion (1)' },
+            85:{ id:'motion2', label:'(Eye-catching) Motion (2)' },
+            340:{ id:'motion3', label:'(Eye-catching) Motion (3)' },
+      */
     };
 
     // Holds all poster items.
@@ -467,7 +467,8 @@ export class ArPoster extends React.Component {
       // First asset defaults
       // to instruction blocks.
       if (this.getAliveCount() <= 1 || this.inactivitySeconds >= 15) {
-        item.image.attr('src', 'images/block-instruct.png');
+        const blockInstructSrc = 'images/block-instruct_' + this.state.language + '.png';
+        item.image.attr('src', blockInstructSrc);
       } else {
         // Assume user doesn't need instructions.
         // Default to most recent asset.
@@ -723,7 +724,13 @@ export class ArPoster extends React.Component {
 
      }
 
+     // TODO: Swap instruction assets language
+     // (block-instruct.png, intro-instruct.png)
+     const introInstructSrc = 'images/intro-instruct_' + this.state.language + '.png';
+     $('#intro-instruct img').attr('src', introInstructSrc);
+
      // Refresh background
+     // NOTE - We opted keep same backgrounds for both languages. -tn
      const bgSrc = 'bg_' + this.state.assetGenre + '_' + this.state.language + '.png';
      Session.set('backgrounds', bgSrc);
 
@@ -928,7 +935,7 @@ export class ArPoster extends React.Component {
 
               <div id='attract-overlay'>
                 <div id='intro-instruct' className='center-overlay'>
-                  <img src='images/intro-instruct.png'/>
+                  <img src='images/intro-instruct_en.png'/>
                 </div>
                 {carouselJSX}
               </div>

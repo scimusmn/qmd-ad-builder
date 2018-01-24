@@ -105,15 +105,19 @@ export class FinaleSequence extends React.Component {
       reelLength += 1515;
 
       // Start position
-      sequence.set($(this), {top:0}, 0.0);
+      sequence.set($(this), {top:0, autoAlpha:0.0}, 0.0);
+
+      if (index == 0) {
+        sequence.set($(this), {autoAlpha:1.0}, 0.0);
+      }
 
       // Move into reel after delay.
-      sequence.set($(this), {top:topPos}, 4.0);
+      sequence.set($(this), {top:topPos, autoAlpha:1.0}, 4.0);
 
     });
 
     this.sequence.set(divNewspaper, {x: 400, y:-185, scale:0.001, autoAlpha:0.0, transformOrigin:'574px 750px', webkitFilter:'blur(' + 0 + 'px)'}, 0.0);
-    this.sequence.from(divNewspaper, 1.4, {webkitFilter:'blur(' + 24 + 'px)', ease:Power2.easeOut}, 2.1);
+    // this.sequence.from(divNewspaper, 1.4, {webkitFilter:'blur(' + 24 + 'px)', ease:Power2.easeOut}, 2.1);
     this.sequence.to(divNewspaper, 0.2, {autoAlpha:1.0, ease:Power0.easeOut}, 2.1);
     this.sequence.from(divNewspaper, 1.34, {rotation: 1280, ease:Power1.easeInOut}, 2.1);
     this.sequence.to(divNewspaper, 1.1, {scale:1.2, ease:Power3.easeInOut }, 2.2);
