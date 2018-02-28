@@ -28,26 +28,13 @@ export class ArPoster extends React.Component {
     // item ids from marker ids.
     this.lookup = {
 
-      343:{ id:'name', label:'(Suspicious) Name' },
-      672:{ id:'details', label:'(The devil\'s in the...)  details' },
-      1019:{ id:'claim', label:'(False) Claim' },
-      839:{ id:'endorsement', label:'(Meaningless) Endorsement' },
-      975:{ id:'image', label:'(Misleading) Images' },
-      767:{ id:'flair', label:'(Attention-grabbing) Flair' },
+      343:{ id:'name', labelEn:'Suspicious Name', labelEs:'NOMBRE SOSPECHOSO' },
+      672:{ id:'details', labelEn:'The devil\'s in the... Details', labelEs:'EL DIABLO ESTÁ EN LOS DETALLES' },
+      1019:{ id:'claim', labelEn:'False Claim', labelEs:'RECLAMA FALSA' },
+      839:{ id:'endorsement', labelEn:'Meaningless Endorsement', labelEs:'RESPALDO INSENSATO' },
+      975:{ id:'image', labelEn:'Misleading Images', labelEs:'IMAGEN ENGAÑOSA' },
+      767:{ id:'flair', labelEn:'Attention-grabbing Flair', labelEs:'ESTILO LLAMATIVO' },
 
-      /*     863:{ id:'name', label:'(Suspicious) Name' },
-            1023:{ id:'details', label:'(The devil\'s in the...)  details' },
-            383:{ id:'claim', label:'(False) Claim' },
-            255:{ id:'endorsement', label:'(Meaningless) Endorsement' },
-            991:{ id:'image', label:'(Misleading) Images' },
-            682:{ id:'flair', label:'(Attention-grabbing) Flair' },
-            */
-
-      /*
-            84:{ id:'motion1', label:'(Eye-catching) Motion (1)' },
-            85:{ id:'motion2', label:'(Eye-catching) Motion (2)' },
-            340:{ id:'motion3', label:'(Eye-catching) Motion (3)' },
-      */
     };
 
     // Holds all poster items.
@@ -59,6 +46,10 @@ export class ArPoster extends React.Component {
     this.inactivitySeconds = 0;
     this.holdToSaveTimer = {};
     this.holdToSaveStart = 0;
+
+    // Enable to never auto-remove
+    // when tag disappear (for debug)
+    this.noKillMode = false;
 
     // Bind to this instance.
     this.markerUpdate = this.markerUpdate.bind(this);
@@ -82,7 +73,8 @@ export class ArPoster extends React.Component {
     for (let key in this.lookup) {
 
       const itemId = this.lookup[key].id;
-      const label = this.lookup[key].label;
+      const labelEn = this.lookup[key].labelEn;
+      const labelEs = this.lookup[key].labelEs;
       const $target = $('#' + itemId);
       const $image = $target.find('img');
 
@@ -93,7 +85,8 @@ export class ArPoster extends React.Component {
 
       this.items[key] = { id:itemId,
                           key:key,
-                          label:label,
+                          labelEn:labelEn,
+                          labelEs:labelEs,
                           target:$target,
                           image:$image,
                           alive:false,
@@ -142,6 +135,71 @@ export class ArPoster extends React.Component {
       });
 
     };
+
+    // Listen for keyboard events
+    // (Physical buttons and debug keys)
+    this.setupKeyboardListeners();
+
+    // Start inactivity counter
+    setInterval(() => {
+
+      this.inactivitySeconds++;
+
+      if (this.inactivitySeconds == 5) {
+
+        // If red UI is showing, hide.
+        TweenMax.to($('.ar-poster #arrows'), 0.25, {autoAlpha:0.0});
+
+      }
+
+      // After long inactivity, hide all items
+      // and show main intructions. This handles
+      // the scenario of someone walking away
+      // leaving blocks on the glass.
+      if (this.inactivitySeconds == 20) {
+
+        this.setState({attractMode:true});
+        Session.set('attractMode', true);
+
+        let item;
+
+        // Fade out all items.
+        for (let key in this.items) {
+
+          item = this.items[key];
+          $(item.image).addClass('grayed');
+
+        }
+
+        // Show inactive instruction message.
+        $('#attract-overlay').show();
+
+      }
+
+      // After longer inactivity, refresh
+      // browser to clear cache and cobwebs.
+      if (this.inactivitySeconds == 300) {
+
+        location.reload();
+
+      }
+
+    }, 1000);
+
+    // Some initial display states
+    $('.ar-poster #arrows').hide();
+    TweenMax.set($('.black-overlay'), { autoAlpha: 0.0});
+
+  }
+
+  componentWillUnmount() {
+
+    // Stop all tweens
+    // and timers.
+
+  }
+
+  setupKeyboardListeners() {
 
     /* Keyboard events */
 
@@ -212,62 +270,71 @@ export class ArPoster extends React.Component {
 
     }, 'keyup');
 
-    // Start inactivity counter
-    setInterval(() => {
+    // Debug Util
+    // Create random layout despite
+    // current blocks. Good for when you
+    // need to test assets without a full
+    // camera setup
+    Mousetrap.bind(['r'], () => {
 
-      this.inactivitySeconds++;
+      this.noKillMode = true;
+      // Hide no-block instructions.
+      $('#attract-overlay').hide();
+      this.resetInactivity();
 
-      if (this.inactivitySeconds == 5) {
+      const numBlocks = Math.floor(Math.random() * 3) + 2;
 
-        // If red UI is showing, hide.
-        TweenMax.to($('.ar-poster #arrows'), 0.25, {autoAlpha:0.0});
+      let item;
+      let hasActiveMarker;
 
-      }
+      for (let key in this.items) {
 
-      // After long inactivity, hide all items
-      // and show main intructions. This handles
-      // the scenario of someone walking away
-      // leaving blocks on the glass.
-      if (this.inactivitySeconds == 20) {
+        item = this.items[key];
 
-        this.setState({attractMode:true});
-        Session.set('attractMode', true);
+        var rand = Math.random();
 
-        let item;
 
-        // Fade out all items.
-        for (let key in this.items) {
+        if (rand < 0.6) {
+          // Show, scale, and place.
 
-          item = this.items[key];
-          $(item.image).addClass('grayed');
+          item.alive = true;
+          item.deadCount = 0;
+
+          // Middle size
+          item.scale = Math.random() * 0.5 + 0.3;
+
+          const rotation = 0;
+
+          const rX = Math.random() * 500 + 150;
+          const rY = Math.random() * 750 + 100;
+
+
+          TweenMax.killTweensOf(item.target);
+          TweenMax.set(item.target, {autoAlpha:1.0, scale: item.scale, x:rX, y:rY, rotation:rotation + '_short'});
+          TweenMax.from(item.target, 0.2, {autoAlpha:0.0, scale:item.scale + 0.4});
+
+          // Display random asset
+          const rAIndex = Math.floor(Math.random() * 4);
+          item.image.attr('src', item.activeAssets[rAIndex]);
+
+        } else {
+          // Hide
+
+          // Skip dead items.
+          if (!item.alive) continue;
+
+          // Marker has been MIA for a while now,
+          // let's assume the user has intentionally
+          // removed it from the poster and remove.
+          TweenMax.killTweensOf(item.target);
+          TweenMax.to(item.target, 0.15, { scale: item.scale - 0.3, autoAlpha:0.0});
+          item.alive = false;
 
         }
 
-        // Show inactive instruction message.
-        $('#attract-overlay').show();
-
       }
 
-      // After longer inactivity, refresh
-      // browser to clear cache and cobwebs.
-      if (this.inactivitySeconds == 300) {
-
-        location.reload();
-
-      }
-
-    }, 1000);
-
-    // Some initial display states
-    $('.ar-poster #arrows').hide();
-    TweenMax.set($('.black-overlay'), { autoAlpha: 0.0});
-
-  }
-
-  componentWillUnmount() {
-
-    // Stop all tweens
-    // and timers.
+    });
 
   }
 
@@ -349,8 +416,8 @@ export class ArPoster extends React.Component {
         this.activeItem.target.append($('#arrows'));
         $('.ar-poster #arrows').show();
 
-        // Update active block label
-        $('#arrows #label').html(this.activeItem.label);
+        // Update block label
+        this.refreshActiveBlockLabel();
 
         // Hide no-block instructions.
         $('#attract-overlay').hide();
@@ -367,6 +434,17 @@ export class ArPoster extends React.Component {
 
     }
 
+  }
+
+  refreshActiveBlockLabel() {
+    // Update active block label
+    if (this.activeItem) {
+      if (this.state.language == 'en') {
+        $('#arrows #label').html(this.activeItem.labelEn);
+      } else {
+        $('#arrows #label').html(this.activeItem.labelEs);
+      }
+    }
   }
 
   incrementImage(incremental) {
@@ -568,6 +646,8 @@ export class ArPoster extends React.Component {
 
       } else {
 
+        if (this.noKillMode == true) return;
+
         item.deadCount++;
 
         if (item.deadCount > 80) {
@@ -692,6 +772,8 @@ export class ArPoster extends React.Component {
      }
 
      this.refreshActiveAssets();
+
+     this.refreshActiveBlockLabel();
 
    }
 
