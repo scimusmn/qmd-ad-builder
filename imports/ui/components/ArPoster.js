@@ -28,12 +28,12 @@ export class ArPoster extends React.Component {
     // item ids from marker ids.
     this.lookup = {
 
-      343:{ id:'name', labelEn:'Suspicious Name', labelEs:'NOMBRE SOSPECHOSO' },
-      672:{ id:'details', labelEn:'The devil\'s in the... Details', labelEs:'EL DIABLO ESTÁ EN LOS DETALLES' },
-      1019:{ id:'claim', labelEn:'False Claim', labelEs:'RECLAMA FALSA' },
-      839:{ id:'endorsement', labelEn:'Meaningless Endorsement', labelEs:'RESPALDO INSENSATO' },
-      975:{ id:'image', labelEn:'Misleading Images', labelEs:'IMAGEN ENGAÑOSA' },
-      767:{ id:'flair', labelEn:'Attention-grabbing Flair', labelEs:'ESTILO LLAMATIVO' },
+      343:{ id:'name', labelEn:'Suspicious Name', labelEs:'Nombre Sospechoso' },
+      672:{ id:'details', labelEn:'The Devil\'s in the... Details', labelEs:'Detalles Engañosos' },
+      1019:{ id:'claim', labelEn:'False Claim', labelEs:'Reclama Falsa' },
+      839:{ id:'endorsement', labelEn:'Meaningless Endorsement', labelEs:'Respaldo Insensato' },
+      975:{ id:'image', labelEn:'Misleading Images', labelEs:'Imagen Engañosa' },
+      767:{ id:'flair', labelEn:'Attention-grabbing Flair', labelEs:'Estilo Llamativo' },
 
     };
 
@@ -813,7 +813,8 @@ export class ArPoster extends React.Component {
 
      // Refresh background
      // NOTE - We opted keep same backgrounds for both languages. -tn
-     const bgSrc = 'bg_' + this.state.assetGenre + '_' + this.state.language + '.png';
+     // const bgSrc = 'bg_' + this.state.assetGenre + '_' + this.state.language + '.png';
+     const bgSrc = 'bg_' + this.state.assetGenre + '_en.png';
      Session.set('backgrounds', bgSrc);
 
    }
