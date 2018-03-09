@@ -23,6 +23,8 @@ body {
   width: 1920px;
   height: 1080px;
 
+  cursor: none;
+
 }
 
 h1,h2,h3{
@@ -114,6 +116,7 @@ h1,h2,h3{
   top: 49.75%;
   left: 50%;
   transform: translate(-50%, -50%);
+
 
 }
 
@@ -397,6 +400,8 @@ $debug-white: rgba(255,255,255, 1.0);
   color:  $debug-turqoise;
 
   z-index: 2;
+
+  cursor: crosshair;
 
 }
 
