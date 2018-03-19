@@ -17,7 +17,7 @@ export class ArPoster extends React.Component {
 
     this.state = {
 
-      assetGenre: 'new',
+      assetGenre: 'old',
       language: 'en',
       saveLockdown: false,
       attractMode: false,
@@ -125,7 +125,7 @@ export class ArPoster extends React.Component {
                             };
 
           // Default to new english set.
-          item.activeAssets = item.assets.new.en;
+          item.activeAssets = item.assets.old.en;
 
           // Set default asset
           item.image.attr('src', item.activeAssets[item.assetIndex]);
@@ -278,6 +278,7 @@ export class ArPoster extends React.Component {
     Mousetrap.bind(['r'], () => {
 
       this.noKillMode = true;
+
       // Hide no-block instructions.
       $('#attract-overlay').hide();
       this.resetInactivity();
@@ -293,7 +294,6 @@ export class ArPoster extends React.Component {
 
         var rand = Math.random();
 
-
         if (rand < 0.6) {
           // Show, scale, and place.
 
@@ -307,7 +307,6 @@ export class ArPoster extends React.Component {
 
           const rX = Math.random() * 500 + 150;
           const rY = Math.random() * 750 + 100;
-
 
           TweenMax.killTweensOf(item.target);
           TweenMax.set(item.target, {autoAlpha:1.0, scale: item.scale, x:rX, y:rY, rotation:rotation + '_short'});
@@ -650,7 +649,7 @@ export class ArPoster extends React.Component {
 
         item.deadCount++;
 
-        if (item.deadCount > 80) {
+        if (item.deadCount > 160) {
 
           // Marker has been MIA for a while now,
           // let's assume the user has intentionally
@@ -750,10 +749,10 @@ export class ArPoster extends React.Component {
    */
    toggleOldNew() {
 
-     if (this.state.assetGenre == 'new') {
-       this.setState({assetGenre:'old'});
-     } else {
+     if (this.state.assetGenre == 'old') {
        this.setState({assetGenre:'new'});
+     } else {
+       this.setState({assetGenre:'old'});
      }
 
      this.refreshActiveAssets();
@@ -806,8 +805,7 @@ export class ArPoster extends React.Component {
 
      }
 
-     // TODO: Swap instruction assets language
-     // (block-instruct.png, intro-instruct.png)
+     // Swap instruction assets language
      const introInstructSrc = 'images/intro-instruct_' + this.state.language + '.png';
      $('#intro-instruct img').attr('src', introInstructSrc);
 
